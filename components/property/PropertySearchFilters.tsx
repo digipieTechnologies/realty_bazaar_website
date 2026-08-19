@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 interface PropertySearchFiltersProps {
   onSearch: (params: SearchParams) => void;
@@ -103,38 +104,36 @@ export default function PropertySearchFilters({ onSearch }: PropertySearchFilter
 
       {/* Extended filters */}
       {showFilters && (
-        <div className="mt-4 pt-4 border-t border-[#E4EAF2] grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div className="mt-4 pt-4 border-t border-[#E4EAF2] grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label className="block text-xs font-semibold text-[#667085] mb-1.5">City</label>
-            <select
+            <CustomSelect
               value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm text-[#172033] bg-white transition-colors"
-            >
-              {cities.map((c) => <option key={c}>{c}</option>)}
-            </select>
+              onChange={(val) => setCity(val)}
+              options={cities}
+              size="sm"
+            />
           </div>
           <div>
             <label className="block text-xs font-semibold text-[#667085] mb-1.5">Property Type</label>
-            <select
+            <CustomSelect
               value={propertyType}
-              onChange={(e) => setPropertyType(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm text-[#172033] bg-white transition-colors"
-            >
-              {propertyTypes.map((t) => <option key={t}>{t}</option>)}
-            </select>
+              onChange={(val) => setPropertyType(val)}
+              options={propertyTypes}
+              size="sm"
+            />
           </div>
           <div>
             <label className="block text-xs font-semibold text-[#667085] mb-1.5">Bedrooms</label>
-            <select
+            <CustomSelect
               value={minBeds}
-              onChange={(e) => setMinBeds(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm text-[#172033] bg-white transition-colors"
-            >
-              {bedrooms.map((b) => (
-                <option key={b} value={b}>{b === "Any" ? "Any Bedrooms" : `${b}+ BHK`}</option>
-              ))}
-            </select>
+              onChange={(val) => setMinBeds(val)}
+              options={bedrooms.map((b) => ({
+                value: b,
+                label: b === "Any" ? "Any Bedrooms" : `${b}+ BHK`,
+              }))}
+              size="sm"
+            />
           </div>
         </div>
       )}

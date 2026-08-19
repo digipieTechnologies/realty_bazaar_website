@@ -4,6 +4,16 @@ import { useActionState, useEffect } from "react";
 import { submitContactForm, type ContactFormState } from "@/app/actions";
 import { Send, Phone, Mail, MapPin } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import CustomSelect from "@/components/ui/CustomSelect";
+
+const subjectOptions = [
+  { value: "general", label: "General Enquiry" },
+  { value: "demo", label: "Platform Demo" },
+  { value: "enterprise", label: "Enterprise Enquiry" },
+  { value: "partnership", label: "Partnership" },
+  { value: "marketing", label: "Marketing" },
+  { value: "support", label: "Support" },
+];
 
 const initialState: ContactFormState = { success: false, message: "" };
 
@@ -153,19 +163,13 @@ export default function ContactForm() {
               <label htmlFor="contact-subject" className="block text-sm font-semibold text-[#172033] mb-1.5">
                 Subject
               </label>
-              <select
+              <CustomSelect
                 id="contact-subject"
                 name="subject"
-                className="w-full px-4 py-3 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm text-[#172033] transition-colors bg-white"
-              >
-                <option value="">Select a subject</option>
-                <option value="general">General Enquiry</option>
-                <option value="demo">Platform Demo</option>
-                <option value="enterprise">Enterprise Enquiry</option>
-                <option value="partnership">Partnership</option>
-                <option value="marketing">Marketing</option>
-                <option value="support">Support</option>
-              </select>
+                placeholder="Select a subject"
+                defaultValue="general"
+                options={subjectOptions}
+              />
             </div>
             <div>
               <label htmlFor="contact-message" className="block text-sm font-semibold text-[#172033] mb-1.5">
