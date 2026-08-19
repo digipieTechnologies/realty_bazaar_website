@@ -9,29 +9,29 @@ const APP_URL =
 export default function FinalCTA() {
   return (
     <section
-      className="relative py-24 overflow-hidden bg-gradient-to-br from-[#0f1c2e] via-[#162540] to-[#1e3a5f]"
+      className="relative py-24 overflow-hidden bg-[#397BCF]"
       aria-labelledby="final-cta-heading"
     >
       {/* Dot grid */}
-      <div className="absolute inset-0 dot-grid opacity-[0.06] pointer-events-none" />
+      <div className="absolute inset-0 dot-grid opacity-[0.08] pointer-events-none" />
 
-      {/* Orange glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#f97316] opacity-[0.07] rounded-full blur-3xl pointer-events-none" />
+      {/* Subtle deep blue glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#245FA8] opacity-[0.4] rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <ScrollReveal>
-          <p className="text-[#f97316] text-sm font-semibold uppercase tracking-wider mb-4">
+          <p className="text-[#EAF3FF] text-sm font-semibold uppercase tracking-wider mb-4">
             Get Started Today
           </p>
           <h2
             id="final-cta-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-display font-bold !text-white text-white leading-[1.1] mb-6"
+            className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-display font-bold !text-white leading-[1.1] mb-6"
           >
             Your Next Deal Could Start{" "}
             <br className="hidden sm:block" />
             With Your Next Listing.
           </h2>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto mb-10">
+          <p className="text-lg text-[#EAF3FF]/80 max-w-2xl mx-auto mb-10">
             Bring your properties, marketing and leads together with The Realty Bazaar —
             one powerful mobile platform for modern real estate professionals.
           </p>
@@ -42,7 +42,7 @@ export default function FinalCTA() {
               target="_blank"
               rel="noopener noreferrer"
               id="final-cta-get-app"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#f97316] hover:bg-[#ea6c00] text-white text-base font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white hover:bg-[#EAF3FF] text-[#245FA8] text-base font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.98]"
             >
               <Download className="w-5 h-5" />
               Get the App
@@ -50,7 +50,7 @@ export default function FinalCTA() {
             <Link
               href="/properties"
               id="final-cta-browse"
-              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white/30 hover:border-white text-white text-base font-semibold rounded-xl transition-all duration-200 hover:bg-white/10 active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white/40 hover:border-white text-white text-base font-semibold rounded-xl transition-all duration-200 hover:bg-white/10 active:scale-[0.98]"
             >
               Browse Properties
               <ArrowRight className="w-5 h-5" />
@@ -66,7 +66,7 @@ export default function FinalCTA() {
                   className={
                     item === "→"
                       ? "text-white/30 font-bold"
-                      : "text-white/60 bg-white/10 border border-white/10 px-3 py-1.5 rounded-lg text-xs font-medium"
+                      : "text-white/80 bg-white/10 border border-white/20 px-3 py-1.5 rounded-lg text-xs font-medium"
                   }
                 >
                   {item}

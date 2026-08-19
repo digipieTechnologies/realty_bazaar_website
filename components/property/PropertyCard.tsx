@@ -14,10 +14,10 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   return (
     <Link
       href={`/properties/${property.slug}`}
-      className="group block bg-white border border-[#e2e8f0] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+      className="group block bg-white border border-[#E4EAF2] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-[#397BCF] hover:-translate-y-1 transition-all duration-300"
     >
       {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-[#eef3f8]">
+      <div className="relative aspect-[4/3] overflow-hidden bg-[#F3F8FE]">
         <img
           src={imageUrl}
           alt={property.title}
@@ -25,11 +25,11 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           loading="lazy"
         />
         {property.featured && (
-          <span className="absolute top-3 left-3 bg-[#f97316] text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm">
+          <span className="absolute top-3 left-3 bg-[#EAF3FF] text-[#245FA8] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#6FA5E5]/40 shadow-sm">
             Featured
           </span>
         )}
-        <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-[#0f1c2e] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#e2e8f0]">
+        <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-[#172033] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#E4EAF2]">
           {property.transaction_type === "sale" ? "For Sale" : "For Rent"}
         </span>
       </div>
@@ -37,20 +37,20 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       {/* Content */}
       <div className="p-4">
         <div className="flex items-start justify-between gap-2 mb-2">
-          <h2 className="font-bold text-sm text-[#0f1c2e] group-hover:text-[#f97316] transition-colors line-clamp-1">
+          <h2 className="font-bold text-sm text-[#172033] group-hover:text-[#397BCF] transition-colors line-clamp-1">
             {property.title}
           </h2>
-          <span className="text-base font-display font-bold text-[#0f1c2e] shrink-0 whitespace-nowrap">
+          <span className="text-base font-display font-bold text-[#172033] shrink-0 whitespace-nowrap">
             {price}
           </span>
         </div>
 
-        <div className="flex items-center gap-1 text-xs text-[#64748b] mb-3">
-          <MapPin className="w-3 h-3 text-[#f97316] shrink-0" />
+        <div className="flex items-center gap-1 text-xs text-[#667085] mb-3">
+          <MapPin className="w-3 h-3 text-[#397BCF] shrink-0" />
           <span className="truncate">{property.locality}, {property.city}</span>
         </div>
 
-        <div className="flex items-center gap-4 text-xs text-[#94a3b8] border-t border-[#f4f6f9] pt-3">
+        <div className="flex items-center gap-4 text-xs text-[#98A2B3] border-t border-[#F3F8FE] pt-3">
           {property.bedrooms && (
             <span className="flex items-center gap-1">
               <Bed className="w-3 h-3" />

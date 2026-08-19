@@ -94,19 +94,19 @@ const seekerFaqs = [
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-[#e2e8f0] last:border-0">
+    <div className="border-b border-[#E4EAF2] last:border-0">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full text-left flex items-center justify-between gap-4 py-5 hover:text-[#f97316] transition-colors"
+        className="w-full text-left flex items-center justify-between gap-4 py-5 hover:text-[#397BCF] transition-colors"
         aria-expanded={open}
       >
-        <span className="text-sm font-semibold text-[#0f1c2e]">{question}</span>
+        <span className="text-sm font-semibold text-[#172033]">{question}</span>
         <motion.div
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.2 }}
           className="shrink-0"
         >
-          <ChevronDown className="w-4 h-4 text-[#64748b]" />
+          <ChevronDown className="w-4 h-4 text-[#667085]" />
         </motion.div>
       </button>
       <AnimatePresence>
@@ -118,7 +118,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-sm text-[#64748b] leading-relaxed">{answer}</p>
+            <p className="pb-5 text-sm text-[#667085] leading-relaxed">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -129,17 +129,17 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 export default function FAQSection() {
   return (
     <section
-      className="section-padding bg-[#fafafa]"
+      className="section-padding bg-[#F8FAFC]"
       aria-labelledby="faq-heading"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-14">
-          <p className="text-[#f97316] text-sm font-semibold uppercase tracking-wider mb-3">
+          <p className="text-[#397BCF] text-sm font-semibold uppercase tracking-wider mb-3">
             FAQ
           </p>
           <h2
             id="faq-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#0f1c2e] mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#172033] mb-4"
           >
             Frequently Asked Questions
           </h2>
@@ -148,12 +148,12 @@ export default function FAQSection() {
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Broker FAQs */}
           <ScrollReveal>
-            <div className="bg-white border border-[#e2e8f0] rounded-2xl p-6 shadow-sm">
-              <h3 className="text-base font-bold text-[#0f1c2e] mb-1 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-[#fff7ed] flex items-center justify-center text-xs">🏢</span>
+            <div className="bg-white border border-[#E4EAF2] rounded-2xl p-6 shadow-sm">
+              <h3 className="text-base font-bold text-[#172033] mb-1 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-[#EAF3FF] flex items-center justify-center text-xs">🏢</span>
                 For Brokers
               </h3>
-              <p className="text-xs text-[#94a3b8] mb-4">Questions about using the platform</p>
+              <p className="text-xs text-[#98A2B3] mb-4">Questions about using the platform</p>
               <div>
                 {brokerFaqs.map((faq) => (
                   <FAQItem key={faq.question} {...faq} />
@@ -164,12 +164,12 @@ export default function FAQSection() {
 
           {/* Seeker FAQs */}
           <ScrollReveal delay={0.1}>
-            <div className="bg-white border border-[#e2e8f0] rounded-2xl p-6 shadow-sm">
-              <h3 className="text-base font-bold text-[#0f1c2e] mb-1 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-[#eef3f8] flex items-center justify-center text-xs">🔍</span>
+            <div className="bg-white border border-[#E4EAF2] rounded-2xl p-6 shadow-sm">
+              <h3 className="text-base font-bold text-[#172033] mb-1 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-[#F3F8FE] flex items-center justify-center text-xs">🔍</span>
                 For Property Seekers
               </h3>
-              <p className="text-xs text-[#94a3b8] mb-4">Questions about finding properties</p>
+              <p className="text-xs text-[#98A2B3] mb-4">Questions about finding properties</p>
               <div>
                 {seekerFaqs.map((faq) => (
                   <FAQItem key={faq.question} {...faq} />

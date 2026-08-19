@@ -28,7 +28,7 @@ const features = [
 export default function ForBrokersSection() {
   return (
     <section
-      className="section-padding bg-[#eef3f8]"
+      className="section-padding bg-[#F3F8FE]"
       aria-labelledby="for-brokers-heading"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,16 +36,16 @@ export default function ForBrokersSection() {
 
           {/* Left */}
           <ScrollReveal>
-            <p className="text-[#f97316] text-sm font-semibold uppercase tracking-wider mb-3">
+            <p className="text-[#397BCF] text-sm font-semibold uppercase tracking-wider mb-3">
               For Brokers
             </p>
             <h2
               id="for-brokers-heading"
-              className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#0f1c2e] mb-6"
+              className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#172033] mb-6"
             >
               Built for the Way Real Estate Brokers Actually Work.
             </h2>
-            <p className="text-lg text-[#3a4a5c] leading-relaxed mb-6">
+            <p className="text-lg text-[#667085] leading-relaxed mb-6">
               The Realty Bazaar doesn&apos;t force you to abandon WhatsApp or phone
               calls. The mobile app becomes your system of record — while you
               continue communicating through the channels you already use.
@@ -56,17 +56,17 @@ export default function ForBrokersSection() {
               {brokerTypes.map((type) => (
                 <span
                   key={type}
-                  className="px-3 py-1.5 bg-white border border-[#e2e8f0] rounded-xl text-sm font-medium text-[#0f1c2e]"
+                  className="px-3 py-1.5 bg-white border border-[#E4EAF2] rounded-xl text-sm font-medium text-[#172033]"
                 >
                   {type}
                 </span>
               ))}
             </div>
 
-            <div className="flex items-start gap-3 p-4 bg-white border border-[#e2e8f0] rounded-2xl mb-8">
-              <Smartphone className="w-5 h-5 text-[#f97316] mt-0.5 shrink-0" />
-              <div className="text-sm text-[#64748b]">
-                <strong className="text-[#0f1c2e]">No website dashboard.</strong>{" "}
+            <div className="flex items-start gap-3 p-4 bg-white border border-[#E4EAF2] rounded-2xl mb-8">
+              <Smartphone className="w-5 h-5 text-[#397BCF] mt-0.5 shrink-0" />
+              <div className="text-sm text-[#667085]">
+                <strong className="text-[#172033]">No website dashboard.</strong>{" "}
                 Everything brokers need — property management, marketing,
                 CRM and analytics — is in the mobile app. The website is
                 purely the public-facing discovery and lead-generation layer.
@@ -78,7 +78,7 @@ export default function ForBrokersSection() {
               target="_blank"
               rel="noopener noreferrer"
               id="for-brokers-get-app"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#f97316] hover:bg-[#ea6c00] text-white font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#397BCF] hover:bg-[#245FA8] text-white font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98]"
             >
               <Download className="w-4 h-4" />
               Get the App
@@ -90,11 +90,11 @@ export default function ForBrokersSection() {
             <StaggerReveal className="space-y-3">
               {features.map((feature) => (
                 <StaggerItem key={feature}>
-                  <div className="flex items-center gap-3 p-4 bg-white border border-[#e2e8f0] rounded-xl hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200">
-                    <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
-                      <Check className="w-4 h-4 text-green-600" />
+                  <div className="flex items-center gap-3 p-4 bg-white border border-[#E4EAF2] rounded-xl hover:shadow-sm hover:border-[#397BCF] hover:-translate-y-0.5 transition-all duration-200">
+                    <div className="w-8 h-8 rounded-lg bg-[#EAF3FF] flex items-center justify-center shrink-0">
+                      <Check className="w-4 h-4 text-[#397BCF]" />
                     </div>
-                    <span className="text-sm font-medium text-[#0f1c2e]">
+                    <span className="text-sm font-medium text-[#172033]">
                       {feature}
                     </span>
                   </div>

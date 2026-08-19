@@ -4,12 +4,12 @@ import { Bell, Phone, Calendar, ArrowRight } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const pipeline = [
-  { stage: "New Lead", count: 6, color: "bg-blue-500", textColor: "text-blue-700", bg: "bg-blue-50" },
-  { stage: "Contacted", count: 8, color: "bg-[#f97316]", textColor: "text-[#ea6c00]", bg: "bg-[#fff7ed]" },
-  { stage: "Qualified", count: 5, color: "bg-purple-500", textColor: "text-purple-700", bg: "bg-purple-50" },
-  { stage: "Site Visit", count: 3, color: "bg-cyan-500", textColor: "text-cyan-700", bg: "bg-cyan-50" },
-  { stage: "Negotiation", count: 2, color: "bg-yellow-500", textColor: "text-yellow-700", bg: "bg-yellow-50" },
-  { stage: "Closed", count: 1, color: "bg-green-500", textColor: "text-green-700", bg: "bg-green-50" },
+  { stage: "New Lead",    count: 6, color: "bg-[#397BCF]", textColor: "text-[#245FA8]", bg: "bg-[#EAF3FF]" },
+  { stage: "Contacted",  count: 8, color: "bg-[#245FA8]", textColor: "text-[#174A86]", bg: "bg-[#F3F8FE]"  },
+  { stage: "Qualified",  count: 5, color: "bg-purple-500", textColor: "text-purple-700", bg: "bg-purple-50" },
+  { stage: "Site Visit", count: 3, color: "bg-cyan-500",  textColor: "text-cyan-700",   bg: "bg-cyan-50"   },
+  { stage: "Negotiation",count: 2, color: "bg-yellow-500",textColor: "text-yellow-700", bg: "bg-yellow-50" },
+  { stage: "Closed",     count: 1, color: "bg-green-500", textColor: "text-green-700",  bg: "bg-green-50"  },
 ];
 
 const sampleLeads = [
@@ -33,7 +33,7 @@ const sampleLeads = [
     nextFollowup: "Today 4 PM",
     stage: "Negotiation",
     avatar: "R",
-    avatarColor: "from-blue-400 to-indigo-500",
+    avatarColor: "from-[#397BCF] to-[#245FA8]",
   },
   {
     name: "Anjali Patel",
@@ -53,23 +53,23 @@ const leadSources = ["Instagram", "Facebook", "Meta Ads", "The Realty Bazaar", "
 export default function CRMSection() {
   return (
     <section
-      className="section-padding bg-[#fafafa]"
+      className="section-padding bg-[#F8FAFC]"
       aria-labelledby="crm-heading"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-14">
-          <p className="text-[#f97316] text-sm font-semibold uppercase tracking-wider mb-3">
+          <p className="text-[#397BCF] text-sm font-semibold uppercase tracking-wider mb-3">
             CRM
           </p>
           <h2
             id="crm-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#0f1c2e] mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#172033] mb-4"
           >
             Every Lead. Every Follow-Up.{" "}
             <br className="hidden sm:block" />
             One Place.
           </h2>
-          <p className="text-lg text-[#64748b] max-w-2xl mx-auto">
+          <p className="text-lg text-[#667085] max-w-2xl mx-auto">
             All your leads — from social media, paid ads, website enquiries and
             manual entries — land in your mobile CRM automatically.
           </p>
@@ -79,8 +79,8 @@ export default function CRMSection() {
 
           {/* Pipeline sidebar */}
           <ScrollReveal direction="right" className="lg:col-span-1">
-            <div className="bg-white border border-[#e2e8f0] rounded-2xl p-4 shadow-sm">
-              <div className="text-xs font-bold text-[#0f1c2e] uppercase tracking-wider mb-4">
+            <div className="bg-white border border-[#E4EAF2] rounded-2xl p-4 shadow-sm">
+              <div className="text-xs font-bold text-[#172033] uppercase tracking-wider mb-4">
                 Pipeline
               </div>
               <div className="space-y-2">
@@ -92,21 +92,21 @@ export default function CRMSection() {
                         {stage.stage}
                       </span>
                     </div>
-                    <span className="text-xs font-bold text-[#0f1c2e]">{stage.count}</span>
+                    <span className="text-xs font-bold text-[#172033]">{stage.count}</span>
                   </div>
                 ))}
               </div>
 
               {/* Lead sources */}
-              <div className="mt-5 pt-4 border-t border-[#e2e8f0]">
-                <div className="text-xs font-bold text-[#0f1c2e] uppercase tracking-wider mb-3">
+              <div className="mt-5 pt-4 border-t border-[#E4EAF2]">
+                <div className="text-xs font-bold text-[#172033] uppercase tracking-wider mb-3">
                   Lead Sources
                 </div>
                 <div className="space-y-1.5">
                   {leadSources.map((src) => (
                     <div key={src} className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#f97316]" />
-                      <span className="text-[11px] text-[#64748b]">{src}</span>
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#397BCF]" />
+                      <span className="text-[11px] text-[#667085]">{src}</span>
                     </div>
                   ))}
                 </div>
@@ -118,7 +118,7 @@ export default function CRMSection() {
           <div className="lg:col-span-4 space-y-4">
             {sampleLeads.map((lead, i) => (
               <ScrollReveal key={lead.name} delay={i * 0.1}>
-                <div className="bg-white border border-[#e2e8f0] rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                <div className="bg-white border border-[#E4EAF2] rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
                   <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                     {/* Avatar + name */}
                     <div className="flex items-center gap-3 sm:w-48 shrink-0">
@@ -128,8 +128,8 @@ export default function CRMSection() {
                         {lead.avatar}
                       </div>
                       <div>
-                        <div className="font-bold text-sm text-[#0f1c2e]">{lead.name}</div>
-                        <span className="text-[10px] bg-[#eef3f8] text-[#3a6496] px-2 py-0.5 rounded-md font-medium">
+                        <div className="font-bold text-sm text-[#172033]">{lead.name}</div>
+                        <span className="text-[10px] bg-[#EAF3FF] text-[#245FA8] px-2 py-0.5 rounded-md font-medium">
                           {lead.stage}
                         </span>
                       </div>
@@ -138,26 +138,26 @@ export default function CRMSection() {
                     {/* Details */}
                     <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-3">
                       <div>
-                        <div className="text-[10px] text-[#94a3b8] uppercase tracking-wide mb-0.5">Property</div>
-                        <div className="text-xs font-semibold text-[#0f1c2e]">{lead.property}</div>
+                        <div className="text-[10px] text-[#98A2B3] uppercase tracking-wide mb-0.5">Property</div>
+                        <div className="text-xs font-semibold text-[#172033]">{lead.property}</div>
                       </div>
                       <div>
-                        <div className="text-[10px] text-[#94a3b8] uppercase tracking-wide mb-0.5">Budget</div>
-                        <div className="text-xs font-semibold text-[#0f1c2e]">{lead.budget}</div>
+                        <div className="text-[10px] text-[#98A2B3] uppercase tracking-wide mb-0.5">Budget</div>
+                        <div className="text-xs font-semibold text-[#172033]">{lead.budget}</div>
                       </div>
                       <div>
-                        <div className="text-[10px] text-[#94a3b8] uppercase tracking-wide mb-0.5">Source</div>
-                        <div className="text-xs font-semibold text-[#f97316]">{lead.source}</div>
+                        <div className="text-[10px] text-[#98A2B3] uppercase tracking-wide mb-0.5">Source</div>
+                        <div className="text-xs font-semibold text-[#397BCF]">{lead.source}</div>
                       </div>
                       <div>
-                        <div className="text-[10px] text-[#94a3b8] uppercase tracking-wide mb-0.5">Last Activity</div>
-                        <div className="text-xs text-[#64748b]">{lead.lastActivity}</div>
+                        <div className="text-[10px] text-[#98A2B3] uppercase tracking-wide mb-0.5">Last Activity</div>
+                        <div className="text-xs text-[#667085]">{lead.lastActivity}</div>
                       </div>
                     </div>
 
                     {/* Actions */}
                     <div className="flex items-center gap-2 sm:flex-col sm:items-end shrink-0">
-                      <div className="flex items-center gap-1.5 text-[10px] text-[#64748b] bg-[#eef3f8] px-2.5 py-1 rounded-lg">
+                      <div className="flex items-center gap-1.5 text-[10px] text-[#667085] bg-[#F3F8FE] px-2.5 py-1 rounded-lg">
                         <Calendar className="w-3 h-3" />
                         {lead.nextFollowup}
                       </div>
@@ -165,11 +165,11 @@ export default function CRMSection() {
                         <button className="w-8 h-8 rounded-lg bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="Call">
                           <Phone className="w-3.5 h-3.5 text-green-600" />
                         </button>
-                        <button className="w-8 h-8 rounded-lg bg-[#fff7ed] hover:bg-[#ffedd5] flex items-center justify-center transition-colors" aria-label="Reminder">
-                          <Bell className="w-3.5 h-3.5 text-[#f97316]" />
+                        <button className="w-8 h-8 rounded-lg bg-[#EAF3FF] hover:bg-[#d4e9ff] flex items-center justify-center transition-colors" aria-label="Reminder">
+                          <Bell className="w-3.5 h-3.5 text-[#397BCF]" />
                         </button>
-                        <button className="w-8 h-8 rounded-lg bg-[#eef3f8] hover:bg-[#d0dde8] flex items-center justify-center transition-colors" aria-label="View">
-                          <ArrowRight className="w-3.5 h-3.5 text-[#0f1c2e]" />
+                        <button className="w-8 h-8 rounded-lg bg-[#F3F8FE] hover:bg-[#E4EAF2] flex items-center justify-center transition-colors" aria-label="View">
+                          <ArrowRight className="w-3.5 h-3.5 text-[#172033]" />
                         </button>
                       </div>
                     </div>
@@ -180,15 +180,15 @@ export default function CRMSection() {
 
             {/* Note */}
             <ScrollReveal delay={0.3}>
-              <div className="bg-[#fff7ed] border border-[#fdba74] rounded-2xl p-4 flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-[#f97316] flex items-center justify-center shrink-0">
+              <div className="bg-[#EAF3FF] border border-[#6FA5E5]/30 rounded-2xl p-4 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-[#397BCF] flex items-center justify-center shrink-0">
                   <Bell className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-[#0f1c2e] mb-1">
+                  <div className="text-sm font-bold text-[#172033] mb-1">
                     Never miss a follow-up
                   </div>
-                  <div className="text-sm text-[#64748b]">
+                  <div className="text-sm text-[#667085]">
                     The app sends you reminders for overdue follow-ups and
                     upcoming site visits — so no lead ever goes cold.
                   </div>

@@ -64,19 +64,19 @@ export default function Navbar() {
               className="flex items-center gap-2.5 shrink-0"
               aria-label="The Realty Bazaar — Home"
             >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#f97316] to-[#ea6c00] flex items-center justify-center shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#397BCF] to-[#245FA8] flex items-center justify-center shadow-sm">
                 <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white" aria-hidden="true">
                   <path d="M3 12L12 3l9 9v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z" opacity="0.3"/>
                   <path d="M9 21V12h6v9" />
                   <path d="M3 12L12 3l9 9" strokeWidth="1.5" stroke="white" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
                   <rect x="9" y="12" width="6" height="9" fill="white"/>
-                  <circle cx="17" cy="7" r="2" fill="#f97316"/>
+                  <circle cx="17" cy="7" r="2" fill="#6FA5E5"/>
                 </svg>
               </div>
               <span
                 className={cn(
                   "font-display font-bold text-base tracking-tight transition-colors duration-300",
-                  scrolled ? "text-[#0f1c2e]" : "text-[#0f1c2e]"
+                  "text-[#172033]"
                 )}
               >
                 The Realty Bazaar
@@ -92,8 +92,8 @@ export default function Navbar() {
                   className={cn(
                     "px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 animated-underline",
                     pathname === link.href
-                      ? "text-[#f97316] bg-[#fff7ed]"
-                      : "text-[#3a4a5c] hover:text-[#0f1c2e] hover:bg-[#eef3f8]"
+                      ? "text-[#397BCF] bg-[#EAF3FF]"
+                      : "text-[#667085] hover:text-[#172033] hover:bg-[#F3F8FE]"
                   )}
                 >
                   {link.label}
@@ -105,7 +105,7 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center gap-3">
               <Link
                 href="/properties"
-                className="text-sm font-medium text-[#3a4a5c] hover:text-[#0f1c2e] transition-colors px-3 py-2 rounded-lg hover:bg-[#eef3f8]"
+                className="text-sm font-medium text-[#667085] hover:text-[#172033] transition-colors px-3 py-2 rounded-lg hover:bg-[#F3F8FE]"
                 id="nav-browse-properties"
               >
                 Browse Properties
@@ -115,7 +115,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 id="nav-get-app"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#f97316] hover:bg-[#ea6c00] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#397BCF] hover:bg-[#245FA8] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98]"
               >
                 <Download className="w-4 h-4" />
                 Get the App
@@ -124,7 +124,7 @@ export default function Navbar() {
 
             {/* Mobile hamburger */}
             <button
-              className="lg:hidden p-2 rounded-lg text-[#0f1c2e] hover:bg-[#eef3f8] transition-colors"
+              className="lg:hidden p-2 rounded-lg text-[#172033] hover:bg-[#F3F8FE] transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
@@ -154,22 +154,22 @@ export default function Navbar() {
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
               className="fixed top-0 right-0 bottom-0 w-80 max-w-[90vw] bg-white z-50 shadow-2xl flex flex-col lg:hidden"
             >
-              <div className="flex items-center justify-between p-4 border-b border-[#e2e8f0]">
+              <div className="flex items-center justify-between p-4 border-b border-[#E4EAF2]">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#f97316] to-[#ea6c00] flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#397BCF] to-[#245FA8] flex items-center justify-center">
                     <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white" aria-hidden="true">
                       <path d="M3 12L12 3l9 9v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z" opacity="0.3"/>
                       <rect x="9" y="12" width="6" height="9" fill="white"/>
                     </svg>
                   </div>
-                  <span className="font-display font-bold text-sm text-[#0f1c2e]">The Realty Bazaar</span>
+                  <span className="font-display font-bold text-sm text-[#172033]">The Realty Bazaar</span>
                 </Link>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="p-2 rounded-lg hover:bg-[#eef3f8] transition-colors"
+                  className="p-2 rounded-lg hover:bg-[#F3F8FE] transition-colors"
                   aria-label="Close menu"
                 >
-                  <X className="w-5 h-5 text-[#0f1c2e]" />
+                  <X className="w-5 h-5 text-[#172033]" />
                 </button>
               </div>
 
@@ -181,8 +181,8 @@ export default function Navbar() {
                     className={cn(
                       "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all",
                       pathname === link.href
-                        ? "bg-[#fff7ed] text-[#f97316]"
-                        : "text-[#0f1c2e] hover:bg-[#eef3f8]"
+                        ? "bg-[#EAF3FF] text-[#397BCF]"
+                        : "text-[#172033] hover:bg-[#F3F8FE]"
                     )}
                   >
                     {link.label}
@@ -191,10 +191,10 @@ export default function Navbar() {
                 ))}
               </nav>
 
-              <div className="p-4 border-t border-[#e2e8f0] space-y-3">
+              <div className="p-4 border-t border-[#E4EAF2] space-y-3">
                 <Link
                   href="/properties"
-                  className="flex items-center justify-center gap-2 w-full px-5 py-3 border-2 border-[#0f1c2e] text-[#0f1c2e] text-sm font-semibold rounded-xl hover:bg-[#eef3f8] transition-all"
+                  className="flex items-center justify-center gap-2 w-full px-5 py-3 border-2 border-[#397BCF] text-[#397BCF] text-sm font-semibold rounded-xl hover:bg-[#EAF3FF] transition-all"
                   id="mobile-browse-properties"
                 >
                   Browse Properties
@@ -204,7 +204,7 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   id="mobile-get-app"
-                  className="flex items-center justify-center gap-2 w-full px-5 py-3 bg-[#f97316] hover:bg-[#ea6c00] text-white text-sm font-semibold rounded-xl transition-all shadow-sm"
+                  className="flex items-center justify-center gap-2 w-full px-5 py-3 bg-[#397BCF] hover:bg-[#245FA8] text-white text-sm font-semibold rounded-xl transition-all shadow-sm"
                 >
                   <Download className="w-4 h-4" />
                   Get the App

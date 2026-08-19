@@ -40,7 +40,7 @@ export default function AISection() {
 
   return (
     <section
-      className="section-padding bg-white"
+      className="section-padding bg-[#F3F8FE]"
       aria-labelledby="ai-heading"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -48,16 +48,16 @@ export default function AISection() {
 
           {/* Left — copy */}
           <ScrollReveal>
-            <p className="text-[#f97316] text-sm font-semibold uppercase tracking-wider mb-3">
+            <p className="text-[#397BCF] text-sm font-semibold uppercase tracking-wider mb-3">
               AI Assistant
             </p>
             <h2
               id="ai-heading"
-              className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#0f1c2e] mb-6"
+              className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#172033] mb-6"
             >
               AI That Works Like Your Marketing Assistant.
             </h2>
-            <p className="text-lg text-[#64748b] leading-relaxed mb-8">
+            <p className="text-lg text-[#667085] leading-relaxed mb-8">
               Ask the AI anything about your properties, campaigns or leads.
               It understands your business and gives you practical, actionable
               answers — not generic suggestions.
@@ -71,11 +71,11 @@ export default function AISection() {
                   onClick={() => setActiveIdx(i)}
                   className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-all duration-200 text-sm font-medium ${
                     activeIdx === i
-                      ? "border-[#f97316] bg-[#fff7ed] text-[#0f1c2e]"
-                      : "border-[#e2e8f0] hover:border-[#0f1c2e] text-[#64748b] hover:text-[#0f1c2e]"
+                      ? "border-[#397BCF] bg-[#EAF3FF] text-[#172033]"
+                      : "border-[#E4EAF2] hover:border-[#397BCF] text-[#667085] hover:text-[#172033] bg-white"
                   }`}
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#94a3b8] block mb-0.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#98A2B3] block mb-0.5">
                     {conv.category}
                   </span>
                   &ldquo;{conv.prompt}&rdquo;
@@ -83,7 +83,7 @@ export default function AISection() {
               ))}
             </div>
 
-            <p className="text-sm text-[#94a3b8] mt-6">
+            <p className="text-sm text-[#98A2B3] mt-6">
               AI is deeply integrated into the mobile app — not a standalone
               chatbot. Every response is grounded in your real data.
             </p>
@@ -91,10 +91,10 @@ export default function AISection() {
 
           {/* Right — AI chat interface */}
           <ScrollReveal direction="left" delay={0.2}>
-            <div ref={ref} className="bg-[#0f1c2e] rounded-2xl overflow-hidden shadow-2xl">
+            <div ref={ref} className="bg-[#172033] rounded-2xl overflow-hidden shadow-2xl">
               {/* Chat header */}
               <div className="px-5 py-4 border-b border-white/10 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#f97316] to-[#ea6c00] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#397BCF] to-[#245FA8] flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -116,7 +116,7 @@ export default function AISection() {
                   transition={{ duration: 0.3 }}
                   className="flex justify-end"
                 >
-                  <div className="max-w-[80%] bg-[#f97316] text-white text-sm px-4 py-3 rounded-2xl rounded-tr-sm">
+                  <div className="max-w-[80%] bg-[#397BCF] text-white text-sm px-4 py-3 rounded-2xl rounded-tr-sm">
                     {active.prompt}
                   </div>
                 </motion.div>
@@ -129,7 +129,7 @@ export default function AISection() {
                   transition={{ duration: 0.4, delay: 0.2 }}
                   className="flex items-start gap-3"
                 >
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#f97316] to-[#ea6c00] flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#397BCF] to-[#245FA8] flex items-center justify-center shrink-0">
                     <Bot className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1 bg-white/10 text-white/90 text-sm px-4 py-3 rounded-2xl rounded-tl-sm leading-relaxed">
@@ -148,7 +148,7 @@ export default function AISection() {
                     readOnly
                     aria-label="AI prompt input (demo)"
                   />
-                  <button className="w-8 h-8 rounded-lg bg-[#f97316] flex items-center justify-center shrink-0" aria-label="Send">
+                  <button className="w-8 h-8 rounded-lg bg-[#397BCF] flex items-center justify-center shrink-0" aria-label="Send">
                     <Send className="w-4 h-4 text-white" />
                   </button>
                 </div>

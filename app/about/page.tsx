@@ -28,16 +28,16 @@ export default function AboutPage() {
       />
 
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-[#eef3f8] to-white border-b border-[#e2e8f0]">
+      <section className="py-20 bg-gradient-to-br from-[#F3F8FE] to-white border-b border-[#E4EAF2]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <ScrollReveal>
-            <p className="text-[#f97316] text-sm font-semibold uppercase tracking-wider mb-3">
+            <p className="text-[#397BCF] text-sm font-semibold uppercase tracking-wider mb-3">
               About Us
             </p>
-            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#0f1c2e] mb-6">
+            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#172033] mb-6">
               Building the Future of Real Estate in India.
             </h1>
-            <p className="text-lg text-[#64748b] max-w-2xl mx-auto">
+            <p className="text-lg text-[#667085] max-w-2xl mx-auto">
               The Realty Bazaar is a PropTech platform designed to help Indian
               real-estate professionals digitize property marketing, lead
               management and sales operations.
@@ -54,14 +54,14 @@ export default function AboutPage() {
               {
                 icon: Target,
                 title: "Our Mission",
-                color: "bg-[#fff7ed] text-[#f97316]",
+                color: "bg-[#EAF3FF] text-[#397BCF]",
                 description:
                   "Make property marketing and lead management simpler, faster and more effective for real-estate professionals across India.",
               },
               {
                 icon: Eye,
                 title: "Our Vision",
-                color: "bg-[#eef3f8] text-[#3a6496]",
+                color: "bg-[#F3F8FE] text-[#245FA8]",
                 description:
                   "Build a connected ecosystem between brokers, properties and property seekers — where every broker has access to professional marketing tools.",
               },
@@ -74,12 +74,12 @@ export default function AboutPage() {
               },
             ].map((item) => (
               <ScrollReveal key={item.title}>
-                <div className="bg-[#fafafa] border border-[#e2e8f0] rounded-2xl p-6 h-full">
+                <div className="bg-[#F8FAFC] border border-[#E4EAF2] rounded-2xl p-6 h-full hover:border-[#397BCF] transition-colors">
                   <div className={`w-12 h-12 rounded-xl ${item.color} flex items-center justify-center mb-4`}>
                     <item.icon className="w-6 h-6" />
                   </div>
-                  <h2 className="text-lg font-bold text-[#0f1c2e] mb-3">{item.title}</h2>
-                  <p className="text-sm text-[#64748b] leading-relaxed">{item.description}</p>
+                  <h2 className="text-lg font-bold text-[#172033] mb-3">{item.title}</h2>
+                  <p className="text-sm text-[#667085] leading-relaxed">{item.description}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -87,7 +87,7 @@ export default function AboutPage() {
 
           {/* Why we built it */}
           <ScrollReveal>
-            <div className="bg-gradient-to-br from-[#0f1c2e] to-[#1a2e48] rounded-2xl p-8 text-white">
+            <div className="bg-gradient-to-br from-[#172033] to-[#1e2d47] rounded-2xl p-8 text-white">
               <h2 className="text-2xl font-display font-bold mb-4">Why We Built This</h2>
               <div className="space-y-4 text-white/70 text-sm leading-relaxed">
                 <p>
@@ -116,13 +116,13 @@ export default function AboutPage() {
 
           {/* The platform */}
           <ScrollReveal className="mt-8">
-            <div className="bg-[#fafafa] border border-[#e2e8f0] rounded-2xl p-8">
-              <h2 className="text-2xl font-display font-bold text-[#0f1c2e] mb-4">
+            <div className="bg-[#F8FAFC] border border-[#E4EAF2] rounded-2xl p-8">
+              <h2 className="text-2xl font-display font-bold text-[#172033] mb-4">
                 The Platform
               </h2>
-              <div className="grid sm:grid-cols-2 gap-6 text-sm text-[#64748b] leading-relaxed">
+              <div className="grid sm:grid-cols-2 gap-6 text-sm text-[#667085] leading-relaxed">
                 <div>
-                  <h3 className="font-bold text-[#0f1c2e] mb-2">For Brokers — Mobile App</h3>
+                  <h3 className="font-bold text-[#172033] mb-2">For Brokers — Mobile App</h3>
                   <p>
                     The Realty Bazaar mobile app is where brokers manage their
                     entire business — property uploads, marketing campaigns,
@@ -130,7 +130,7 @@ export default function AboutPage() {
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#0f1c2e] mb-2">For Property Seekers — Website</h3>
+                  <h3 className="font-bold text-[#172033] mb-2">For Property Seekers — Website</h3>
                   <p>
                     This website is a public property discovery platform.
                     Buyers and renters can browse properties listed by brokers

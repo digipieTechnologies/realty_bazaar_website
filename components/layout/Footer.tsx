@@ -28,7 +28,7 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0f1c2e] text-white" aria-labelledby="footer-heading">
+    <footer className="bg-[#172033] text-white" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">Footer</h2>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
@@ -37,7 +37,7 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#f97316] to-[#ea6c00] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#397BCF] to-[#245FA8] flex items-center justify-center">
                 <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white" aria-hidden="true">
                   <path d="M3 12L12 3l9 9v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z" opacity="0.4"/>
                   <rect x="9" y="12" width="6" height="9" fill="white"/>
@@ -198,7 +198,7 @@ export default function Footer() {
                 href="https://digipie.net"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#f97316] hover:text-[#fb923c] font-medium transition-colors underline-offset-2 hover:underline"
+                className="text-[#6FA5E5] hover:text-white font-medium transition-colors underline-offset-2 hover:underline"
               >
                 Digipie Technologies
               </Link>

@@ -67,13 +67,13 @@ export default function FeaturesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-[#eef3f8] to-white border-b border-[#e2e8f0]">
+      <section className="py-20 bg-gradient-to-br from-[#F3F8FE] to-white border-b border-[#E4EAF2]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <ScrollReveal>
-            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#0f1c2e] mb-6">
+            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#172033] mb-6">
               Every Feature a Real Estate Broker Needs.
             </h1>
-            <p className="text-lg text-[#64748b] max-w-2xl mx-auto mb-10">
+            <p className="text-lg text-[#667085] max-w-2xl mx-auto mb-10">
               The Realty Bazaar mobile app is a complete property marketing,
               lead management and CRM platform — built specifically for Indian brokers.
             </p>
@@ -81,7 +81,7 @@ export default function FeaturesPage() {
               href={APP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#f97316] hover:bg-[#ea6c00] text-white font-semibold rounded-xl transition-all shadow-md active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-[#397BCF] hover:bg-[#245FA8] text-white font-semibold rounded-xl transition-all shadow-md active:scale-[0.98]"
             >
               <Download className="w-5 h-5" />
               Get the App — Start Free
@@ -96,10 +96,10 @@ export default function FeaturesPage() {
           <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {featureHighlights.map((feature) => (
               <StaggerItem key={feature.title}>
-                <div className="p-5 bg-[#fafafa] border border-[#e2e8f0] rounded-2xl hover:shadow-md hover:-translate-y-1 transition-all duration-300 h-full">
+                <div className="p-5 bg-[#F8FAFC] border border-[#E4EAF2] rounded-2xl hover:shadow-md hover:border-[#397BCF] hover:-translate-y-1 transition-all duration-300 h-full">
                   <div className="text-3xl mb-4">{feature.emoji}</div>
-                  <h2 className="text-sm font-bold text-[#0f1c2e] mb-2">{feature.title}</h2>
-                  <p className="text-xs text-[#64748b] leading-relaxed">{feature.description}</p>
+                  <h2 className="text-sm font-bold text-[#172033] mb-2">{feature.title}</h2>
+                  <p className="text-xs text-[#667085] leading-relaxed">{feature.description}</p>
                 </div>
               </StaggerItem>
             ))}

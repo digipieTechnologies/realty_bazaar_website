@@ -45,23 +45,23 @@ const sampleProperties = [
 export default function PropertyMarketplaceSection() {
   return (
     <section
-      className="section-padding bg-white border-t border-[#e2e8f0]"
+      className="section-padding bg-white border-t border-[#E4EAF2]"
       aria-labelledby="marketplace-heading"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-12">
-          <p className="text-[#f97316] text-sm font-semibold uppercase tracking-wider mb-3">
+          <p className="text-[#397BCF] text-sm font-semibold uppercase tracking-wider mb-3">
             Property Discovery
           </p>
           <h2
             id="marketplace-heading"
-            className="text-3xl sm:text-4xl font-display font-bold text-[#0f1c2e] mb-4"
+            className="text-3xl sm:text-4xl font-display font-bold text-[#172033] mb-4"
           >
             Your Properties Can Reach Buyers{" "}
             <br className="hidden sm:block" />
             Beyond Social Media.
           </h2>
-          <p className="text-lg text-[#64748b] max-w-2xl mx-auto">
+          <p className="text-lg text-[#667085] max-w-2xl mx-auto">
             Every published property automatically appears on The Realty Bazaar — a
             growing property discovery platform for buyers and renters.
           </p>
@@ -85,8 +85,8 @@ export default function PropertyMarketplaceSection() {
                 key={i}
                 className={
                   item === "→"
-                    ? "text-[#cbd5e1] font-bold"
-                    : "bg-[#eef3f8] text-[#0f1c2e] font-medium px-3 py-1.5 rounded-lg border border-[#e2e8f0] text-xs"
+                    ? "text-[#D0D5DD] font-bold"
+                    : "bg-[#EAF3FF] text-[#245FA8] font-medium px-3 py-1.5 rounded-lg border border-[#E4EAF2] text-xs"
                 }
               >
                 {item}
@@ -101,10 +101,10 @@ export default function PropertyMarketplaceSection() {
             <StaggerItem key={property.slug}>
               <Link
                 href={`/properties/${property.slug}`}
-                className="group block bg-white border border-[#e2e8f0] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                className="group block bg-white border border-[#E4EAF2] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-[#397BCF] hover:-translate-y-1 transition-all duration-300"
               >
                 {/* Image */}
-                <div className="relative aspect-[4/3] overflow-hidden bg-[#eef3f8]">
+                <div className="relative aspect-[4/3] overflow-hidden bg-[#F3F8FE]">
                   <img
                     src={property.image}
                     alt={property.title}
@@ -112,11 +112,11 @@ export default function PropertyMarketplaceSection() {
                     loading="lazy"
                   />
                   {property.featured && (
-                    <span className="absolute top-3 left-3 bg-[#f97316] text-white text-[10px] font-bold px-2 py-1 rounded-lg">
+                    <span className="absolute top-3 left-3 bg-[#EAF3FF] text-[#245FA8] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#6FA5E5]/30">
                       Featured
                     </span>
                   )}
-                  <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-[#0f1c2e] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#e2e8f0]">
+                  <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-[#172033] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#E4EAF2]">
                     {property.type}
                   </span>
                 </div>
@@ -124,18 +124,18 @@ export default function PropertyMarketplaceSection() {
                 {/* Info */}
                 <div className="p-4">
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-bold text-sm text-[#0f1c2e] group-hover:text-[#f97316] transition-colors">
+                    <h3 className="font-bold text-sm text-[#172033] group-hover:text-[#397BCF] transition-colors">
                       {property.title}
                     </h3>
-                    <span className="text-base font-display font-bold text-[#0f1c2e] shrink-0">
+                    <span className="text-base font-display font-bold text-[#172033] shrink-0">
                       {property.price}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-[#64748b] mb-3">
-                    <MapPin className="w-3 h-3 text-[#f97316]" />
+                  <div className="flex items-center gap-1 text-xs text-[#667085] mb-3">
+                    <MapPin className="w-3 h-3 text-[#397BCF]" />
                     {property.locality}
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-[#64748b] border-t border-[#f4f6f9] pt-3">
+                  <div className="flex items-center gap-4 text-xs text-[#667085] border-t border-[#F3F8FE] pt-3">
                     <span className="flex items-center gap-1">
                       <Bed className="w-3 h-3" />
                       {property.beds} Beds
@@ -159,7 +159,7 @@ export default function PropertyMarketplaceSection() {
           <Link
             href="/properties"
             id="marketplace-browse-properties"
-            className="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-[#0f1c2e] text-[#0f1c2e] hover:bg-[#0f1c2e] hover:text-white font-semibold rounded-xl transition-all duration-200 active:scale-[0.98]"
+            className="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-[#397BCF] text-[#397BCF] hover:bg-[#397BCF] hover:text-white font-semibold rounded-xl transition-all duration-200 active:scale-[0.98]"
           >
             Browse All Properties
             <ArrowRight className="w-4 h-4" />

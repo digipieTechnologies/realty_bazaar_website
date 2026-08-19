@@ -9,8 +9,8 @@ const leadSources = [
   { label: "Instagram", color: "from-pink-500 to-purple-600", icon: "📱" },
   { label: "Facebook", color: "from-blue-600 to-blue-700", icon: "📘" },
   { label: "Meta Ads", color: "from-blue-500 to-cyan-500", icon: "🎯" },
-  { label: "The Realty Bazaar", color: "from-[#f97316] to-[#ea6c00]", icon: "🏠" },
-  { label: "Manual Entry", color: "from-[#1a2e48] to-[#0f1c2e]", icon: "✍️" },
+  { label: "The Realty Bazaar", color: "from-[#397BCF] to-[#245FA8]", icon: "🏠" },
+  { label: "Manual Entry", color: "from-[#1e2d47] to-[#172033]", icon: "✍️" },
 ];
 
 const dealStages = [
@@ -25,21 +25,21 @@ export default function LeadSourcesSection() {
 
   return (
     <section
-      className="section-padding bg-[#fafafa]"
+      className="section-padding bg-[#F8FAFC]"
       aria-labelledby="lead-sources-heading"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-14">
-          <p className="text-[#f97316] text-sm font-semibold uppercase tracking-wider mb-3">
+          <p className="text-[#397BCF] text-sm font-semibold uppercase tracking-wider mb-3">
             Lead Management
           </p>
           <h2
             id="lead-sources-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#0f1c2e] mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#172033] mb-4"
           >
             One CRM. Every Lead.
           </h2>
-          <p className="text-lg text-[#64748b] max-w-xl mx-auto">
+          <p className="text-lg text-[#667085] max-w-xl mx-auto">
             No matter where your lead comes from, it lands in your mobile CRM — automatically.
           </p>
         </ScrollReveal>
@@ -60,7 +60,7 @@ export default function LeadSourcesSection() {
                 >
                   {source.icon}
                 </div>
-                <span className="text-xs font-semibold text-[#0f1c2e] text-center leading-tight">
+                <span className="text-xs font-semibold text-[#172033] text-center leading-tight">
                   {source.label}
                 </span>
               </motion.div>
@@ -74,8 +74,8 @@ export default function LeadSourcesSection() {
             transition={{ duration: 0.5, delay: 0.5 }}
             className="flex flex-col items-center gap-2 my-2"
           >
-            <div className="w-0.5 h-8 bg-gradient-to-b from-[#e2e8f0] to-[#f97316]" />
-            <ArrowDown className="w-5 h-5 text-[#f97316]" />
+            <div className="w-0.5 h-8 bg-gradient-to-b from-[#E4EAF2] to-[#397BCF]" />
+            <ArrowDown className="w-5 h-5 text-[#397BCF]" />
           </motion.div>
 
           {/* CRM hub */}
@@ -83,9 +83,9 @@ export default function LeadSourcesSection() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.5, delay: 0.7 }}
-            className="bg-gradient-to-br from-[#0f1c2e] to-[#1a2e48] rounded-2xl px-8 py-5 text-white text-center shadow-xl mb-6 w-full sm:w-auto sm:min-w-[280px]"
+            className="bg-gradient-to-br from-[#172033] to-[#1e2d47] rounded-2xl px-8 py-5 text-white text-center shadow-xl mb-6 w-full sm:w-auto sm:min-w-[280px]"
           >
-            <div className="w-12 h-12 rounded-xl bg-[#f97316] flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 rounded-xl bg-[#397BCF] flex items-center justify-center mx-auto mb-3">
               <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white" aria-hidden="true">
                 <path d="M3 12L12 3l9 9v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z" opacity="0.4"/>
                 <rect x="9" y="12" width="6" height="9" fill="white"/>
@@ -100,7 +100,7 @@ export default function LeadSourcesSection() {
                 { value: "3", label: "Visits" },
               ].map((s) => (
                 <div key={s.label} className="text-center">
-                  <div className="text-[#f97316] font-bold text-lg">{s.value}</div>
+                  <div className="text-[#6FA5E5] font-bold text-lg">{s.value}</div>
                   <div className="text-white/50 text-xs">{s.label}</div>
                 </div>
               ))}
@@ -114,8 +114,8 @@ export default function LeadSourcesSection() {
             transition={{ duration: 0.4, delay: 1.0 }}
             className="flex flex-col items-center gap-2 my-2"
           >
-            <div className="w-0.5 h-6 bg-[#f97316]" />
-            <ArrowDown className="w-5 h-5 text-[#f97316]" />
+            <div className="w-0.5 h-6 bg-[#397BCF]" />
+            <ArrowDown className="w-5 h-5 text-[#397BCF]" />
           </motion.div>
 
           {/* Deal stages */}
@@ -129,13 +129,13 @@ export default function LeadSourcesSection() {
                 className="flex items-center gap-3"
               >
                 <div className="flex flex-col items-center gap-1">
-                  <div className="w-10 h-10 rounded-xl bg-white border-2 border-[#e2e8f0] flex items-center justify-center text-lg shadow-sm">
+                  <div className="w-10 h-10 rounded-xl bg-white border-2 border-[#E4EAF2] flex items-center justify-center text-lg shadow-sm">
                     {stage.icon}
                   </div>
-                  <span className="text-xs font-semibold text-[#0f1c2e]">{stage.label}</span>
+                  <span className="text-xs font-semibold text-[#172033]">{stage.label}</span>
                 </div>
                 {i < dealStages.length - 1 && (
-                  <div className="text-[#cbd5e1] font-bold text-lg mb-5">→</div>
+                  <div className="text-[#D0D5DD] font-bold text-lg mb-5">→</div>
                 )}
               </motion.div>
             ))}

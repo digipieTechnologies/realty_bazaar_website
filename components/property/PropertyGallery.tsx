@@ -13,8 +13,8 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
 
   if (!images.length) {
     return (
-      <div className="aspect-video bg-[#eef3f8] rounded-2xl flex items-center justify-center">
-        <span className="text-[#94a3b8] text-sm">No images available</span>
+      <div className="aspect-video bg-[#F3F8FE] rounded-2xl flex items-center justify-center">
+        <span className="text-[#98A2B3] text-sm">No images available</span>
       </div>
     );
   }
@@ -25,7 +25,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
   return (
     <div className="space-y-3">
       {/* Main image */}
-      <div className="relative aspect-video rounded-2xl overflow-hidden bg-[#eef3f8] group">
+      <div className="relative aspect-video rounded-2xl overflow-hidden bg-[#F3F8FE] group">
         <img
           src={images[current]}
           alt={`${title} — image ${current + 1}`}
@@ -39,14 +39,14 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
               className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-white"
               aria-label="Previous image"
             >
-              <ChevronLeft className="w-5 h-5 text-[#0f1c2e]" />
+              <ChevronLeft className="w-5 h-5 text-[#172033]" />
             </button>
             <button
               onClick={next}
               className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-white"
               aria-label="Next image"
             >
-              <ChevronRight className="w-5 h-5 text-[#0f1c2e]" />
+              <ChevronRight className="w-5 h-5 text-[#172033]" />
             </button>
             <div className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2.5 py-1 rounded-full backdrop-blur-sm">
               {current + 1} / {images.length}
@@ -64,8 +64,8 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
               onClick={() => setCurrent(i)}
               className={`shrink-0 w-20 h-14 rounded-xl overflow-hidden border-2 transition-all ${
                 i === current
-                  ? "border-[#f97316]"
-                  : "border-[#e2e8f0] hover:border-[#0f1c2e]"
+                  ? "border-[#397BCF]"
+                  : "border-[#E4EAF2] hover:border-[#397BCF]"
               }`}
               aria-label={`View image ${i + 1}`}
             >

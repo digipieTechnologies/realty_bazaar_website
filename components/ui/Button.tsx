@@ -19,13 +19,13 @@ interface ButtonProps {
 
 const variantClasses = {
   primary:
-    "bg-[#f97316] hover:bg-[#ea6c00] text-white shadow-sm hover:shadow-md active:scale-[0.98]",
+    "bg-[#397BCF] hover:bg-[#245FA8] text-white shadow-sm hover:shadow-md active:scale-[0.98]",
   secondary:
-    "bg-[#0f1c2e] hover:bg-[#162540] text-white shadow-sm hover:shadow-md active:scale-[0.98]",
+    "bg-[#172033] hover:bg-[#1e2d47] text-white shadow-sm hover:shadow-md active:scale-[0.98]",
   outline:
-    "border-2 border-[#0f1c2e] text-[#0f1c2e] hover:bg-[#0f1c2e] hover:text-white active:scale-[0.98]",
+    "border-2 border-[#397BCF] text-[#397BCF] hover:bg-[#397BCF] hover:text-white active:scale-[0.98]",
   ghost:
-    "text-[#0f1c2e] hover:bg-[#eef3f8] active:scale-[0.98]",
+    "text-[#397BCF] hover:bg-[#EAF3FF] active:scale-[0.98]",
 };
 
 const sizeClasses = {

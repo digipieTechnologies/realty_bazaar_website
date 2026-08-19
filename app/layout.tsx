@@ -21,7 +21,6 @@ const SITE_URL = "https://therealtybazaar.com";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0f1c2e",
 };
 
 export const metadata: Metadata = {

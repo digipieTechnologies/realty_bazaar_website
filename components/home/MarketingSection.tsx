@@ -32,11 +32,13 @@ const features = [
 export default function MarketingSection() {
   return (
     <section
-      className="section-padding bg-gradient-to-br from-[#0f1c2e] via-[#162540] to-[#1e3a5f] relative overflow-hidden"
+      className="section-padding bg-gradient-to-br from-[#172033] via-[#1e2d47] to-[#253553] relative overflow-hidden"
       aria-labelledby="marketing-heading"
     >
       {/* Background texture */}
-      <div className="absolute inset-0 dot-grid opacity-[0.06] pointer-events-none" />
+      <div className="absolute inset-0 dot-grid opacity-[0.05] pointer-events-none" />
+      {/* Subtle blue glow */}
+      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-[#397BCF] opacity-[0.06] rounded-full blur-3xl pointer-events-none -translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -44,7 +46,7 @@ export default function MarketingSection() {
           {/* Left — Copy */}
           <div>
             <ScrollReveal>
-              <p className="text-[#f97316] text-sm font-semibold uppercase tracking-wider mb-3">
+              <p className="text-[#6FA5E5] text-sm font-semibold uppercase tracking-wider mb-3">
                 Marketing
               </p>
               <h2
@@ -64,7 +66,7 @@ export default function MarketingSection() {
               {features.map((feature) => (
                 <StaggerItem key={feature.label}>
                   <div className="flex items-center gap-3 px-4 py-3 bg-white/10 hover:bg-white/15 border border-white/10 rounded-xl transition-all duration-200">
-                    <feature.icon className="w-4 h-4 text-[#f97316] shrink-0" />
+                    <feature.icon className="w-4 h-4 text-[#6FA5E5] shrink-0" />
                     <span className="text-sm text-white/90 font-medium">
                       {feature.label}
                     </span>
@@ -138,7 +140,7 @@ export default function MarketingSection() {
                     key={campaign.property}
                     className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#f97316] to-[#ea6c00] flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#397BCF] to-[#245FA8] flex items-center justify-center shrink-0">
                       <span className="text-white text-xs font-bold">
                         {campaign.property.charAt(0)}
                       </span>
@@ -163,9 +165,9 @@ export default function MarketingSection() {
               </div>
 
               {/* AI content suggestion */}
-              <div className="mt-4 p-3 bg-[#f97316]/10 border border-[#f97316]/20 rounded-xl">
+              <div className="mt-4 p-3 bg-[#397BCF]/10 border border-[#397BCF]/20 rounded-xl">
                 <div className="flex items-start gap-2">
-                  <Sparkles className="w-4 h-4 text-[#f97316] mt-0.5 shrink-0" />
+                  <Sparkles className="w-4 h-4 text-[#6FA5E5] mt-0.5 shrink-0" />
                   <div>
                     <div className="text-white text-xs font-semibold mb-1">AI Suggestion</div>
                     <div className="text-white/70 text-[11px] leading-relaxed">

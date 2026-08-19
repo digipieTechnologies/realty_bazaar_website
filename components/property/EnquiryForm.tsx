@@ -42,9 +42,9 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
   };
 
   return (
-    <div className="bg-white border border-[#e2e8f0] rounded-2xl overflow-hidden shadow-sm">
+    <div className="bg-white border border-[#E4EAF2] rounded-2xl overflow-hidden shadow-sm">
       {/* Header */}
-      <div className="bg-[#0f1c2e] px-5 py-4">
+      <div className="bg-[#172033] px-5 py-4">
         <div className="text-white font-bold text-sm mb-0.5">{property.broker_name || "Contact Broker"}</div>
         <div className="text-white/60 text-xs">Verified Broker · The Realty Bazaar</div>
       </div>
@@ -55,8 +55,8 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
             <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
               <Check className="w-6 h-6 text-green-600" />
             </div>
-            <h3 className="font-bold text-[#0f1c2e] mb-1">Enquiry Sent!</h3>
-            <p className="text-sm text-[#64748b]">
+            <h3 className="font-bold text-[#172033] mb-1">Enquiry Sent!</h3>
+            <p className="text-sm text-[#667085]">
               The broker will contact you shortly.
             </p>
           </div>
@@ -90,17 +90,17 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
 
             <div className="relative mb-4">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[#e2e8f0]" />
+                <div className="w-full border-t border-[#E4EAF2]" />
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-white px-3 text-xs text-[#94a3b8]">or send an enquiry</span>
+                <span className="bg-white px-3 text-xs text-[#98A2B3]">or send an enquiry</span>
               </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
-                <label htmlFor="enquiry-name" className="block text-xs font-semibold text-[#0f1c2e] mb-1">
-                  Your Name <span className="text-[#f97316]">*</span>
+                <label htmlFor="enquiry-name" className="block text-xs font-semibold text-[#172033] mb-1">
+                  Your Name <span className="text-[#397BCF]">*</span>
                 </label>
                 <input
                   id="enquiry-name"
@@ -109,12 +109,12 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
                   onChange={(e) => setName(e.target.value)}
                   required
                   placeholder="Priya Sharma"
-                  className="w-full px-3 py-2.5 rounded-xl border-2 border-[#e2e8f0] focus:border-[#f97316] outline-none text-sm placeholder:text-[#94a3b8] transition-colors"
+                  className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm placeholder:text-[#98A2B3] transition-colors"
                 />
               </div>
               <div>
-                <label htmlFor="enquiry-phone" className="block text-xs font-semibold text-[#0f1c2e] mb-1">
-                  Phone Number <span className="text-[#f97316]">*</span>
+                <label htmlFor="enquiry-phone" className="block text-xs font-semibold text-[#172033] mb-1">
+                  Phone Number <span className="text-[#397BCF]">*</span>
                 </label>
                 <input
                   id="enquiry-phone"
@@ -123,11 +123,11 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
                   onChange={(e) => setPhone(e.target.value)}
                   required
                   placeholder="+91 98765 43210"
-                  className="w-full px-3 py-2.5 rounded-xl border-2 border-[#e2e8f0] focus:border-[#f97316] outline-none text-sm placeholder:text-[#94a3b8] transition-colors"
+                  className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm placeholder:text-[#98A2B3] transition-colors"
                 />
               </div>
               <div>
-                <label htmlFor="enquiry-message" className="block text-xs font-semibold text-[#0f1c2e] mb-1">
+                <label htmlFor="enquiry-message" className="block text-xs font-semibold text-[#172033] mb-1">
                   Message
                 </label>
                 <textarea
@@ -136,7 +136,7 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
                   onChange={(e) => setMessage(e.target.value)}
                   rows={3}
                   placeholder="I'm interested in this property..."
-                  className="w-full px-3 py-2.5 rounded-xl border-2 border-[#e2e8f0] focus:border-[#f97316] outline-none text-sm placeholder:text-[#94a3b8] transition-colors resize-none"
+                  className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm placeholder:text-[#98A2B3] transition-colors resize-none"
                 />
               </div>
 
@@ -150,7 +150,7 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
                 type="submit"
                 id="property-send-enquiry"
                 disabled={submitting}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-[#f97316] hover:bg-[#ea6c00] disabled:opacity-50 text-white font-semibold rounded-xl text-sm transition-all active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-2 py-3 bg-[#397BCF] hover:bg-[#245FA8] disabled:opacity-50 text-white font-semibold rounded-xl text-sm transition-all active:scale-[0.98] shadow-sm"
               >
                 {submitting ? (
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -165,14 +165,14 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 id="property-schedule-visit"
-                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-[#0f1c2e] text-[#0f1c2e] hover:bg-[#0f1c2e] hover:text-white font-semibold rounded-xl text-sm transition-all active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-[#397BCF] text-[#397BCF] hover:bg-[#EAF3FF] font-semibold rounded-xl text-sm transition-all active:scale-[0.98]"
               >
                 <Calendar className="w-4 h-4" />
                 Schedule a Site Visit
               </a>
             </form>
 
-            <p className="text-[10px] text-[#94a3b8] text-center mt-3">
+            <p className="text-[10px] text-[#98A2B3] text-center mt-3">
               No account required. Your enquiry goes directly to the broker.
             </p>
           </>

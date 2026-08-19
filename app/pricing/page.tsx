@@ -14,13 +14,13 @@ export const metadata: Metadata = {
 export default function PricingPage() {
   return (
     <>
-      <section className="py-16 bg-[#fafafa] text-center border-b border-[#e2e8f0]">
+      <section className="py-16 bg-[#F8FAFC] text-center border-b border-[#E4EAF2]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <ScrollReveal>
-            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#0f1c2e] mb-4">
+            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#172033] mb-4">
               Pricing
             </h1>
-            <p className="text-lg text-[#64748b]">
+            <p className="text-lg text-[#667085]">
               All plans include the mobile app. Choose the level of marketing
               support that fits your business.
             </p>

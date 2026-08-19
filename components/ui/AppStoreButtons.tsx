@@ -36,7 +36,7 @@ export default function AppStoreButtons({
         rel="noopener noreferrer"
         id="btn-play-store"
         className={cn(
-          "inline-flex items-center gap-3 bg-[#0f1c2e] text-white rounded-xl border border-white/10 hover:bg-[#1a2e48] transition-all duration-200 active:scale-[0.98]",
+          "inline-flex items-center gap-3 bg-[#172033] text-white rounded-xl border border-white/10 hover:bg-[#1e2d47] transition-all duration-200 active:scale-[0.98]",
           size === "sm" ? "px-4 py-2.5" : "px-5 py-3"
         )}
       >
@@ -73,7 +73,7 @@ export default function AppStoreButtons({
         rel="noopener noreferrer"
         id="btn-app-store"
         className={cn(
-          "inline-flex items-center gap-3 bg-[#0f1c2e] text-white rounded-xl border border-white/10 hover:bg-[#1a2e48] transition-all duration-200 active:scale-[0.98]",
+          "inline-flex items-center gap-3 bg-[#172033] text-white rounded-xl border border-white/10 hover:bg-[#1e2d47] transition-all duration-200 active:scale-[0.98]",
           size === "sm" ? "px-4 py-2.5" : "px-5 py-3"
         )}
       >
@@ -123,9 +123,9 @@ export function GetAppButton({
     lg: "px-8 py-4 text-base",
   };
   const variantMap = {
-    primary: "bg-[#f97316] hover:bg-[#ea6c00] text-white",
-    outline: "border-2 border-[#f97316] text-[#f97316] hover:bg-[#fff7ed]",
-    white: "bg-white hover:bg-[#eef3f8] text-[#0f1c2e]",
+    primary: "bg-[#397BCF] hover:bg-[#245FA8] text-white",
+    outline: "border-2 border-[#397BCF] text-[#397BCF] hover:bg-[#EAF3FF]",
+    white: "bg-white hover:bg-[#F3F8FE] text-[#172033]",
   };
   return (
     <Link
