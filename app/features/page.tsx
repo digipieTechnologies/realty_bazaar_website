@@ -67,13 +67,13 @@ export default function FeaturesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-[#F3F8FE] to-white border-b border-[#E4EAF2]">
+      <section className="pt-12 sm:pt-16 pb-10 sm:pb-12 bg-gradient-to-br from-[#F3F8FE] to-white border-b border-[#E4EAF2]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <ScrollReveal>
-            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#172033] mb-6">
+            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#172033] mb-4">
               Every Feature a Real Estate Broker Needs.
             </h1>
-            <p className="text-lg text-[#667085] max-w-2xl mx-auto mb-10">
+            <p className="text-base sm:text-lg text-[#667085] max-w-2xl mx-auto mb-8">
               The Realty Bazaar mobile app is a complete property marketing,
               lead management and CRM platform — built specifically for Indian brokers.
             </p>
@@ -91,7 +91,7 @@ export default function FeaturesPage() {
       </section>
 
       {/* Feature highlights */}
-      <section className="section-padding bg-white">
+      <section className="py-10 sm:py-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {featureHighlights.map((feature) => (

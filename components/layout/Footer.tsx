@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const APP_URL =
   process.env.NEXT_PUBLIC_PLAY_STORE_URL ||
@@ -36,16 +37,14 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#397BCF] to-[#245FA8] flex items-center justify-center">
-                <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white" aria-hidden="true">
-                  <path d="M3 12L12 3l9 9v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z" opacity="0.4" />
-                  <rect x="9" y="12" width="6" height="9" fill="white" />
-                </svg>
-              </div>
-              <span className="font-display font-bold text-base text-white">
-                The Realty Bazaar
-              </span>
+            <Link href="/" className="inline-flex items-center mb-4 transition-opacity hover:opacity-90">
+              <Image
+                src="/logo-white.png"
+                alt="The Realty Bazaar"
+                width={190}
+                height={44}
+                className="h-9 sm:h-10 w-auto object-contain"
+              />
             </Link>
             <p className="text-white/60 text-sm leading-relaxed max-w-xs">
               Property Marketing & Lead Management for Modern Real Estate Professionals.

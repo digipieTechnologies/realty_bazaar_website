@@ -28,16 +28,16 @@ export default function AboutPage() {
       />
 
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-[#F3F8FE] to-white border-b border-[#E4EAF2]">
+      <section className="pt-12 sm:pt-16 pb-10 sm:pb-12 bg-gradient-to-br from-[#F3F8FE] to-white border-b border-[#E4EAF2]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <ScrollReveal>
-            <p className="text-[#397BCF] text-sm font-semibold uppercase tracking-wider mb-3">
+            <p className="text-[#397BCF] text-sm font-semibold uppercase tracking-wider mb-2">
               About Us
             </p>
-            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#172033] mb-6">
+            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#172033] mb-4">
               Building the Future of Real Estate in India.
             </h1>
-            <p className="text-lg text-[#667085] max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-[#667085] max-w-2xl mx-auto">
               The Realty Bazaar is a PropTech platform designed to help Indian
               real-estate professionals digitize property marketing, lead
               management and sales operations.
@@ -47,7 +47,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission, Vision, Why */}
-      <section className="section-padding bg-white">
+      <section className="py-10 sm:py-14 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-6 mb-16">
             {[

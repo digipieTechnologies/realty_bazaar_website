@@ -4,12 +4,13 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { ArrowDown } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import Image from "next/image";
 
 const leadSources = [
   { label: "Instagram", color: "from-pink-500 to-purple-600", icon: "📱" },
   { label: "Facebook", color: "from-blue-600 to-blue-700", icon: "📘" },
   { label: "Meta Ads", color: "from-blue-500 to-cyan-500", icon: "🎯" },
-  { label: "The Realty Bazaar", color: "from-[#397BCF] to-[#245FA8]", icon: "🏠" },
+  { label: "The Realty Bazaar", color: "from-[#397BCF] to-[#245FA8]", icon: "logo" },
   { label: "Manual Entry", color: "from-[#1e2d47] to-[#172033]", icon: "✍️" },
 ];
 
@@ -35,18 +36,20 @@ export default function LeadSourcesSection() {
           </p>
           <h2
             id="lead-sources-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#172033] mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#172033] tracking-tight mb-4"
           >
-            One CRM. Every Lead.
+            All Lead Sources Converge in One CRM
           </h2>
-          <p className="text-lg text-[#667085] max-w-xl mx-auto">
-            No matter where your lead comes from, it lands in your mobile CRM — automatically.
+          <p className="text-base sm:text-lg text-[#667085] max-w-2xl mx-auto">
+            Never miss an enquiry. Leads from Instagram, Facebook ads, your property listings
+            and manual entries flow directly into your mobile pipeline.
           </p>
         </ScrollReveal>
 
-        <div ref={ref} className="flex flex-col items-center">
-          {/* Lead sources */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 w-full mb-6">
+        {/* Diagram */}
+        <div ref={ref} className="flex flex-col items-center max-w-xl mx-auto">
+          {/* Top: 5 Lead sources */}
+          <div className="grid grid-cols-5 gap-3 sm:gap-6 w-full mb-4">
             {leadSources.map((source, i) => (
               <motion.div
                 key={source.label}
@@ -56,9 +59,19 @@ export default function LeadSourcesSection() {
                 className="flex flex-col items-center gap-2"
               >
                 <div
-                  className={`w-12 h-12 rounded-xl bg-gradient-to-br ${source.color} flex items-center justify-center text-xl shadow-md`}
+                  className={`w-12 h-12 rounded-xl bg-gradient-to-br ${source.color} flex items-center justify-center text-xl shadow-md p-2`}
                 >
-                  {source.icon}
+                  {source.icon === "logo" ? (
+                    <Image
+                      src="/logo-icon.png"
+                      alt="The Realty Bazaar"
+                      width={24}
+                      height={24}
+                      className="w-full h-full object-contain filter brightness-0 invert"
+                    />
+                  ) : (
+                    source.icon
+                  )}
                 </div>
                 <span className="text-xs font-semibold text-[#172033] text-center leading-tight">
                   {source.label}
@@ -85,11 +98,14 @@ export default function LeadSourcesSection() {
             transition={{ duration: 0.5, delay: 0.7 }}
             className="bg-gradient-to-br from-[#172033] to-[#1e2d47] rounded-2xl px-8 py-5 text-white text-center shadow-xl mb-6 w-full sm:w-auto sm:min-w-[280px]"
           >
-            <div className="w-12 h-12 rounded-xl bg-[#397BCF] flex items-center justify-center mx-auto mb-3">
-              <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white" aria-hidden="true">
-                <path d="M3 12L12 3l9 9v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z" opacity="0.4"/>
-                <rect x="9" y="12" width="6" height="9" fill="white"/>
-              </svg>
+            <div className="w-12 h-12 rounded-xl bg-white/10 p-2.5 flex items-center justify-center mx-auto mb-3">
+              <Image
+                src="/logo-icon.png"
+                alt="Broker CRM"
+                width={36}
+                height={36}
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="font-display font-bold text-lg">Broker CRM</div>
             <div className="text-white/60 text-sm">Mobile App</div>

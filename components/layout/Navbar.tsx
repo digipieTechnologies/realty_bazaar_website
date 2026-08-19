@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Download, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -61,26 +62,17 @@ export default function Navbar() {
             {/* Logo */}
             <Link
               href="/"
-              className="flex items-center gap-2.5 shrink-0"
+              className="flex items-center shrink-0 transition-opacity hover:opacity-90 py-1"
               aria-label="The Realty Bazaar — Home"
             >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#397BCF] to-[#245FA8] flex items-center justify-center shadow-sm">
-                <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white" aria-hidden="true">
-                  <path d="M3 12L12 3l9 9v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z" opacity="0.3"/>
-                  <path d="M9 21V12h6v9" />
-                  <path d="M3 12L12 3l9 9" strokeWidth="1.5" stroke="white" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                  <rect x="9" y="12" width="6" height="9" fill="white"/>
-                  <circle cx="17" cy="7" r="2" fill="#6FA5E5"/>
-                </svg>
-              </div>
-              <span
-                className={cn(
-                  "font-display font-bold text-base tracking-tight transition-colors duration-300",
-                  "text-[#172033]"
-                )}
-              >
-                The Realty Bazaar
-              </span>
+              <Image
+                src="/logo.png"
+                alt="The Realty Bazaar"
+                width={190}
+                height={44}
+                priority
+                className="h-9 sm:h-10 w-auto object-contain"
+              />
             </Link>
 
             {/* Desktop nav */}
@@ -155,14 +147,14 @@ export default function Navbar() {
               className="fixed top-0 right-0 bottom-0 w-80 max-w-[90vw] bg-white z-50 shadow-2xl flex flex-col lg:hidden"
             >
               <div className="flex items-center justify-between p-4 border-b border-[#E4EAF2]">
-                <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#397BCF] to-[#245FA8] flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white" aria-hidden="true">
-                      <path d="M3 12L12 3l9 9v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z" opacity="0.3"/>
-                      <rect x="9" y="12" width="6" height="9" fill="white"/>
-                    </svg>
-                  </div>
-                  <span className="font-display font-bold text-sm text-[#172033]">The Realty Bazaar</span>
+                <Link href="/" className="flex items-center shrink-0" onClick={() => setMobileOpen(false)}>
+                  <Image
+                    src="/logo.png"
+                    alt="The Realty Bazaar"
+                    width={160}
+                    height={38}
+                    className="h-8 w-auto object-contain"
+                  />
                 </Link>
                 <button
                   onClick={() => setMobileOpen(false)}

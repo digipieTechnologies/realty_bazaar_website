@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import Link from "next/link";
+import Image from "next/image";
 
 const APP_URL =
   process.env.NEXT_PUBLIC_PLAY_STORE_URL ||
@@ -143,11 +144,14 @@ export default function ProblemSection() {
                 transition={{ duration: 0.5, delay: 1.8 }}
                 className="bg-gradient-to-br from-[#172033] to-[#1e2d47] rounded-2xl p-5 text-white text-center"
               >
-                <div className="w-10 h-10 rounded-xl bg-[#397BCF] flex items-center justify-center mx-auto mb-3">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white" aria-hidden="true">
-                    <path d="M3 12L12 3l9 9v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z" opacity="0.4"/>
-                    <rect x="9" y="12" width="6" height="9" fill="white"/>
-                  </svg>
+                <div className="w-12 h-12 rounded-xl bg-white/10 p-2.5 flex items-center justify-center mx-auto mb-3">
+                  <Image
+                    src="/logo-icon.png"
+                    alt="The Realty Bazaar"
+                    width={36}
+                    height={36}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div className="text-base font-bold">The Realty Bazaar</div>
                 <div className="text-white/60 text-xs mt-1">Mobile App + CRM</div>

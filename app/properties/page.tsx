@@ -16,25 +16,27 @@ export default async function PropertiesPage() {
   const properties = await getPublishedProperties({ limit: 50 });
 
   return (
-    <>
-      <section className="py-12 bg-gradient-to-br from-[#eef3f8] to-white border-b border-[#e2e8f0]">
+    <div className="bg-[#F8FAFC] min-h-screen">
+      {/* Header */}
+      <section className="pt-8 sm:pt-10 pb-5 bg-white border-b border-[#E4EAF2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
-            <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#0f1c2e] mb-2">
+            <h1 className="text-2xl sm:text-3xl font-display font-bold text-[#172033] mb-1">
               Browse Properties
             </h1>
-            <p className="text-[#64748b]">
+            <p className="text-sm sm:text-base text-[#667085]">
               Properties listed by verified real-estate brokers across India.
             </p>
           </ScrollReveal>
         </div>
       </section>
 
-      <section className="section-padding bg-white min-h-[60vh]">
+      {/* Main Content */}
+      <section className="py-6 sm:py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <PropertyGridClient initialProperties={properties} />
         </div>
       </section>
-    </>
+    </div>
   );
 }

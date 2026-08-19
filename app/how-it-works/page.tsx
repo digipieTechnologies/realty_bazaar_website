@@ -21,13 +21,13 @@ export const metadata: Metadata = {
 export default function HowItWorksPage() {
   return (
     <>
-      <section className="py-16 bg-[#F8FAFC] text-center border-b border-[#E4EAF2]">
+      <section className="pt-10 sm:pt-14 pb-8 sm:pb-10 bg-[#F8FAFC] text-center border-b border-[#E4EAF2]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <ScrollReveal>
-            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#172033] mb-4">
+            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#172033] mb-3">
               How It Works
             </h1>
-            <p className="text-lg text-[#667085] mb-8">
+            <p className="text-base sm:text-lg text-[#667085] mb-6">
               Two experiences. One connected platform.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
@@ -49,7 +49,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* Ecosystem overview */}
-      <section className="section-padding bg-white">
+      <section className="py-10 sm:py-14 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-display font-bold text-[#172033] mb-4">

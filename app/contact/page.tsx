@@ -11,14 +11,14 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <>
-      <section className="py-16 bg-[#fafafa] border-b border-[#e2e8f0]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+    <div className="bg-[#F8FAFC] min-h-screen">
+      <section className="pt-10 pb-6 bg-white border-b border-[#E4EAF2] text-center">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <ScrollReveal>
-            <h1 className="text-3xl sm:text-5xl font-display font-bold text-[#0f1c2e] mb-4">
+            <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#172033] mb-2">
               Contact Us
             </h1>
-            <p className="text-lg text-[#64748b]">
+            <p className="text-base text-[#667085]">
               We&apos;d love to hear from you. Reach out for demos, partnerships or
               any questions.
             </p>
@@ -26,11 +26,11 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="section-padding bg-white">
+      <section className="py-8 sm:py-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <ContactForm />
         </div>
       </section>
-    </>
+    </div>
   );
 }
