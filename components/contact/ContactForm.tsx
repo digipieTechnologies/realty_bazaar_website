@@ -31,8 +31,8 @@ export default function ContactForm() {
             {
               icon: Mail,
               label: "Email",
-              value: "hello@therealtybazaar.com",
-              href: "mailto:hello@therealtybazaar.com",
+              value: "bazaarrealty@gmail.com",
+              href: "mailto:bazaarrealty@gmail.com",
             },
             {
               icon: Phone,

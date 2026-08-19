@@ -7,11 +7,11 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import Image from "next/image";
 
 const leadSources = [
-  { label: "Instagram", color: "from-pink-500 to-purple-600", icon: "📱" },
-  { label: "Facebook", color: "from-blue-600 to-blue-700", icon: "📘" },
-  { label: "Meta Ads", color: "from-blue-500 to-cyan-500", icon: "🎯" },
-  { label: "The Realty Bazaar", color: "from-[#397BCF] to-[#245FA8]", icon: "logo" },
-  { label: "Manual Entry", color: "from-[#1e2d47] to-[#172033]", icon: "✍️" },
+  { label: "Instagram", color: "from-pink-500 to-purple-600", icon: "/instagram-icon.png", type: "image" },
+  { label: "Facebook", color: "from-blue-600 to-blue-700", icon: "/facebook-icon.png", type: "image" },
+  { label: "Meta Ads", color: "from-blue-500 to-cyan-500", icon: "🎯", type: "emoji" },
+  { label: "The Realty Bazaar", color: "from-[#397BCF] to-[#245FA8]", icon: "/logo-icon.png", type: "brand" },
+  { label: "Manual Entry", color: "from-[#1e2d47] to-[#172033]", icon: "✍️", type: "emoji" },
 ];
 
 const dealStages = [
@@ -59,14 +59,28 @@ export default function LeadSourcesSection() {
                 className="flex flex-col items-center gap-2"
               >
                 <div
-                  className={`w-12 h-12 rounded-xl bg-gradient-to-br ${source.color} flex items-center justify-center text-xl shadow-md p-2`}
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-md overflow-hidden ${
+                    source.type === "image"
+                      ? "bg-transparent p-0"
+                      : source.type === "brand"
+                      ? "bg-gradient-to-br from-[#397BCF] to-[#245FA8] p-2.5"
+                      : `bg-gradient-to-br ${source.color} p-2`
+                  }`}
                 >
-                  {source.icon === "logo" ? (
+                  {source.type === "image" ? (
                     <Image
-                      src="/logo-icon.png"
-                      alt="The Realty Bazaar"
-                      width={24}
-                      height={24}
+                      src={source.icon}
+                      alt={source.label}
+                      width={48}
+                      height={48}
+                      className="w-full h-full object-contain rounded-xl"
+                    />
+                  ) : source.type === "brand" ? (
+                    <Image
+                      src={source.icon}
+                      alt={source.label}
+                      width={28}
+                      height={28}
                       className="w-full h-full object-contain filter brightness-0 invert"
                     />
                   ) : (

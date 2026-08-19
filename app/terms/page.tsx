@@ -32,7 +32,7 @@ export default function TermsPage() {
           </section>
           <section>
             <h2 className="text-lg font-bold text-[#172033] mb-2">5. Contact</h2>
-            <p className="text-[#667085]">For terms-related questions, contact <a href="mailto:legal@therealtybazaar.com" className="text-[#397BCF] hover:underline">legal@therealtybazaar.com</a>.</p>
+            <p className="text-[#667085]">For terms-related questions, contact <a href="mailto:bazaarrealty@gmail.com" className="text-[#397BCF] hover:underline">bazaarrealty@gmail.com</a>.</p>
           </section>
         </div>
       </ScrollReveal>

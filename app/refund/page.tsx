@@ -32,7 +32,7 @@ export default function RefundPage() {
           </section>
           <section>
             <h2 className="text-lg font-bold text-[#172033] mb-2">Contact</h2>
-            <p className="text-[#667085]">For refund-related queries, contact <a href="mailto:support@therealtybazaar.com" className="text-[#397BCF] hover:underline">support@therealtybazaar.com</a>.</p>
+            <p className="text-[#667085]">For refund-related queries, contact <a href="mailto:bazaarrealty@gmail.com" className="text-[#397BCF] hover:underline">bazaarrealty@gmail.com</a>.</p>
           </section>
         </div>
       </ScrollReveal>
