@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Menu, X, Search, ChevronRight, PlusCircle, Smartphone } from "lucide-react";
+import { Menu, X, ChevronRight, PlusCircle, Smartphone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import ListPropertyModal from "@/components/ui/ListPropertyModal";
@@ -33,6 +33,7 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     setMobileOpen(false);
   }, [pathname, searchParams]);
 
@@ -69,7 +70,7 @@ export default function Navbar() {
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-18">
+          <div className="flex items-center justify-between h-16 lg:h-[72px]">
             {/* Logo */}
             <Link
               href="/"
@@ -109,35 +110,20 @@ export default function Navbar() {
 
             {/* Desktop CTAs */}
             <div className="hidden lg:flex items-center gap-3">
-              <Link
-                href="/properties"
-                className="p-2.5 text-[#667085] hover:text-[#397BCF] hover:bg-[#F3F8FE] rounded-xl transition-colors"
-                title="Search Properties"
-                aria-label="Search Properties"
-              >
-                <Search className="w-4 h-4" />
-              </Link>
               <button
                 onClick={() => setListModalOpen(true)}
                 id="nav-list-property"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#397BCF] hover:bg-[#245FA8] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#397BCF] hover:bg-[#245FA8] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer"
               >
                 <PlusCircle className="w-4 h-4" />
                 List Your Property
               </button>
             </div>
 
-            {/* Mobile Actions: Search icon + Hamburger */}
+            {/* Mobile Actions: Hamburger */}
             <div className="flex items-center gap-1 lg:hidden">
-              <Link
-                href="/properties"
-                className="p-2 rounded-lg text-[#172033] hover:bg-[#F3F8FE] transition-colors"
-                aria-label="Search Properties"
-              >
-                <Search className="w-5 h-5 text-[#172033]" />
-              </Link>
               <button
-                className="p-2 rounded-lg text-[#172033] hover:bg-[#F3F8FE] transition-colors"
+                className="p-2 rounded-lg text-[#172033] hover:bg-[#F3F8FE] transition-colors cursor-pointer"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label={mobileOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileOpen}
@@ -245,7 +231,7 @@ export default function Navbar() {
       />
 
       {/* Spacer to push content below fixed navbar */}
-      <div className="h-16 lg:h-18" aria-hidden="true" />
+      <div className="h-16 lg:h-[72px]" aria-hidden="true" />
     </>
   );
 }

@@ -169,7 +169,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <Suspense fallback={<div className="h-16 lg:h-18 bg-white border-b border-[#E4EAF2]" />}>
+        <Suspense fallback={<div className="h-16 lg:h-[72px] bg-white border-b border-[#E4EAF2]" />}>
           <Navbar />
         </Suspense>
         <main>{children}</main>
