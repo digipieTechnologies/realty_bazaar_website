@@ -1,81 +1,61 @@
-import { Download, ArrowRight } from "lucide-react";
-import Link from "next/link";
-import ScrollReveal from "@/components/ui/ScrollReveal";
+"use client";
 
-const APP_URL =
-  process.env.NEXT_PUBLIC_PLAY_STORE_URL ||
-  "https://play.google.com/store/apps/details?id=com.therealtybazaar";
+import { useState } from "react";
+import Link from "next/link";
+import { Search, Smartphone, ArrowRight } from "lucide-react";
+import ScrollReveal from "@/components/ui/ScrollReveal";
+import ListPropertyModal from "@/components/ui/ListPropertyModal";
 
 export default function FinalCTA() {
-  return (
-    <section
-      className="relative py-24 overflow-hidden bg-[#397BCF]"
-      aria-labelledby="final-cta-heading"
-    >
-      {/* Dot grid */}
-      <div className="absolute inset-0 dot-grid opacity-[0.08] pointer-events-none" />
+  const [modalOpen, setModalOpen] = useState(false);
 
-      {/* Subtle deep blue glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#245FA8] opacity-[0.4] rounded-full blur-3xl pointer-events-none" />
+  return (
+    <section className="relative py-20 lg:py-28 overflow-hidden bg-[#397BCF] text-white" aria-labelledby="final-cta-heading">
+      {/* Subtle background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#245FA8] opacity-50 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <ScrollReveal>
-          <p className="text-[#EAF3FF] text-sm font-semibold uppercase tracking-wider mb-4">
-            Get Started Today
-          </p>
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 text-white border border-white/20 text-xs font-bold uppercase tracking-wider mb-4">
+            Start Your Property Discovery
+          </span>
+
           <h2
             id="final-cta-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-display font-bold !text-white leading-[1.1] mb-6"
+            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold !text-white leading-[1.15] mb-6"
           >
-            Your Next Deal Could Start{" "}
-            <br className="hidden sm:block" />
-            With Your Next Listing.
+            Your next property could be <br className="hidden sm:inline" />
+            closer than you think.
           </h2>
-          <p className="text-lg text-[#EAF3FF]/80 max-w-2xl mx-auto mb-10">
-            Bring your properties, marketing and leads together with The Realty Bazaar —
-            one powerful mobile platform for modern real estate professionals.
+
+          <p className="text-base sm:text-lg text-[#EAF3FF]/90 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Search verified apartments, independent villas, commercial spaces, and residential plots from top local brokers across India.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href={APP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              id="final-cta-get-app"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white hover:bg-[#EAF3FF] text-[#245FA8] text-base font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.98]"
-            >
-              <Download className="w-5 h-5" />
-              Get the App
-            </Link>
-            <Link
               href="/properties"
-              id="final-cta-browse"
-              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white/40 hover:border-white text-white text-base font-semibold rounded-xl transition-all duration-200 hover:bg-white/10 active:scale-[0.98]"
+              id="final-cta-browse-btn"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-[#F3F8FE] text-[#245FA8] font-bold rounded-2xl text-sm sm:text-base transition-all duration-200 shadow-xl hover:shadow-2xl active:scale-[0.98]"
             >
+              <Search className="w-4 h-4" />
               Browse Properties
-              <ArrowRight className="w-5 h-5" />
             </Link>
-          </div>
 
-          {/* Flow */}
-          <div className="mt-14 flex flex-wrap justify-center gap-2 text-sm">
-            {["Property", "→", "Marketing", "→", "Leads", "→", "CRM", "→", "Deal"].map(
-              (item, i) => (
-                <span
-                  key={i}
-                  className={
-                    item === "→"
-                      ? "text-white/30 font-bold"
-                      : "text-white/80 bg-white/10 border border-white/20 px-3 py-1.5 rounded-lg text-xs font-medium"
-                  }
-                >
-                  {item}
-                </span>
-              )
-            )}
+            <button
+              type="button"
+              onClick={() => setModalOpen(true)}
+              id="final-cta-broker-btn"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/40 hover:border-white text-white font-bold rounded-2xl text-sm sm:text-base transition-all duration-200 hover:bg-white/10 active:scale-[0.98] cursor-pointer"
+            >
+              <Smartphone className="w-4 h-4" />
+              Are you a broker? Join The Realty Bazaar
+            </button>
           </div>
         </ScrollReveal>
       </div>
+
+      <ListPropertyModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </section>
   );
 }

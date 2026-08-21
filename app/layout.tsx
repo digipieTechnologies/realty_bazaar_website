@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import { Inter, DM_Sans } from "next/font/google";
 import "./globals.css";
@@ -168,10 +169,13 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <Navbar />
+        <Suspense fallback={<div className="h-16 lg:h-18 bg-white border-b border-[#E4EAF2]" />}>
+          <Navbar />
+        </Suspense>
         <main>{children}</main>
         <Footer />
       </body>
     </html>
   );
 }
+

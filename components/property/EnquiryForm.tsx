@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { submitEnquiry } from "@/app/actions";
-import { Send, Phone, MessageCircle, Calendar, Check } from "lucide-react";
+import { Send, Phone, MessageCircle, Calendar, ShieldCheck, CheckCircle2, Building } from "lucide-react";
+import ScheduleVisitModal from "@/components/property/ScheduleVisitModal";
 import type { Property } from "@/types";
 
 interface EnquiryFormProps {
@@ -16,168 +17,183 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) {
-      setError("Name and phone are required.");
+      setError("Name and phone number are required.");
       return;
     }
     setSubmitting(true);
     setError("");
     try {
-      await submitEnquiry(
-        property.id,
-        null, // broker_id resolved server-side from property
-        name,
-        phone,
-        message
-      );
+      await submitEnquiry(property.id, null, name, phone, message);
       setSubmitted(true);
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Something went wrong. Please call or WhatsApp the broker directly.");
     } finally {
       setSubmitting(false);
     }
   };
 
+  const cleanPhone = property.broker_phone?.replace(/\D/g, "") || "9876543210";
+  const cleanWhatsApp = property.broker_whatsapp?.replace(/\D/g, "") || cleanPhone;
+
   return (
-    <div className="bg-white border border-[#E4EAF2] rounded-2xl overflow-hidden shadow-sm">
-      {/* Header */}
-      <div className="bg-[#172033] px-5 py-4">
-        <div className="text-white font-bold text-sm mb-0.5">{property.broker_name || "Contact Broker"}</div>
-        <div className="text-white/60 text-xs">Verified Broker · The Realty Bazaar</div>
+    <div className="bg-white border border-[#E4EAF2] rounded-3xl overflow-hidden shadow-sm sticky top-24">
+      {/* Verified Broker Profile Header */}
+      <div className="bg-gradient-to-br from-[#172033] via-[#1e2d47] to-[#253553] p-5 text-white">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#397BCF] to-[#245FA8] flex items-center justify-center font-display font-bold text-lg text-white shadow-md shrink-0">
+            {property.broker_name ? property.broker_name.charAt(0) : "B"}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1 text-white font-bold text-sm truncate">
+              <span>{property.broker_name || "Verified Real Estate Broker"}</span>
+              <ShieldCheck className="w-4 h-4 text-[#6FA5E5] shrink-0" />
+            </div>
+            <div className="text-xs text-white/70 truncate mt-0.5">
+              {property.broker_agency || "The Realty Bazaar Partner"}
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="p-5">
+      <div className="p-5 space-y-4">
+        {/* Quick Action Buttons (Call & WhatsApp) */}
+        <div className="grid grid-cols-2 gap-2.5">
+          <a
+            href={`tel:${property.broker_phone || "+919876543210"}`}
+            id="property-call-broker"
+            className="flex items-center justify-center gap-2 py-3 bg-[#F3F8FE] hover:bg-[#EAF3FF] text-[#245FA8] font-bold rounded-2xl text-xs transition-all border border-[#6FA5E5]/30 shadow-2xs active:scale-95"
+          >
+            <Phone className="w-3.5 h-3.5" />
+            Call Broker
+          </a>
+
+          <a
+            href={`https://wa.me/${cleanWhatsApp}?text=${encodeURIComponent(
+              `Hi, I'm interested in viewing ${property.title} listed on The Realty Bazaar (${property.locality}, ${property.city}).`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            id="property-whatsapp-broker"
+            className="flex items-center justify-center gap-2 py-3 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] font-bold rounded-2xl text-xs transition-all border border-[#25D366]/30 shadow-2xs active:scale-95"
+          >
+            <MessageCircle className="w-3.5 h-3.5" />
+            WhatsApp
+          </a>
+        </div>
+
+        {/* Schedule Visit Trigger Button */}
+        <button
+          type="button"
+          onClick={() => setScheduleModalOpen(true)}
+          id="property-schedule-visit-btn"
+          className="w-full flex items-center justify-center gap-2 py-3.5 border-2 border-[#397BCF] text-[#397BCF] hover:bg-[#EAF3FF] font-bold rounded-2xl text-xs sm:text-sm transition-all shadow-2xs active:scale-95 cursor-pointer"
+        >
+          <Calendar className="w-4 h-4" />
+          Schedule a Physical Site Visit
+        </button>
+
+        {/* Divider */}
+        <div className="relative py-1">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-[#E4EAF2]" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-white px-3 text-[11px] font-bold text-[#98A2B3] uppercase tracking-wider">
+              or send enquiry
+            </span>
+          </div>
+        </div>
+
+        {/* Form */}
         {submitted ? (
-          <div className="py-6 text-center">
-            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
-              <Check className="w-6 h-6 text-green-600" />
+          <div className="py-6 text-center space-y-2">
+            <div className="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto">
+              <CheckCircle2 className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-[#172033] mb-1">Enquiry Sent!</h3>
-            <p className="text-sm text-[#667085]">
-              The broker will contact you shortly.
+            <h4 className="font-bold text-sm text-[#172033]">Enquiry Sent to Broker!</h4>
+            <p className="text-xs text-[#667085]">
+              The broker will call or message you shortly with details.
             </p>
           </div>
         ) : (
-          <>
-            {/* Quick actions */}
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              {property.broker_phone && (
-                <a
-                  href={`tel:${property.broker_phone}`}
-                  id="property-call-broker"
-                  className="flex items-center justify-center gap-2 py-2.5 bg-green-50 hover:bg-green-100 text-green-700 font-semibold rounded-xl text-xs transition-all border border-green-200"
-                >
-                  <Phone className="w-3.5 h-3.5" />
-                  Call Broker
-                </a>
-              )}
-              {property.broker_whatsapp && (
-                <a
-                  href={`https://wa.me/${property.broker_whatsapp.replace(/\D/g, "")}?text=Hi, I'm interested in ${property.title}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  id="property-whatsapp-broker"
-                  className="flex items-center justify-center gap-2 py-2.5 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] font-semibold rounded-xl text-xs transition-all border border-[#25D366]/20"
-                >
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  WhatsApp
-                </a>
-              )}
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div>
+              <label htmlFor="enquiry-name" className="block text-[11px] font-bold text-[#172033] mb-1">
+                Your Name <span className="text-[#397BCF]">*</span>
+              </label>
+              <input
+                id="enquiry-name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                placeholder="Priya Sharma"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#E4EAF2] focus:border-[#397BCF] outline-none text-xs font-medium placeholder:text-[#98A2B3] transition-colors"
+              />
             </div>
 
-            <div className="relative mb-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[#E4EAF2]" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-white px-3 text-xs text-[#98A2B3]">or send an enquiry</span>
-              </div>
+            <div>
+              <label htmlFor="enquiry-phone" className="block text-[11px] font-bold text-[#172033] mb-1">
+                Phone Number <span className="text-[#397BCF]">*</span>
+              </label>
+              <input
+                id="enquiry-phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                placeholder="+91 98765 43210"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#E4EAF2] focus:border-[#397BCF] outline-none text-xs font-medium placeholder:text-[#98A2B3] transition-colors"
+              />
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div>
-                <label htmlFor="enquiry-name" className="block text-xs font-semibold text-[#172033] mb-1">
-                  Your Name <span className="text-[#397BCF]">*</span>
-                </label>
-                <input
-                  id="enquiry-name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  placeholder="Priya Sharma"
-                  className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm placeholder:text-[#98A2B3] transition-colors"
-                />
-              </div>
-              <div>
-                <label htmlFor="enquiry-phone" className="block text-xs font-semibold text-[#172033] mb-1">
-                  Phone Number <span className="text-[#397BCF]">*</span>
-                </label>
-                <input
-                  id="enquiry-phone"
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                  placeholder="+91 98765 43210"
-                  className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm placeholder:text-[#98A2B3] transition-colors"
-                />
-              </div>
-              <div>
-                <label htmlFor="enquiry-message" className="block text-xs font-semibold text-[#172033] mb-1">
-                  Message
-                </label>
-                <textarea
-                  id="enquiry-message"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  rows={3}
-                  placeholder="I'm interested in this property..."
-                  className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm placeholder:text-[#98A2B3] transition-colors resize-none"
-                />
-              </div>
+            <div>
+              <label htmlFor="enquiry-message" className="block text-[11px] font-bold text-[#172033] mb-1">
+                Message (Optional)
+              </label>
+              <textarea
+                id="enquiry-message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                rows={2}
+                placeholder="I would like to know more about this property..."
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#E4EAF2] focus:border-[#397BCF] outline-none text-xs font-medium placeholder:text-[#98A2B3] transition-colors resize-none"
+              />
+            </div>
 
-              {error && (
-                <p className="text-xs text-red-600 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
-                  {error}
-                </p>
-              )}
+            {error && (
+              <p className="text-xs text-red-600 bg-red-50 p-2 rounded-lg border border-red-200">
+                {error}
+              </p>
+            )}
 
-              <button
-                type="submit"
-                id="property-send-enquiry"
-                disabled={submitting}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-[#397BCF] hover:bg-[#245FA8] disabled:opacity-50 text-white font-semibold rounded-xl text-sm transition-all active:scale-[0.98] shadow-sm"
-              >
-                {submitting ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <Send className="w-4 h-4" />
-                )}
-                {submitting ? "Sending..." : "Send Enquiry"}
-              </button>
-
-              <a
-                href={`https://wa.me/${property.broker_whatsapp?.replace(/\D/g, "")}?text=I'd like to schedule a site visit for ${property.title}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                id="property-schedule-visit"
-                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-[#397BCF] text-[#397BCF] hover:bg-[#EAF3FF] font-semibold rounded-xl text-sm transition-all active:scale-[0.98]"
-              >
-                <Calendar className="w-4 h-4" />
-                Schedule a Site Visit
-              </a>
-            </form>
-
-            <p className="text-[10px] text-[#98A2B3] text-center mt-3">
-              No account required. Your enquiry goes directly to the broker.
-            </p>
-          </>
+            <button
+              type="submit"
+              disabled={submitting}
+              id="property-send-enquiry-btn"
+              className="w-full py-3 bg-[#397BCF] hover:bg-[#245FA8] disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-all shadow-sm active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              <Send className="w-3.5 h-3.5" />
+              {submitting ? "Sending..." : "Send Free Enquiry"}
+            </button>
+          </form>
         )}
+
+        <div className="pt-2 text-center text-[10px] text-[#98A2B3] border-t border-[#E4EAF2]">
+          🔒 No account needed · Direct broker lead capture
+        </div>
       </div>
+
+      <ScheduleVisitModal
+        property={property}
+        isOpen={scheduleModalOpen}
+        onClose={() => setScheduleModalOpen(false)}
+      />
     </div>
   );
 }
