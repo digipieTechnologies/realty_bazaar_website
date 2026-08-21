@@ -14,6 +14,7 @@ const navLinks = [
   { label: "Rent", href: "/properties?transaction=rent", paramKey: "transaction", paramValue: "rent" },
   { label: "Commercial", href: "/properties?type=commercial", paramKey: "type", paramValue: "commercial" },
   { label: "For Brokers", href: "/for-brokers" },
+  { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];

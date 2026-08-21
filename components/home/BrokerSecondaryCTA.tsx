@@ -81,18 +81,25 @@ export default function BrokerSecondaryCTA() {
                   type="button"
                   onClick={() => setModalOpen(true)}
                   id="broker-cta-join-btn"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 bg-[#397BCF] hover:bg-[#245FA8] text-white font-bold rounded-2xl text-sm sm:text-base transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.98]"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#397BCF] hover:bg-[#245FA8] text-white font-bold rounded-2xl text-sm transition-all duration-200 shadow-lg hover:shadow-xl active:scale-[0.98] cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
-                  Join The Realty Bazaar App
+                  Join Broker App
                 </button>
 
                 <Link
+                  href="/pricing"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-sm font-bold border border-white/10 transition-all"
+                >
+                  <span>View Plans & Pricing</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+
+                <Link
                   href="/for-brokers"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl border border-white/20 hover:border-white text-white text-sm font-bold hover:bg-white/10 transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-white/70 hover:text-white text-sm font-semibold transition-all"
                 >
                   <span>Learn More</span>
-                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </ScrollReveal>
