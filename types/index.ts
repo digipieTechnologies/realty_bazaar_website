@@ -69,27 +69,27 @@ export interface DbPropertyRow {
 }
 
 // ── UI-facing Property shape ─────────────────────────────────────────────
-// Used by all components. Mapper converts DbPropertyRow → Property.
+// Used by all marketplace components. Mapper converts DbPropertyRow → Property.
 export interface Property {
   id: string;
-  slug: string;                    // generated: slugify(title)+last8(id)
+  slug: string;                    // generated: slugify(title)+hexId
   title: string;
   description: string | null;
   property_type: PropertyType;
   transaction_type: TransactionType;
   price: number | null;
-  price_display: string | null;    // computed: formatPrice(price)
+  price_display: string | null;    // formatted string e.g. "₹1.35 Cr"
   price_per_sqft?: number | null;
   city: string;
   locality: string;
   address?: string | null;
   area_sqft: number | null;
-  carpet_sqft?: number | null;     // not in DB; kept for mock compat
+  carpet_sqft?: number | null;
   bedrooms: number | null;
   bathrooms: number | null;
   balconies?: number | null;
   parking?: number | null;
-  floor?: string | null;           // computed: "Xth of Y Floors"
+  floor?: string | null;
   facing?: string | null;
   furnishing?: FurnishingStatus;
   possession?: PossessionStatus;
