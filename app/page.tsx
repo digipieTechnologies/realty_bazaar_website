@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { getPublishedProperties } from "@/lib/supabase/queries";
+import {
+  getPublishedProperties,
+  getPropertyTypeCounts,
+  getCityCounts,
+} from "@/lib/supabase/queries";
 import HeroSection from "@/components/home/HeroSection";
 import QuickDiscoveryChips from "@/components/home/QuickDiscoveryChips";
 import TrendingPropertiesSection from "@/components/home/TrendingPropertiesSection";
@@ -25,7 +29,11 @@ export const metadata: Metadata = {
 export const revalidate = 60; // ISR: revalidate every 60 seconds
 
 export default async function HomePage() {
-  const properties = await getPublishedProperties({ limit: 20 });
+  const [properties, typeCounts, cityCounts] = await Promise.all([
+    getPublishedProperties({ limit: 20 }),
+    getPropertyTypeCounts(),
+    getCityCounts(),
+  ]);
 
   return (
     <>
@@ -39,10 +47,10 @@ export default async function HomePage() {
       <TrendingPropertiesSection properties={properties} />
 
       {/* 4. Search by Location (Surat, Ahmedabad, Mumbai, etc.) */}
-      <LocationDiscoverySection />
+      <LocationDiscoverySection counts={cityCounts} />
 
       {/* 5. Property Categories */}
-      <CategoryDiscoverySection />
+      <CategoryDiscoverySection counts={typeCounts} />
 
       {/* 6. Promoted / Featured Spotlight Properties */}
       <PromotedPropertiesSection properties={properties} />

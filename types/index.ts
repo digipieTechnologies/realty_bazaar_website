@@ -13,28 +13,83 @@ export type PropertyType =
   | "shop"
   | "warehouse";
 
-export type FurnishingStatus = "unfurnished" | "semi-furnished" | "fully-furnished";
-export type PossessionStatus = "ready-to-move" | "under-construction";
+export type FurnishingStatus = "unfurnished" | "semi-furnished" | "fully-furnished" | "semi_furnished" | "fully_furnished";
+export type PossessionStatus = "ready-to-move" | "under-construction" | "ready_to_move" | "under_construction";
 
+// ── Raw DB row shapes returned from Supabase joins ──────────────────────
+export interface DbPropertyRow {
+  id: string;
+  broker_id: string;
+  address_id: string | null;
+  property_title: string;
+  property_description: string | null;
+  property_type: string;         // DB enum value e.g. 'apartment'
+  listing_type: string;          // 'sale' | 'rent'
+  price: number;
+  area: number;
+  area_unit: string;             // 'sqft', 'sqm', 'sqyards'
+  bedrooms: number;
+  bathrooms: number;
+  balconies: number;
+  parking: number;
+  floor_number: number | null;
+  total_floors: number | null;
+  furnishing_status: string;     // 'unfurnished' | 'semi_furnished' | 'fully_furnished'
+  property_status: string;       // 'available' | 'sold' | 'rented'
+  construction_status: string;   // 'ready_to_move' | 'under_construction'
+  facing: string | null;
+  amenities: string[] | null;    // JSONB array of strings
+  medias: Array<{ url: string; type: string; thumbnail?: string }> | null; // JSONB
+  is_active: boolean;
+  is_deleted: boolean;
+  created_at: string;
+  updated_at: string;
+  // Joined address fields (prefixed via PostgREST)
+  addresses?: {
+    full_address: string;
+    city: string | null;
+    state: string | null;
+    landmark: string | null;
+    latitude: number | null;
+    longitude: number | null;
+    pincode: string | null;
+  } | null;
+  // Joined broker fields
+  brokers?: {
+    id: string;
+    business_name: string;
+    is_active: boolean;
+  } | null;
+  // Joined broker user (owner/primary user of the broker account)
+  broker_user?: {
+    name: string;
+    phone: string | null;
+    phone_country_code: string | null;
+  } | null;
+}
+
+// ── UI-facing Property shape ─────────────────────────────────────────────
+// Used by all components. Mapper converts DbPropertyRow → Property.
 export interface Property {
   id: string;
-  slug: string;
+  slug: string;                    // generated: slugify(title)+last8(id)
   title: string;
   description: string | null;
   property_type: PropertyType;
   transaction_type: TransactionType;
   price: number | null;
-  price_display: string | null;
+  price_display: string | null;    // computed: formatPrice(price)
   price_per_sqft?: number | null;
   city: string;
   locality: string;
   address?: string | null;
   area_sqft: number | null;
-  carpet_sqft?: number | null;
+  carpet_sqft?: number | null;     // not in DB; kept for mock compat
   bedrooms: number | null;
   bathrooms: number | null;
   balconies?: number | null;
-  floor?: string | null;
+  parking?: number | null;
+  floor?: string | null;           // computed: "Xth of Y Floors"
   facing?: string | null;
   furnishing?: FurnishingStatus;
   possession?: PossessionStatus;
@@ -85,4 +140,3 @@ export interface PricingPlan {
   ctaLabel: string;
   ctaVariant: "primary" | "secondary" | "outline";
 }
-

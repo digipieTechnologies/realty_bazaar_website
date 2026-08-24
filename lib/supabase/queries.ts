@@ -1,580 +1,191 @@
 import { createPublicServerSupabaseClient } from "./server";
-import type { Property } from "@/types";
+import type { Property, DbPropertyRow } from "@/types";
+import { formatPrice, slugify } from "@/lib/utils";
 
-// Rich fallback mock data representing verified Indian properties
-export const MOCK_PROPERTIES: Property[] = [
-  {
-    id: "1",
-    slug: "3-bhk-luxury-apartment-vesu-surat",
-    title: "3 BHK Luxury High-Rise Apartment in Vesu",
-    description:
-      "A stunning, sun-drenched 3 BHK residence located in the most prestigious enclave of Vesu, Surat. Features Italian marble flooring, 11-foot ceilings, automated smart home lighting, three lavish en-suite bedrooms, and panoramic sunset balconies overlooking the skyline.",
-    property_type: "apartment",
-    transaction_type: "sale",
-    price: 13500000,
-    price_display: "₹1.35 Cr",
-    price_per_sqft: 7500,
-    city: "Surat",
-    locality: "Vesu",
-    address: "Skyline Heights, VIP Road, Vesu, Surat - 395007",
-    area_sqft: 1800,
-    carpet_sqft: 1450,
-    bedrooms: 3,
-    bathrooms: 3,
-    balconies: 2,
-    floor: "8th of 14 Floors",
-    facing: "East Facing (Vastu Compliant)",
-    furnishing: "semi-furnished",
-    possession: "ready-to-move",
-    amenities: [
-      "Clubhouse",
-      "Infinity Swimming Pool",
-      "Gym & Fitness Studio",
-      "2 Covered Car Parking",
-      "24x7 High-Tech Security",
-      "High-Speed Passenger Lifts",
-      "Children Play Arena",
-      "100% Power Backup",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200",
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200",
-      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Rajesh K. Mehta",
-    broker_agency: "Mehta Elite Realty",
-    broker_phone: "+91-9876543210",
-    broker_whatsapp: "+91-9876543210",
-    broker_verified: true,
-    featured: true,
-    promoted: true,
-    created_at: "2026-02-10T10:00:00Z",
-    updated_at: "2026-02-10T10:00:00Z",
-  },
-  {
-    id: "2",
-    slug: "4-bhk-independent-villa-adajan-surat",
-    title: "4 BHK Ultra-Luxury Independent Villa in Adajan",
-    description:
-      "Exclusive 4 BHK gated community villa with private landscaped garden, double-height living room, modular European kitchen, private terrace lounge, and dedicated servant quarters. Located in a quiet, tree-lined residential neighbourhood of Adajan.",
-    property_type: "villa",
-    transaction_type: "sale",
-    price: 28000000,
-    price_display: "₹2.80 Cr",
-    price_per_sqft: 8235,
-    city: "Surat",
-    locality: "Adajan",
-    address: "Palms Enclave, Near Anand Mahal Road, Adajan, Surat - 395009",
-    area_sqft: 3400,
-    carpet_sqft: 2850,
-    bedrooms: 4,
-    bathrooms: 4,
-    balconies: 3,
-    floor: "G + 2 Floors",
-    facing: "North-East",
-    furnishing: "fully-furnished",
-    possession: "ready-to-move",
-    amenities: [
-      "Private Landscaped Garden",
-      "Private Terrace Gazebo",
-      "Modular German Kitchen",
-      "2 Covered Car Garages",
-      "Gated Security with CCTV",
-      "Solar Water Heating",
-      "Servant Room with Bath",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200",
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Karan Patel",
-    broker_agency: "Gujarat Prime Properties",
-    broker_phone: "+91-9876543211",
-    broker_whatsapp: "+91-9876543211",
-    broker_verified: true,
-    featured: true,
-    promoted: true,
-    created_at: "2026-02-14T10:00:00Z",
-    updated_at: "2026-02-14T10:00:00Z",
-  },
-  {
-    id: "3",
-    slug: "2-bhk-modern-apartment-pal-surat",
-    title: "2 BHK Premium Road-Facing Apartment in Pal",
-    description:
-      "Well-planned 2 BHK apartment in the fast-appreciating locality of Pal, Surat. Excellent natural ventilation, proximity to top CBSE schools, shopping hubs, and major transport corridors. Perfect for young families or high-yield rental investment.",
-    property_type: "apartment",
-    transaction_type: "sale",
-    price: 6800000,
-    price_display: "₹68 Lakh",
-    price_per_sqft: 5913,
-    city: "Surat",
-    locality: "Pal",
-    address: "Shreeji Residency, Pal-Gam Road, Pal, Surat - 394510",
-    area_sqft: 1150,
-    carpet_sqft: 920,
-    bedrooms: 2,
-    bathrooms: 2,
-    balconies: 1,
-    floor: "4th of 11 Floors",
-    facing: "East Facing",
-    furnishing: "semi-furnished",
-    possession: "ready-to-move",
-    amenities: [
-      "Reserved Stilt Parking",
-      "Children Play Area",
-      "Senior Citizen Sit-out",
-      "Automatic High-Speed Lift",
-      "24x7 Security & Intercom",
-      "Rainwater Harvesting",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Amit Solanki",
-    broker_agency: "CityLink Real Estate",
-    broker_phone: "+91-9876543212",
-    broker_whatsapp: "+91-9876543212",
-    broker_verified: true,
-    featured: false,
-    promoted: false,
-    created_at: "2026-02-18T10:00:00Z",
-    updated_at: "2026-02-18T10:00:00Z",
-  },
-  {
-    id: "4",
-    slug: "prime-commercial-office-space-ring-road-surat",
-    title: "Grade-A Commercial Office Space on Ring Road",
-    description:
-      "Fully-fitted corporate office space in Surat's premier commercial corridor on Ring Road. Glass facade, centralized HVAC, reception lounge, 3 executive cabins, 24 workstations, conference room, and high-speed fiber connectivity.",
-    property_type: "office",
-    transaction_type: "rent",
-    price: 95000,
-    price_display: "₹95,000/mo",
-    price_per_sqft: 43,
-    city: "Surat",
-    locality: "Ring Road",
-    address: "World Trade Tower, Ring Road, Surat - 395002",
-    area_sqft: 2200,
-    carpet_sqft: 1850,
-    bedrooms: null,
-    bathrooms: 2,
-    balconies: 0,
-    floor: "6th of 18 Floors",
-    facing: "Main Road Facing",
-    furnishing: "fully-furnished",
-    possession: "ready-to-move",
-    amenities: [
-      "Central Air Conditioning",
-      "100% DG Power Backup",
-      "3 Dedicated Basement Parking",
-      "4 High-Speed Elevators",
-      "Fire Fighting System",
-      "Cafeteria in Building",
-      "24x7 Access & Security",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200",
-      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1200",
-      "https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Nilesh Shah",
-    broker_agency: "Commercial Point Consultants",
-    broker_phone: "+91-9876543213",
-    broker_whatsapp: "+91-9876543213",
-    broker_verified: true,
-    featured: false,
-    promoted: true,
-    created_at: "2026-02-20T10:00:00Z",
-    updated_at: "2026-02-20T10:00:00Z",
-  },
-  {
-    id: "5",
-    slug: "3-bhk-garden-facing-apartment-althan-surat",
-    title: "3 BHK Garden-Facing Flat in Althan",
-    description:
-      "Vastu-aligned 3 BHK flat with serene community garden views in Althan, Surat. Master bedroom with wooden flooring, wide modular kitchen with piped gas connection, and dedicated utility wash area.",
-    property_type: "apartment",
-    transaction_type: "sale",
-    price: 10500000,
-    price_display: "₹1.05 Cr",
-    price_per_sqft: 6774,
-    city: "Surat",
-    locality: "Althan",
-    address: "Green Meadows, Althan-Bhimrad Canal Road, Althan, Surat - 395017",
-    area_sqft: 1550,
-    carpet_sqft: 1220,
-    bedrooms: 3,
-    bathrooms: 3,
-    balconies: 2,
-    floor: "5th of 12 Floors",
-    facing: "North Facing",
-    furnishing: "semi-furnished",
-    possession: "ready-to-move",
-    amenities: [
-      "Grand Clubhouse",
-      "Air-Conditioned Gym",
-      "Swimming Pool with Kids Pool",
-      "Badminton Court",
-      "Covered Stilt Parking",
-      "24x7 Security & CCTV",
-      "Jogging Track",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200",
-      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200",
-      "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Vivek Deshmukh",
-    broker_agency: "Prime Space Advisors",
-    broker_phone: "+91-9876543214",
-    broker_whatsapp: "+91-9876543214",
-    broker_verified: true,
-    featured: true,
-    promoted: false,
-    created_at: "2026-02-22T10:00:00Z",
-    updated_at: "2026-02-22T10:00:00Z",
-  },
-  {
-    id: "6",
-    slug: "1-bhk-furnished-studio-citylight-surat",
-    title: "1 BHK Designer Studio in City Light",
-    description:
-      "Fully furnished, thoughtfully designed 1 BHK studio in the elite City Light neighborhood. Includes custom wood finishes, built-in study nook, smart TV, inverter AC, refrigerator, and microwave.",
-    property_type: "studio",
-    transaction_type: "rent",
-    price: 22000,
-    price_display: "₹22,000/mo",
-    price_per_sqft: 34,
-    city: "Surat",
-    locality: "City Light",
-    address: "Urban Crest, Near Science Centre, City Light, Surat - 395007",
-    area_sqft: 650,
-    carpet_sqft: 520,
-    bedrooms: 1,
-    bathrooms: 1,
-    balconies: 1,
-    floor: "3rd of 8 Floors",
-    facing: "West Facing",
-    furnishing: "fully-furnished",
-    possession: "ready-to-move",
-    amenities: [
-      "All Appliances Included",
-      "High-Speed Wi-Fi Ready",
-      "Covered 2-Wheeler & Car Parking",
-      "Lift with Battery Backup",
-      "24x7 Security Guard",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1505873242700-f289a29e1724?w=1200",
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Sneha Kapadia",
-    broker_agency: "Urban Abode Realty",
-    broker_phone: "+91-9876543215",
-    broker_whatsapp: "+91-9876543215",
-    broker_verified: true,
-    featured: false,
-    promoted: false,
-    created_at: "2026-02-24T10:00:00Z",
-    updated_at: "2026-02-24T10:00:00Z",
-  },
-  {
-    id: "7",
-    slug: "4-bhk-penthouse-piplod-surat",
-    title: "4 BHK Sky Villa Penthouse in Piplod",
-    description:
-      "Spectacular duplex penthouse with private plunge pool and 360-degree views of Surat. Crafted for luxury living with imported marble, private elevator access, home theatre room, and double-height glass terrace.",
-    property_type: "apartment",
-    transaction_type: "sale",
-    price: 36000000,
-    price_display: "₹3.60 Cr",
-    price_per_sqft: 8571,
-    city: "Surat",
-    locality: "Piplod",
-    address: "Aura Royale, Dumas Road, Piplod, Surat - 395007",
-    area_sqft: 4200,
-    carpet_sqft: 3400,
-    bedrooms: 4,
-    bathrooms: 5,
-    balconies: 3,
-    floor: "Top 15th & 16th Floors",
-    facing: "North-East",
-    furnishing: "semi-furnished",
-    possession: "ready-to-move",
-    amenities: [
-      "Private Splash Pool",
-      "Private Sky Terrace",
-      "Private Keycard Elevator",
-      "3 Covered Parking Slots",
-      "Clubhouse & Squash Court",
-      "24x7 Valet & Concierge",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200",
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Rajesh K. Mehta",
-    broker_agency: "Mehta Elite Realty",
-    broker_phone: "+91-9876543210",
-    broker_whatsapp: "+91-9876543210",
-    broker_verified: true,
-    featured: true,
-    promoted: true,
-    created_at: "2026-02-25T10:00:00Z",
-    updated_at: "2026-02-25T10:00:00Z",
-  },
-  {
-    id: "8",
-    slug: "3-bhk-luxury-condo-sg-highway-ahmedabad",
-    title: "3 BHK High-End Condo on SG Highway",
-    description:
-      "Modern luxury condominium located right off SG Highway in Ahmedabad. Seamless connectivity to GIFT City, top international universities, and tech parks.",
-    property_type: "apartment",
-    transaction_type: "sale",
-    price: 16500000,
-    price_display: "₹1.65 Cr",
-    price_per_sqft: 7674,
-    city: "Ahmedabad",
-    locality: "SG Highway",
-    address: "Signature Heights, Off SG Highway, Ahmedabad - 380054",
-    area_sqft: 2150,
-    carpet_sqft: 1720,
-    bedrooms: 3,
-    bathrooms: 3,
-    balconies: 2,
-    floor: "7th of 16 Floors",
-    facing: "East Facing",
-    furnishing: "semi-furnished",
-    possession: "ready-to-move",
-    amenities: [
-      "Olympic Length Swimming Pool",
-      "State-of-art Gymnasium",
-      "Badminton & Tennis Courts",
-      "Banquet Hall",
-      "2 Covered Car Parking",
-      "EV Charging Stations",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Hiren Trivedi",
-    broker_agency: "Apex Realty Gujarat",
-    broker_phone: "+91-9876543216",
-    broker_whatsapp: "+91-9876543216",
-    broker_verified: true,
-    featured: true,
-    promoted: false,
-    created_at: "2026-02-26T10:00:00Z",
-    updated_at: "2026-02-26T10:00:00Z",
-  },
-  {
-    id: "9",
-    slug: "residential-plot-dumas-road-surat",
-    title: "500 Sq. Yard Freehold Residential Villa Plot on Dumas Road",
-    description:
-      "Premium NA plot inside an upscale gated township on Dumas Road, Surat. Complete underground utility cabling, broad 40ft internal paved roads, clear title deeds, and bank loan approvals from SBI & HDFC.",
-    property_type: "plot",
-    transaction_type: "sale",
-    price: 22500000,
-    price_display: "₹2.25 Cr",
-    price_per_sqft: 5000,
-    city: "Surat",
-    locality: "Dumas Road",
-    address: "Boulevard Greens Township, Dumas Road, Surat - 395007",
-    area_sqft: 4500,
-    carpet_sqft: null,
-    bedrooms: null,
-    bathrooms: null,
-    balconies: null,
-    floor: "NA Plot",
-    facing: "Corner Plot (North & East Road)",
-    furnishing: "unfurnished",
-    possession: "ready-to-move",
-    amenities: [
-      "Gated Community with Boundary Wall",
-      "24x7 Security & Guard House",
-      "40 Ft Wide Concrete Internal Roads",
-      "Underground Drainage & Electricity",
-      "Landscaped Central Park",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200",
-      "https://images.unsplash.com/photo-1524813686514-a57563d77d61?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Karan Patel",
-    broker_agency: "Gujarat Prime Properties",
-    broker_phone: "+91-9876543211",
-    broker_whatsapp: "+91-9876543211",
-    broker_verified: true,
-    featured: false,
-    promoted: false,
-    created_at: "2026-02-27T10:00:00Z",
-    updated_at: "2026-02-27T10:00:00Z",
-  },
-  {
-    id: "10",
-    slug: "2-bhk-sea-view-bandra-west-mumbai",
-    title: "2 BHK Sea-View Luxury Apartment in Bandra West",
-    description:
-      "Rare opportunity to own an unobstructed Arabian Sea-facing 2 BHK in the coveted Bandra West neighborhood. High ceiling interiors, curated Italian fixtures, and steps away from Carter Road promenade.",
-    property_type: "apartment",
-    transaction_type: "sale",
-    price: 49500000,
-    price_display: "₹4.95 Cr",
-    price_per_sqft: 52105,
-    city: "Mumbai",
-    locality: "Bandra West",
-    address: "Ocean Breeze, Off Carter Road, Bandra West, Mumbai - 400050",
-    area_sqft: 950,
-    carpet_sqft: 810,
-    bedrooms: 2,
-    bathrooms: 2,
-    balconies: 1,
-    floor: "11th of 14 Floors",
-    facing: "West Facing (Sea View)",
-    furnishing: "semi-furnished",
-    possession: "ready-to-move",
-    amenities: [
-      "Direct Sea View",
-      "Rooftop Infinity Lounge",
-      "Automated Hydraulic Car Parking",
-      "24x7 Multi-Tier Security",
-      "Fitness Centre",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200",
-      "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Rohan Malhotra",
-    broker_agency: "Malhotra & Partners Mumbai",
-    broker_phone: "+91-9876543217",
-    broker_whatsapp: "+91-9876543217",
-    broker_verified: true,
-    featured: true,
-    promoted: true,
-    created_at: "2026-02-28T10:00:00Z",
-    updated_at: "2026-02-28T10:00:00Z",
-  },
-  {
-    id: "11",
-    slug: "prime-retail-showroom-ghod-dod-road-surat",
-    title: "High-Footfall Main Road Retail Shop on Ghod Dod Road",
-    description:
-      "Premier ground floor commercial retail showroom on prestigious Ghod Dod Road in Surat. 30ft clear glass frontage, excellent street visibility, mezzanine floor, and customer parking.",
-    property_type: "shop",
-    transaction_type: "rent",
-    price: 120000,
-    price_display: "₹1.20 Lakh/mo",
-    price_per_sqft: 80,
-    city: "Surat",
-    locality: "Ghod Dod Road",
-    address: "Crystal Plaza, Ghod Dod Road, Surat - 395007",
-    area_sqft: 1500,
-    carpet_sqft: 1350,
-    bedrooms: null,
-    bathrooms: 1,
-    balconies: 0,
-    floor: "Ground Floor",
-    facing: "Main Road Frontage",
-    furnishing: "unfurnished",
-    possession: "ready-to-move",
-    amenities: [
-      "30 Ft Frontage Glass Facade",
-      "High Visibility Signage Area",
-      "Customer Stilt Parking",
-      "3 Phase Commercial Power",
-      "Water Connection",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200",
-      "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Nilesh Shah",
-    broker_agency: "Commercial Point Consultants",
-    broker_phone: "+91-9876543213",
-    broker_whatsapp: "+91-9876543213",
-    broker_verified: true,
-    featured: false,
-    promoted: false,
-    created_at: "2026-03-01T10:00:00Z",
-    updated_at: "2026-03-01T10:00:00Z",
-  },
-  {
-    id: "12",
-    slug: "3-bhk-spacious-flat-vasna-vadodara",
-    title: "3 BHK Peaceful Garden Residence in Vasna-Bhayli",
-    description:
-      "Spacious 3 BHK residence in Vadodara's most coveted residential suburb of Vasna-Bhayli. Surrounded by lush greenery, international schools, and sports clubs.",
-    property_type: "apartment",
-    transaction_type: "sale",
-    price: 7800000,
-    price_display: "₹78 Lakh",
-    price_per_sqft: 4875,
-    city: "Vadodara",
-    locality: "Vasna-Bhayli",
-    address: "Greenwood Palms, Vasna-Bhayli Road, Vadodara - 391410",
-    area_sqft: 1600,
-    carpet_sqft: 1280,
-    bedrooms: 3,
-    bathrooms: 3,
-    balconies: 2,
-    floor: "3rd of 10 Floors",
-    facing: "East Facing",
-    furnishing: "semi-furnished",
-    possession: "ready-to-move",
-    amenities: [
-      "Clubhouse & Yoga Lawn",
-      "Swimming Pool",
-      "Covered Car Parking",
-      "24x7 Security",
-      "Solar Lighting for Common Areas",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200",
-    ],
-    video_url: null,
-    broker_name: "Paresh Joshi",
-    broker_agency: "Heritage City Homes",
-    broker_phone: "+91-9876543218",
-    broker_whatsapp: "+91-9876543218",
-    broker_verified: true,
-    featured: false,
-    promoted: false,
-    created_at: "2026-03-02T10:00:00Z",
-    updated_at: "2026-03-02T10:00:00Z",
-  },
-];
+// ── Slug helpers ──────────────────────────────────────────────────────────────
+// URL slug = slugify(property_title) + full UUID without dashes (32 hex chars)
+// e.g. "3-bhk-apartment-vesu-surat-a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4"
+// Using the full UUID lets us do an exact .eq("id", uuid) lookup — ilike on
+// the native uuid column type does not work reliably in PostgreSQL.
 
-function isSupabaseConfigured(): boolean {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  return (
-    !!url &&
-    url !== "https://your-project.supabase.co" &&
-    !url.includes("your-project")
-  );
+export function buildPropertySlug(title: string, id: string): string {
+  const cleanId = id.replace(/-/g, ""); // 32 hex chars, no dashes
+  return `${slugify(title)}-${cleanId}`;
 }
 
+/** Reconstruct a standard UUID (8-4-4-4-12) from the 32-char raw hex suffix */
+function rawHexToUuid(raw: string): string | null {
+  if (raw.length !== 32 || !/^[0-9a-f]+$/i.test(raw)) return null;
+  return [
+    raw.slice(0, 8),
+    raw.slice(8, 12),
+    raw.slice(12, 16),
+    raw.slice(16, 20),
+    raw.slice(20),
+  ].join("-");
+}
+
+// ── DB → UI mapper ────────────────────────────────────────────────────────────
+function mapDbRowToProperty(row: DbPropertyRow): Property {
+  const addr = row.addresses;
+  const broker = row.brokers;
+  const brokerUser = row.broker_user;
+
+  const city = addr?.city ?? "";
+  const locality = addr?.landmark ?? addr?.city ?? "";
+  const fullAddress = addr?.full_address ?? null;
+
+  // Extract image URLs from the medias JSONB array
+  const images: string[] = (row.medias ?? [])
+    .filter((m) => m.type === "image" || m.type === "photo" || !m.type)
+    .map((m) => m.url)
+    .filter(Boolean);
+
+  // Build human-readable floor string
+  let floor: string | null = null;
+  if (row.floor_number != null && row.total_floors != null) {
+    floor = `${toOrdinal(row.floor_number)} of ${row.total_floors} Floors`;
+  } else if (row.floor_number != null) {
+    floor = `${toOrdinal(row.floor_number)} Floor`;
+  }
+
+  // Normalize furnishing status (DB uses underscores, UI uses hyphens)
+  const furnishing = row.furnishing_status?.replace(/_/g, "-") as Property["furnishing"];
+
+  // Normalize possession / construction status
+  const possession = row.construction_status?.replace(/_/g, "-") as Property["possession"];
+
+  // Normalize facing direction (DB: 'east', 'north_east', etc.)
+  const facing = row.facing
+    ? row.facing
+        .split("_")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ") + " Facing"
+    : null;
+
+  const price = typeof row.price === "number" ? row.price : null;
+  const areaInSqft = normalizeArea(row.area, row.area_unit);
+  const pricePerSqft =
+    price && areaInSqft && areaInSqft > 0
+      ? Math.round(price / areaInSqft)
+      : null;
+
+  const brokerPhone = formatPhone(
+    brokerUser?.phone,
+    brokerUser?.phone_country_code
+  );
+
+  return {
+    id: row.id,
+    slug: buildPropertySlug(row.property_title, row.id),
+    title: row.property_title,
+    description: row.property_description ?? null,
+    property_type: (row.property_type ?? "apartment") as Property["property_type"],
+    transaction_type: (row.listing_type as Property["transaction_type"]) ?? "sale",
+    price,
+    price_display: formatPrice(price, null),
+    price_per_sqft: pricePerSqft,
+    city,
+    locality,
+    address: fullAddress,
+    area_sqft: areaInSqft,
+    carpet_sqft: null,
+    bedrooms: row.bedrooms ?? null,
+    bathrooms: row.bathrooms ?? null,
+    balconies: row.balconies ?? null,
+    parking: row.parking ?? null,
+    floor,
+    facing,
+    furnishing,
+    possession,
+    amenities: Array.isArray(row.amenities) ? row.amenities : [],
+    images: images.length > 0 ? images : null,
+    video_url: null,
+    broker_name: brokerUser?.name ?? null,
+    broker_agency: broker?.business_name ?? null,
+    broker_phone: brokerPhone,
+    broker_whatsapp: brokerPhone,
+    broker_verified: broker?.is_active ?? false,
+    featured: false,
+    promoted: false,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  };
+}
+
+// ── Utility helpers ───────────────────────────────────────────────────────────
+function toOrdinal(n: number): string {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+function normalizeArea(area: number | null, unit: string | null): number | null {
+  if (area == null) return null;
+  if (!unit || unit === "sqft") return area;
+  if (unit === "sqm") return Math.round(area * 10.764);
+  if (unit === "sqyards") return Math.round(area * 9);
+  return area;
+}
+
+function formatPhone(
+  phone: string | null | undefined,
+  countryCode: string | null | undefined
+): string | null {
+  if (!phone) return null;
+  const code = countryCode ?? "91";
+  const digits = phone.replace(/\D/g, "");
+  return `+${code}${digits}`;
+}
+
+// ── Supabase join select ──────────────────────────────────────────────────────
+const PROPERTY_SELECT = `
+  id,
+  broker_id,
+  address_id,
+  property_title,
+  property_description,
+  property_type,
+  listing_type,
+  price,
+  area,
+  area_unit,
+  bedrooms,
+  bathrooms,
+  balconies,
+  parking,
+  floor_number,
+  total_floors,
+  furnishing_status,
+  property_status,
+  construction_status,
+  facing,
+  amenities,
+  medias,
+  is_active,
+  is_deleted,
+  created_at,
+  updated_at,
+  addresses (
+    full_address,
+    city,
+    state,
+    landmark,
+    latitude,
+    longitude,
+    pincode
+  ),
+  brokers (
+    id,
+    business_name,
+    is_active
+  )
+`.trim();
+
+// ── Query options ─────────────────────────────────────────────────────────────
 export interface GetPropertiesOptions {
   limit?: number;
+  offset?: number;         // for pagination / infinite scroll
   city?: string;
   locality?: string;
   transactionType?: string;
@@ -588,15 +199,101 @@ export interface GetPropertiesOptions {
   sortBy?: "relevance" | "price_asc" | "price_desc" | "newest" | "area_desc";
 }
 
+// ── Main query ────────────────────────────────────────────────────────────────
 export async function getPublishedProperties(
   options?: GetPropertiesOptions
 ): Promise<Property[]> {
-  if (!isSupabaseConfigured()) {
-    let results = [...MOCK_PROPERTIES];
+  try {
+    const supabase = createPublicServerSupabaseClient();
+
+    let query = supabase
+      .from("properties")
+      .select(PROPERTY_SELECT)
+      .eq("is_active", true)
+      .eq("is_deleted", false)
+      .eq("property_status", "available");
+
+    // Transaction type filter (listing_type in DB)
+    if (options?.transactionType && options.transactionType !== "any") {
+      query = query.eq("listing_type", options.transactionType);
+    }
+
+    // Property type filter
+    if (
+      options?.propertyType &&
+      options.propertyType !== "Any" &&
+      options.propertyType !== "All Types"
+    ) {
+      query = query.eq("property_type", options.propertyType);
+    }
+
+    // Bedrooms filter
+    if (options?.bedrooms && options.bedrooms !== "Any") {
+      const beds =
+        typeof options.bedrooms === "string"
+          ? parseInt(options.bedrooms, 10)
+          : options.bedrooms;
+      if (!isNaN(beds)) query = query.gte("bedrooms", beds);
+    }
+
+    // Price range filters
+    if (options?.minPrice) query = query.gte("price", options.minPrice);
+    if (options?.maxPrice) query = query.lte("price", options.maxPrice);
+
+    // Sorting
+    switch (options?.sortBy) {
+      case "price_asc":
+        query = query.order("price", { ascending: true });
+        break;
+      case "price_desc":
+        query = query.order("price", { ascending: false });
+        break;
+      case "area_desc":
+        query = query.order("area", { ascending: false });
+        break;
+      case "newest":
+      default:
+        query = query.order("created_at", { ascending: false });
+        break;
+    }
+
+    // Pagination via range (offset + limit)
+    const pageSize = options?.limit ?? 12;
+    const offset = options?.offset ?? 0;
+    query = query.range(offset, offset + pageSize - 1);
+
+    const { data, error } = await query;
+    if (error) {
+      console.error("[getPublishedProperties] Supabase error:", error.message);
+      return [];
+    }
+
+    let properties = ((data ?? []) as unknown as DbPropertyRow[]).map(
+      mapDbRowToProperty
+    );
+
+    // Post-process filters on joined address columns
+    if (
+      options?.city &&
+      options.city !== "Any" &&
+      options.city !== "All Cities"
+    ) {
+      const cityLower = options.city.toLowerCase();
+      properties = properties.filter(
+        (p) => p.city.toLowerCase() === cityLower
+      );
+    }
+
+    if (options?.locality) {
+      const localityLower = options.locality.toLowerCase();
+      properties = properties.filter((p) =>
+        p.locality.toLowerCase().includes(localityLower)
+      );
+    }
 
     if (options?.searchQuery) {
       const q = options.searchQuery.toLowerCase().trim();
-      results = results.filter(
+      properties = properties.filter(
         (p) =>
           p.title.toLowerCase().includes(q) ||
           p.city.toLowerCase().includes(q) ||
@@ -606,163 +303,170 @@ export async function getPublishedProperties(
       );
     }
 
-    if (options?.featured) {
-      results = results.filter((p) => p.featured);
-    }
-
-    if (options?.promoted) {
-      results = results.filter((p) => p.promoted);
-    }
-
-    if (options?.city && options.city !== "Any" && options.city !== "All Cities") {
-      results = results.filter(
-        (p) => p.city.toLowerCase() === options.city!.toLowerCase()
-      );
-    }
-
-    if (options?.locality) {
-      results = results.filter(
-        (p) => p.locality.toLowerCase().includes(options.locality!.toLowerCase())
-      );
-    }
-
-    if (options?.transactionType && options.transactionType !== "any") {
-      results = results.filter(
-        (p) => p.transaction_type === options.transactionType
-      );
-    }
-
-    if (options?.propertyType && options.propertyType !== "Any" && options.propertyType !== "All Types") {
-      results = results.filter(
-        (p) => p.property_type.toLowerCase() === options.propertyType!.toLowerCase()
-      );
-    }
-
-    if (options?.bedrooms && options.bedrooms !== "Any") {
-      const beds = typeof options.bedrooms === "string" ? parseInt(options.bedrooms, 10) : options.bedrooms;
-      if (!isNaN(beds)) {
-        results = results.filter((p) => (p.bedrooms || 0) >= beds);
-      }
-    }
-
-    if (options?.minPrice) {
-      results = results.filter((p) => (p.price || 0) >= options.minPrice!);
-    }
-
-    if (options?.maxPrice) {
-      results = results.filter((p) => (p.price || 0) <= options.maxPrice!);
-    }
-
-    if (options?.sortBy) {
-      switch (options.sortBy) {
-        case "price_asc":
-          results.sort((a, b) => (a.price || 0) - (b.price || 0));
-          break;
-        case "price_desc":
-          results.sort((a, b) => (b.price || 0) - (a.price || 0));
-          break;
-        case "newest":
-          results.sort(
-            (a, b) =>
-              new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-          );
-          break;
-        case "area_desc":
-          results.sort((a, b) => (b.area_sqft || 0) - (a.area_sqft || 0));
-          break;
-        default:
-          break;
-      }
-    }
-
-    if (options?.limit) {
-      results = results.slice(0, options.limit);
-    }
-
-    return results;
-  }
-
-  try {
-    const supabase = createPublicServerSupabaseClient();
-    let query = supabase
-      .from("properties")
-      .select("*")
-      .eq("published", true);
-
-    if (options?.featured) query = query.eq("featured", true);
-    if (options?.promoted) query = query.eq("promoted", true);
-    if (options?.city && options.city !== "Any") query = query.ilike("city", options.city);
-    if (options?.transactionType && options.transactionType !== "any")
-      query = query.eq("transaction_type", options.transactionType);
-    if (options?.propertyType && options.propertyType !== "Any")
-      query = query.eq("property_type", options.propertyType);
-    if (options?.limit) query = query.limit(options.limit);
-
-    const { data, error } = await query.order("created_at", {
-      ascending: false,
-    });
-
-    if (error) throw error;
-    return (data as Property[]) ?? [];
-  } catch {
-    return MOCK_PROPERTIES;
+    return properties;
+  } catch (err) {
+    console.error("[getPublishedProperties] Unexpected error:", err);
+    return [];
   }
 }
 
+// ── Look up a single property by its generated slug ───────────────────────────
+// New slug format: <slugified-title>-<32hexUUID>  (e.g. "...-a1b2c3d4e5f6...")
+// Legacy format:   <slugified-title>-<8hexSuffix> (e.g. "...-00000035")
+//
+// Strategy:
+//   1. If last segment is 32 hex chars → reconstruct full UUID → exact .eq("id")
+//   2. Otherwise (short/sequential IDs) → use PostgREST text cast filter as fallback
 export async function getPropertyBySlug(
   slug: string
 ): Promise<Property | null> {
-  if (!isSupabaseConfigured()) {
-    return MOCK_PROPERTIES.find((p) => p.slug === slug) ?? null;
-  }
+  const segments = slug.split("-");
+  const rawHex = segments[segments.length - 1] ?? "";
 
   try {
     const supabase = createPublicServerSupabaseClient();
-    const { data, error } = await supabase
-      .from("properties")
-      .select("*")
-      .eq("published", true)
-      .eq("slug", slug)
-      .single();
 
-    if (error) return null;
-    return data as Property;
-  } catch {
-    return MOCK_PROPERTIES.find((p) => p.slug === slug) ?? null;
+    // ── Path 1: full 32-char UUID suffix (new format) ──────────────────────
+    const uuid = rawHexToUuid(rawHex);
+    if (uuid) {
+      const { data, error } = await supabase
+        .from("properties")
+        .select(PROPERTY_SELECT)
+        .eq("is_active", true)
+        .eq("is_deleted", false)
+        .eq("id", uuid)
+        .single();
+
+      if (!error && data) {
+        return mapDbRowToProperty(data as unknown as DbPropertyRow);
+      }
+      // Fall through to text-cast approach if exact match fails
+    }
+
+    // ── Path 2: short suffix fallback — cast UUID to text for suffix match ─
+    // PostgREST supports column type casting in filter column names: "id::text"
+    if (rawHex.length > 0 && /^[0-9a-f]+$/i.test(rawHex)) {
+      const { data, error } = await supabase
+        .from("properties")
+        .select(PROPERTY_SELECT)
+        .eq("is_active", true)
+        .eq("is_deleted", false)
+        .filter("id::text", "ilike", `%${rawHex}`)
+        .limit(1)
+        .single();
+
+      if (!error && data) {
+        return mapDbRowToProperty(data as unknown as DbPropertyRow);
+      }
+      console.error(`[getPropertyBySlug] Not found for slug="${slug}" hex="${rawHex}":`, error?.message);
+    } else {
+      console.error(`[getPropertyBySlug] Could not extract valid hex suffix from slug: ${slug}`);
+    }
+
+    return null;
+  } catch (err) {
+    console.error("[getPropertyBySlug] Unexpected error:", err);
+    return null;
   }
 }
 
+// ── Get all slugs for generateStaticParams ────────────────────────────────────
 export async function getAllPropertySlugs(): Promise<string[]> {
-  if (!isSupabaseConfigured()) {
-    return MOCK_PROPERTIES.map((p) => p.slug);
-  }
-
   try {
     const supabase = createPublicServerSupabaseClient();
     const { data, error } = await supabase
       .from("properties")
-      .select("slug")
-      .eq("published", true);
+      .select("id, property_title")
+      .eq("is_active", true)
+      .eq("is_deleted", false)
+      .eq("property_status", "available");
 
-    if (error) return [];
-    return data.map((p: { slug: string }) => p.slug);
-  } catch {
-    return MOCK_PROPERTIES.map((p) => p.slug);
+    if (error || !data) return [];
+    return data.map((row: { id: string; property_title: string }) =>
+      buildPropertySlug(row.property_title, row.id)
+    );
+  } catch (err) {
+    console.error("[getAllPropertySlugs] Unexpected error:", err);
+    return [];
   }
 }
 
+// ── Similar properties ────────────────────────────────────────────────────────
 export async function getSimilarProperties(
   property: Property,
   limit: number = 3
 ): Promise<Property[]> {
-  const all = await getPublishedProperties();
-  return all
-    .filter(
-      (p) =>
-        p.slug !== property.slug &&
-        (p.city.toLowerCase() === property.city.toLowerCase() ||
-          p.property_type === property.property_type)
-    )
-    .slice(0, limit);
+  try {
+    const all = await getPublishedProperties({ city: property.city, limit: 10 });
+    return all
+      .filter(
+        (p) =>
+          p.id !== property.id &&
+          (p.city.toLowerCase() === property.city.toLowerCase() ||
+            p.property_type === property.property_type)
+      )
+      .slice(0, limit);
+  } catch {
+    return [];
+  }
 }
 
+// ── Property Type Counts (Real DB counts) ────────────────────────────────────
+export async function getPropertyTypeCounts(): Promise<Record<string, number>> {
+  try {
+    const supabase = createPublicServerSupabaseClient();
+    const { data, error } = await supabase
+      .from("properties")
+      .select("property_type")
+      .eq("is_active", true)
+      .eq("is_deleted", false)
+      .eq("property_status", "available");
+
+    if (error || !data) return {};
+
+    const counts: Record<string, number> = {};
+    for (const item of data) {
+      const type = (item.property_type || "").toLowerCase().trim();
+      if (type) {
+        counts[type] = (counts[type] || 0) + 1;
+      }
+    }
+    return counts;
+  } catch (err) {
+    console.error("[getPropertyTypeCounts] Unexpected error:", err);
+    return {};
+  }
+}
+
+// ── City Counts (Real DB counts) ─────────────────────────────────────────────
+export async function getCityCounts(): Promise<Record<string, number>> {
+  try {
+    const supabase = createPublicServerSupabaseClient();
+    const { data, error } = await supabase
+      .from("properties")
+      .select("addresses ( city )")
+      .eq("is_active", true)
+      .eq("is_deleted", false)
+      .eq("property_status", "available");
+
+    if (error || !data) return {};
+
+    const counts: Record<string, number> = {};
+    for (const item of (data as unknown as Array<{ addresses?: { city?: string | null } | Array<{ city?: string | null }> | null }>)) {
+      let city: string | null | undefined = null;
+      if (Array.isArray(item.addresses)) {
+        city = item.addresses[0]?.city;
+      } else if (item.addresses) {
+        city = item.addresses.city;
+      }
+      if (city && typeof city === "string") {
+        const key = city.trim().toLowerCase();
+        counts[key] = (counts[key] || 0) + 1;
+      }
+    }
+    return counts;
+  } catch (err) {
+    console.error("[getCityCounts] Unexpected error:", err);
+    return {};
+  }
+}

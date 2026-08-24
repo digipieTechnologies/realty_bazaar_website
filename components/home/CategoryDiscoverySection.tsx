@@ -2,74 +2,78 @@ import Link from "next/link";
 import { Building, Home, Castle, Trees, Briefcase, Store, Compass, Warehouse, ArrowUpRight } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
+interface CategoryDiscoverySectionProps {
+  counts?: Record<string, number>;
+}
+
 const categories = [
   {
+    typeKey: "apartment",
     title: "Apartments & Flats",
     description: "1, 2, 3 & 4 BHK high-rises and luxury penthouses",
-    count: "650+ Listings",
     icon: Building,
     href: "/properties?type=apartment",
     accent: "bg-blue-50 text-[#397BCF] border-blue-100",
   },
   {
+    typeKey: "villa",
     title: "Luxury Villas",
     description: "Gated community villas with private lawns",
-    count: "120+ Listings",
     icon: Castle,
     href: "/properties?type=villa",
     accent: "bg-indigo-50 text-indigo-600 border-indigo-100",
   },
   {
+    typeKey: "house",
     title: "Independent Houses",
     description: "Stand-alone residential homes & bungalows",
-    count: "95+ Listings",
     icon: Home,
     href: "/properties?type=house",
     accent: "bg-emerald-50 text-emerald-600 border-emerald-100",
   },
   {
+    typeKey: "plot",
     title: "Plots & Land",
     description: "Clear-title NA residential & commercial plots",
-    count: "140+ Listings",
     icon: Trees,
     href: "/properties?type=plot",
     accent: "bg-amber-50 text-amber-600 border-amber-100",
   },
   {
+    typeKey: "commercial",
     title: "Commercial Offices",
     description: "Grade-A corporate office spaces & co-working",
-    count: "180+ Listings",
     icon: Briefcase,
     href: "/properties?type=commercial",
     accent: "bg-sky-50 text-sky-600 border-sky-100",
   },
   {
+    typeKey: "shop",
     title: "Retail Shops & Showrooms",
     description: "High-footfall street & complex retail spaces",
-    count: "110+ Listings",
     icon: Store,
     href: "/properties?type=shop",
     accent: "bg-purple-50 text-purple-600 border-purple-100",
   },
   {
+    typeKey: "studio",
     title: "Studio Apartments",
     description: "Compact 1 BHK & modern bachelor studios",
-    count: "80+ Listings",
     icon: Compass,
     href: "/properties?type=studio",
     accent: "bg-rose-50 text-rose-600 border-rose-100",
   },
   {
+    typeKey: "warehouse",
     title: "Warehouses & Logistics",
     description: "Industrial godowns & logistics hubs",
-    count: "45+ Listings",
     icon: Warehouse,
     href: "/properties?type=warehouse",
     accent: "bg-slate-50 text-slate-700 border-slate-200",
   },
 ];
 
-export default function CategoryDiscoverySection() {
+export default function CategoryDiscoverySection({ counts = {} }: CategoryDiscoverySectionProps) {
   return (
     <section className="section-padding bg-[#F8FAFC] border-t border-[#E4EAF2]" aria-labelledby="category-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,6 +96,9 @@ export default function CategoryDiscoverySection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {categories.map((category, idx) => {
             const Icon = category.icon;
+            const count = counts[category.typeKey] ?? (category.typeKey === "commercial" ? counts["office"] ?? 0 : 0);
+            const countBadge = count > 0 ? `${count} ${count === 1 ? "Listing" : "Listings"}` : "Explore";
+
             return (
               <ScrollReveal key={category.title} delay={idx * 0.04}>
                 <Link
@@ -104,7 +111,7 @@ export default function CategoryDiscoverySection() {
                         <Icon className="w-6 h-6" />
                       </div>
                       <span className="text-xs font-bold text-[#397BCF] bg-[#EAF3FF] px-2.5 py-1 rounded-lg">
-                        {category.count}
+                        {countBadge}
                       </span>
                     </div>
 

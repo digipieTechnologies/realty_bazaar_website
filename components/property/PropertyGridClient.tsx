@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Sparkles, SlidersHorizontal, ArrowUpDown, X, Home, RotateCcw } from "lucide-react";
+import { Sparkles, SlidersHorizontal, ArrowUpDown, X, Home, RotateCcw, Loader2 } from "lucide-react";
 import PropertyCard from "@/components/property/PropertyCard";
 import PropertySearchFilters, { type FilterState } from "@/components/property/PropertySearchFilters";
 import CustomSelect from "@/components/ui/CustomSelect";
 import type { Property } from "@/types";
+import { fetchPropertiesPage } from "@/app/properties/actions";
+
+const PAGE_SIZE = 12;
 
 interface PropertyGridClientProps {
   initialProperties: Property[];
@@ -24,7 +27,7 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Initialize state from URL params
+  // ── Filter state (synced with URL) ─────────────────────────────────────────
   const [filters, setFilters] = useState<FilterState>(() => ({
     q: searchParams.get("q") || "",
     transactionType: (searchParams.get("transaction") as "all" | "sale" | "rent") || "all",
@@ -40,9 +43,32 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
     sortBy: (searchParams.get("sort") as any) || "relevance",
   }));
 
-  // Sync state when URL params change
+  // ── Infinite scroll state ──────────────────────────────────────────────────
+  const [properties, setProperties] = useState<Property[]>(initialProperties);
+  const [offset, setOffset] = useState(initialProperties.length);
+  const [hasMore, setHasMore] = useState(initialProperties.length >= PAGE_SIZE);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  // Sentinel ref — the invisible div at the bottom of the list
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  // Ref to track the current filters for use inside the observer callback
+  const filtersRef = useRef(filters);
+
+  // Keep filtersRef in sync with state
   useEffect(() => {
-    setFilters({
+    filtersRef.current = filters;
+  }, [filters]);
+
+  // ── Reset list when filters change ─────────────────────────────────────────
+  useEffect(() => {
+    setProperties(initialProperties);
+    setOffset(initialProperties.length);
+    setHasMore(initialProperties.length >= PAGE_SIZE);
+  }, [initialProperties]);
+
+  // ── Sync state when URL params change ──────────────────────────────────────
+  useEffect(() => {
+    const nextFilters: FilterState = {
       q: searchParams.get("q") || "",
       transactionType: (searchParams.get("transaction") as "all" | "sale" | "rent") || "all",
       propertyType: searchParams.get("type") || "All Types",
@@ -55,14 +81,69 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
       verifiedOnly: searchParams.get("verified") === "true",
       featuredOnly: searchParams.get("featured") === "true",
       sortBy: (searchParams.get("sort") as any) || "relevance",
-    });
+    };
+    setFilters(nextFilters);
   }, [searchParams]);
 
-  // Update URL search parameters when filters change
-  const handleFilterChange = (newFilters: FilterState) => {
-    setFilters(newFilters);
-    const params = new URLSearchParams();
+  // ── Fetch next page ─────────────────────────────────────────────────────────
+  const loadMore = useCallback(async () => {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
 
+    const f = filtersRef.current;
+    try {
+      const next = await fetchPropertiesPage({
+        offset,
+        limit: PAGE_SIZE,
+        transactionType: f.transactionType !== "all" ? f.transactionType : undefined,
+        propertyType: f.propertyType !== "All Types" ? f.propertyType : undefined,
+        city: f.city !== "All Cities" ? f.city : undefined,
+        locality: f.locality.trim() || undefined,
+        bedrooms: f.bhk !== "Any" ? f.bhk : undefined,
+        minPrice: f.minPrice ? parseFloat(f.minPrice) : undefined,
+        maxPrice: f.maxPrice ? parseFloat(f.maxPrice) : undefined,
+        sortBy: f.sortBy !== "relevance" ? (f.sortBy as any) : "newest",
+        searchQuery: f.q.trim() || undefined,
+      });
+
+      if (next.length < PAGE_SIZE) setHasMore(false);
+      setProperties((prev) => {
+        // Deduplicate by ID
+        const seen = new Set(prev.map((p) => p.id));
+        return [...prev, ...next.filter((p) => !seen.has(p.id))];
+      });
+      setOffset((prev) => prev + next.length);
+    } catch (err) {
+      console.error("[loadMore] Failed to fetch next page:", err);
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [loadingMore, hasMore, offset]);
+
+  // ── Intersection Observer watcher ──────────────────────────────────────────
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      { rootMargin: "300px" }  // start loading 300px before sentinel is visible
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [loadMore]);
+
+  // ── Filter handling ────────────────────────────────────────────────────────
+  const handleFilterChange = async (newFilters: FilterState) => {
+    setFilters(newFilters);
+    filtersRef.current = newFilters;
+
+    const params = new URLSearchParams();
     if (newFilters.q.trim()) params.set("q", newFilters.q.trim());
     if (newFilters.transactionType !== "all") params.set("transaction", newFilters.transactionType);
     if (newFilters.propertyType !== "All Types") params.set("type", newFilters.propertyType);
@@ -78,9 +159,35 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
 
     const str = params.toString();
     router.replace(`/properties${str ? `?${str}` : ""}`, { scroll: false });
+
+    // Fetch fresh page 0 for new filters
+    setLoadingMore(true);
+    try {
+      const fresh = await fetchPropertiesPage({
+        offset: 0,
+        limit: PAGE_SIZE,
+        transactionType: newFilters.transactionType !== "all" ? newFilters.transactionType : undefined,
+        propertyType: newFilters.propertyType !== "All Types" ? newFilters.propertyType : undefined,
+        city: newFilters.city !== "All Cities" ? newFilters.city : undefined,
+        locality: newFilters.locality.trim() || undefined,
+        bedrooms: newFilters.bhk !== "Any" ? newFilters.bhk : undefined,
+        minPrice: newFilters.minPrice ? parseFloat(newFilters.minPrice) : undefined,
+        maxPrice: newFilters.maxPrice ? parseFloat(newFilters.maxPrice) : undefined,
+        sortBy: newFilters.sortBy !== "relevance" ? (newFilters.sortBy as any) : "newest",
+        searchQuery: newFilters.q.trim() || undefined,
+      });
+
+      setProperties(fresh);
+      setOffset(fresh.length);
+      setHasMore(fresh.length >= PAGE_SIZE);
+    } catch (err) {
+      console.error("[handleFilterChange] Error fetching filtered properties:", err);
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
     const defaultFilters: FilterState = {
       q: "",
       transactionType: "all",
@@ -95,15 +202,13 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
       featuredOnly: false,
       sortBy: "relevance",
     };
-    setFilters(defaultFilters);
-    router.replace("/properties", { scroll: false });
+    handleFilterChange(defaultFilters);
   };
 
-  // Compute filtered & sorted properties
-  const filteredProperties = useMemo(() => {
-    let list = [...initialProperties];
+  // ── Client-side secondary filter ──────────────────────────────────────────
+  const displayProperties = useMemo(() => {
+    let list = [...properties];
 
-    // Keyword / Query filter
     if (filters.q.trim()) {
       const q = filters.q.toLowerCase().trim();
       list = list.filter(
@@ -116,30 +221,25 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
       );
     }
 
-    // Transaction Type
     if (filters.transactionType !== "all") {
       list = list.filter((p) => p.transaction_type === filters.transactionType);
     }
 
-    // City
     if (filters.city !== "All Cities") {
       list = list.filter((p) => p.city.toLowerCase() === filters.city.toLowerCase());
     }
 
-    // Locality
     if (filters.locality.trim()) {
       const loc = filters.locality.toLowerCase().trim();
       list = list.filter((p) => p.locality.toLowerCase().includes(loc));
     }
 
-    // Property Type
     if (filters.propertyType !== "All Types") {
       list = list.filter(
         (p) => p.property_type.toLowerCase() === filters.propertyType.toLowerCase()
       );
     }
 
-    // BHK
     if (filters.bhk !== "Any") {
       const bhkNum = parseInt(filters.bhk, 10);
       if (!isNaN(bhkNum)) {
@@ -147,7 +247,6 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
       }
     }
 
-    // Min Price
     if (filters.minPrice) {
       const min = parseFloat(filters.minPrice);
       if (!isNaN(min)) {
@@ -155,7 +254,6 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
       }
     }
 
-    // Max Price
     if (filters.maxPrice) {
       const max = parseFloat(filters.maxPrice);
       if (!isNaN(max)) {
@@ -163,49 +261,35 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
       }
     }
 
-    // Furnishing
     if (filters.furnishing !== "all") {
       list = list.filter((p) => p.furnishing === filters.furnishing);
     }
 
-    // Verified Brokers Only
     if (filters.verifiedOnly) {
       list = list.filter((p) => p.broker_verified);
     }
 
-    // Featured / Promoted Only
     if (filters.featuredOnly) {
       list = list.filter((p) => p.featured || p.promoted);
     }
 
-    // Sorting
-    switch (filters.sortBy) {
-      case "price_asc":
-        list.sort((a, b) => (a.price || 0) - (b.price || 0));
-        break;
-      case "price_desc":
-        list.sort((a, b) => (b.price || 0) - (a.price || 0));
-        break;
-      case "newest":
-        list.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        break;
-      case "area_desc":
-        list.sort((a, b) => (b.area_sqft || 0) - (a.area_sqft || 0));
-        break;
-      default:
-        // Promoted / featured listings first by default
-        list.sort((a, b) => {
-          if (a.promoted && !b.promoted) return -1;
-          if (!a.promoted && b.promoted) return 1;
-          return 0;
-        });
-        break;
-    }
-
     return list;
-  }, [initialProperties, filters]);
+  }, [
+    properties,
+    filters.q,
+    filters.transactionType,
+    filters.city,
+    filters.locality,
+    filters.propertyType,
+    filters.bhk,
+    filters.minPrice,
+    filters.maxPrice,
+    filters.furnishing,
+    filters.verifiedOnly,
+    filters.featuredOnly,
+  ]);
 
-  // Active filter tags for quick removal
+  // ── Active filter chips ────────────────────────────────────────────────────
   const activeTags = useMemo(() => {
     const tags: { label: string; onRemove: () => void }[] = [];
 
@@ -254,7 +338,7 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
           filters={filters}
           onFilterChange={handleFilterChange}
           onReset={handleReset}
-          totalCount={filteredProperties.length}
+          totalCount={displayProperties.length}
         />
       </div>
 
@@ -264,10 +348,15 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
         <div className="bg-white border border-[#E4EAF2] rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="text-base sm:text-lg font-display font-bold text-[#172033]">
-              {filteredProperties.length}{" "}
-              {filteredProperties.length === 1 ? "Property Available" : "Properties Available"}
+              {displayProperties.length}{" "}
+              {displayProperties.length === 1 ? "Property" : "Properties"} Loaded
               {filters.city !== "All Cities" && (
                 <span className="text-[#397BCF]"> in {filters.city}</span>
+              )}
+              {hasMore && (
+                <span className="text-xs font-normal text-[#667085] ml-2">
+                  (scroll to load more)
+                </span>
               )}
             </div>
             <p className="text-xs text-[#667085]">
@@ -317,7 +406,7 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
         )}
 
         {/* Property Grid Results */}
-        {filteredProperties.length === 0 ? (
+        {displayProperties.length === 0 && !loadingMore ? (
           <div className="bg-white border border-[#E4EAF2] rounded-3xl p-10 sm:p-16 text-center shadow-xs">
             <div className="w-16 h-16 rounded-3xl bg-[#F3F8FE] text-[#397BCF] flex items-center justify-center mx-auto mb-4">
               <Home className="w-8 h-8" />
@@ -338,15 +427,36 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
-            {filteredProperties.map((property, idx) => (
-              <PropertyCard
-                key={property.id}
-                property={property}
-                priorityImage={idx < 3}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
+              {displayProperties.map((property, idx) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  priorityImage={idx < 3}
+                />
+              ))}
+            </div>
+
+            {/* Infinite scroll sentinel + loading indicator */}
+            <div ref={sentinelRef} className="w-full flex justify-center py-8">
+              {loadingMore && (
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-10 h-10 rounded-full border-2 border-[#397BCF]/20 border-t-[#397BCF] animate-spin" />
+                  <p className="text-xs text-[#667085] font-medium">Loading more properties...</p>
+                </div>
+              )}
+              {!hasMore && displayProperties.length > 0 && (
+                <div className="flex flex-col items-center gap-2 py-4">
+                  <div className="w-8 h-px bg-[#E4EAF2] flex-1" />
+                  <p className="text-xs text-[#98A2B3] font-medium px-4">
+                    You&apos;ve seen all {displayProperties.length} properties
+                  </p>
+                  <div className="w-8 h-px bg-[#E4EAF2] flex-1" />
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
     </div>

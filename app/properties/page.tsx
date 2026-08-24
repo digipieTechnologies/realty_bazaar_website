@@ -11,10 +11,36 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://therealtybazaar.com/properties" },
 };
 
-export const revalidate = 60; // ISR: revalidate every 60 seconds
+interface PropertiesPageProps {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-export default async function PropertiesPage() {
-  const properties = await getPublishedProperties();
+export default async function PropertiesPage({ searchParams }: PropertiesPageProps) {
+  const params = (await searchParams) || {};
+  const propertyType = typeof params.type === "string" ? params.type : undefined;
+  const transactionType = typeof params.transaction === "string" ? params.transaction : undefined;
+  const city = typeof params.city === "string" ? params.city : undefined;
+  const locality = typeof params.locality === "string" ? params.locality : undefined;
+  const bhk = typeof params.bhk === "string" ? params.bhk : undefined;
+  const minPrice = typeof params.minPrice === "string" ? parseFloat(params.minPrice) : undefined;
+  const maxPrice = typeof params.maxPrice === "string" ? parseFloat(params.maxPrice) : undefined;
+  const q = typeof params.q === "string" ? params.q : undefined;
+  const sort = typeof params.sort === "string" ? (params.sort as any) : undefined;
+
+  // Load the first page matching any server search parameters
+  const properties = await getPublishedProperties({
+    limit: 12,
+    offset: 0,
+    propertyType: propertyType && propertyType !== "All Types" ? propertyType : undefined,
+    transactionType: transactionType && transactionType !== "all" ? transactionType : undefined,
+    city: city && city !== "All Cities" ? city : undefined,
+    locality,
+    bedrooms: bhk && bhk !== "Any" ? bhk : undefined,
+    minPrice,
+    maxPrice,
+    searchQuery: q,
+    sortBy: sort,
+  });
 
   return (
     <div className="bg-[#F8FAFC] min-h-screen">
