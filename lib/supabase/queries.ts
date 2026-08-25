@@ -371,10 +371,16 @@ export async function getPropertyBySlug(
 }
 
 /**
- * Helper to identify test/sample listings that must not be indexed or exposed in public sitemaps
+ * Helper to identify test/sample/seed listings that must not be indexed or exposed in public sitemaps
  */
-export function isTestProperty(title: string | null | undefined): boolean {
+export function isTestProperty(title: string | null | undefined, id?: string | null | undefined): boolean {
   if (!title) return true;
+
+  // Exclude mock seed UUIDs (00000000-0000-4000-b000-...)
+  if (id && /^00000000-0000-4000-b000-/i.test(id)) {
+    return true;
+  }
+
   const t = title.toLowerCase().trim();
   return (
     t === "test" ||
@@ -404,7 +410,7 @@ export async function getAllPropertySlugs(): Promise<string[]> {
 
     if (error || !data) return [];
     return data
-      .filter((row: { id: string; property_title: string }) => !isTestProperty(row.property_title))
+      .filter((row: { id: string; property_title: string }) => !isTestProperty(row.property_title, row.id))
       .map((row: { id: string; property_title: string }) =>
         buildPropertySlug(row.property_title, row.id)
       );
@@ -435,7 +441,7 @@ export async function getAllPropertiesForSitemap(): Promise<PropertySitemapEntry
     return data
       .filter(
         (row: { id: string; property_title: string; updated_at?: string; created_at?: string }) =>
-          !isTestProperty(row.property_title)
+          !isTestProperty(row.property_title, row.id)
       )
       .map((row: { id: string; property_title: string; updated_at?: string; created_at?: string }) => ({
         slug: buildPropertySlug(row.property_title, row.id),
