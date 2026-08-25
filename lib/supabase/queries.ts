@@ -370,6 +370,27 @@ export async function getPropertyBySlug(
   }
 }
 
+/**
+ * Helper to identify test/sample listings that must not be indexed or exposed in public sitemaps
+ */
+export function isTestProperty(title: string | null | undefined): boolean {
+  if (!title) return true;
+  const t = title.toLowerCase().trim();
+  return (
+    t === "test" ||
+    t.startsWith("test ") ||
+    t.startsWith("test-") ||
+    t.startsWith("test_") ||
+    t.startsWith("[test]") ||
+    t.includes("test property") ||
+    t.includes("test ads") ||
+    t.includes("test marketing") ||
+    t.includes("test listing") ||
+    t.includes("sample property") ||
+    t.includes("mobile test")
+  );
+}
+
 // ── Get all slugs for generateStaticParams ────────────────────────────────────
 export async function getAllPropertySlugs(): Promise<string[]> {
   try {
@@ -382,9 +403,11 @@ export async function getAllPropertySlugs(): Promise<string[]> {
       .eq("property_status", "available");
 
     if (error || !data) return [];
-    return data.map((row: { id: string; property_title: string }) =>
-      buildPropertySlug(row.property_title, row.id)
-    );
+    return data
+      .filter((row: { id: string; property_title: string }) => !isTestProperty(row.property_title))
+      .map((row: { id: string; property_title: string }) =>
+        buildPropertySlug(row.property_title, row.id)
+      );
   } catch (err) {
     console.error("[getAllPropertySlugs] Unexpected error:", err);
     return [];
@@ -409,11 +432,16 @@ export async function getAllPropertiesForSitemap(): Promise<PropertySitemapEntry
       .eq("property_status", "available");
 
     if (error || !data) return [];
-    return data.map((row: { id: string; property_title: string; updated_at?: string; created_at?: string }) => ({
-      slug: buildPropertySlug(row.property_title, row.id),
-      updated_at: row.updated_at,
-      created_at: row.created_at,
-    }));
+    return data
+      .filter(
+        (row: { id: string; property_title: string; updated_at?: string; created_at?: string }) =>
+          !isTestProperty(row.property_title)
+      )
+      .map((row: { id: string; property_title: string; updated_at?: string; created_at?: string }) => ({
+        slug: buildPropertySlug(row.property_title, row.id),
+        updated_at: row.updated_at,
+        created_at: row.created_at,
+      }));
   } catch (err) {
     console.error("[getAllPropertiesForSitemap] Unexpected error:", err);
     return [];
