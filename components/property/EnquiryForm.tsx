@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { submitEnquiry } from "@/app/actions";
-import { Send, Phone, MessageCircle, Calendar, ShieldCheck, CheckCircle2, Building } from "lucide-react";
+import { Send, Phone, MessageCircle, Calendar, ShieldCheck, CheckCircle2, Building, Share2 } from "lucide-react";
 import ScheduleVisitModal from "@/components/property/ScheduleVisitModal";
+import SharePropertyModal from "@/components/property/SharePropertyModal";
 import type { Property } from "@/types";
 
 interface EnquiryFormProps {
@@ -18,6 +19,7 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,16 +88,28 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
           </a>
         </div>
 
-        {/* Schedule Visit Trigger Button */}
-        <button
-          type="button"
-          onClick={() => setScheduleModalOpen(true)}
-          id="property-schedule-visit-btn"
-          className="w-full flex items-center justify-center gap-2 py-3.5 border-2 border-[#397BCF] text-[#397BCF] hover:bg-[#EAF3FF] font-bold rounded-2xl text-xs sm:text-sm transition-all shadow-2xs active:scale-95 cursor-pointer"
-        >
-          <Calendar className="w-4 h-4" />
-          Schedule a Physical Site Visit
-        </button>
+        {/* Site Visit and Share / Open Draft Actions */}
+        <div className="space-y-2">
+          <button
+            type="button"
+            onClick={() => setScheduleModalOpen(true)}
+            id="property-schedule-visit-btn"
+            className="w-full flex items-center justify-center gap-2 py-3 border-2 border-[#397BCF] text-[#397BCF] hover:bg-[#EAF3FF] font-bold rounded-2xl text-xs sm:text-sm transition-all shadow-2xs active:scale-95 cursor-pointer"
+          >
+            <Calendar className="w-4 h-4" />
+            Schedule a Physical Site Visit
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShareModalOpen(true)}
+            id="property-open-draft-btn"
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#F8FAFC] hover:bg-[#F3F8FE] text-[#172033] hover:text-[#397BCF] border border-[#E4EAF2] hover:border-[#397BCF]/40 font-bold rounded-2xl text-xs transition-all active:scale-95 cursor-pointer"
+          >
+            <Share2 className="w-3.5 h-3.5 text-[#397BCF]" />
+            Open Draft Text &amp; Share Listing
+          </button>
+        </div>
 
         {/* Divider */}
         <div className="relative py-1">
@@ -193,6 +207,12 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
         property={property}
         isOpen={scheduleModalOpen}
         onClose={() => setScheduleModalOpen(false)}
+      />
+
+      <SharePropertyModal
+        property={property}
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
       />
     </div>
   );

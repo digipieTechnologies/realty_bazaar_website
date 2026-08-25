@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, Clock, User, Phone, CheckCircle2 } from "lucide-react";
+import { X, Calendar, CheckCircle2 } from "lucide-react";
 import { submitEnquiry } from "@/app/actions";
 import type { Property } from "@/types";
 
@@ -17,6 +18,7 @@ export default function ScheduleVisitModal({
   isOpen,
   onClose,
 }: ScheduleVisitModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState("");
@@ -24,6 +26,27 @@ export default function ScheduleVisitModal({
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") onClose();
+      };
+      window.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isOpen, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +69,9 @@ export default function ScheduleVisitModal({
     }
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
@@ -64,6 +89,7 @@ export default function ScheduleVisitModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ type: "spring", duration: 0.35, bounce: 0.1 }}
             className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10 border border-[#E4EAF2]"
           >
             {/* Modal Header */}
@@ -71,7 +97,7 @@ export default function ScheduleVisitModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
@@ -103,7 +129,7 @@ export default function ScheduleVisitModal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="mt-4 px-6 py-2.5 bg-[#397BCF] text-white font-bold rounded-xl text-xs hover:bg-[#245FA8] transition-colors"
+                    className="mt-4 px-6 py-2.5 bg-[#397BCF] text-white font-bold rounded-xl text-xs hover:bg-[#245FA8] transition-colors cursor-pointer"
                   >
                     Done
                   </button>
@@ -185,7 +211,7 @@ export default function ScheduleVisitModal({
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3.5 bg-[#397BCF] hover:bg-[#245FA8] disabled:opacity-50 text-white font-bold rounded-2xl text-sm transition-all shadow-md active:scale-95"
+                    className="w-full py-3.5 bg-[#397BCF] hover:bg-[#245FA8] disabled:opacity-50 text-white font-bold rounded-2xl text-sm transition-all shadow-md active:scale-95 cursor-pointer"
                   >
                     {submitting ? "Requesting Visit..." : "Confirm Site Visit Request"}
                   </button>
@@ -199,6 +225,7 @@ export default function ScheduleVisitModal({
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

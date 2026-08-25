@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Bed, Bath, Square, MapPin, Heart, ShieldCheck, ArrowUpRight } from "lucide-react";
 import type { Property } from "@/types";
 import { formatPrice } from "@/lib/utils";
+import SharePropertyButton from "./SharePropertyButton";
 
 interface PropertyCardProps {
   property: Property;
@@ -27,20 +28,29 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
   return (
     <div className="group relative bg-white border border-[#E4EAF2] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_2px_8px_-2px_rgb(0_0_0/0.04)] hover:shadow-[0_16px_32px_-8px_rgb(57_123_207/0.12)] hover:border-[#397BCF]/60 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
       {/* Image Container */}
-      <Link
-        href={`/properties/${property.slug}`}
-        className="relative block aspect-[4/3] w-full overflow-hidden bg-[#F3F8FE]"
-      >
-        <img
-          src={imageUrl}
-          alt={property.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-          loading={priorityImage ? "eager" : "lazy"}
-        />
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F3F8FE]">
+        <Link
+          href={`/properties/${property.slug}`}
+          className="block w-full h-full"
+        >
+          <img
+            src={imageUrl}
+            alt={property.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            loading={priorityImage ? "eager" : "lazy"}
+          />
 
-        {/* Top Badges */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-          <div className="flex items-center gap-1.5">
+          {/* Property Type Badge (bottom left of image) */}
+          <div className="absolute bottom-3 left-3 pointer-events-none">
+            <span className="bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-0.5 rounded-md">
+              {property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1)}
+            </span>
+          </div>
+        </Link>
+
+        {/* Top Badges & Actions Overlay */}
+        <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
+          <div className="flex items-center gap-1.5 pointer-events-none">
             {property.promoted && (
               <span className="bg-[#172033]/90 backdrop-blur-md text-[#6FA5E5] text-[10px] font-bold px-2.5 py-1 rounded-lg border border-white/10 shadow-sm">
                 Promoted
@@ -56,28 +66,26 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
             </span>
           </div>
 
-          {/* Favorite Heart Button */}
-          <button
-            type="button"
-            onClick={toggleFavorite}
-            className="pointer-events-auto w-8 h-8 rounded-full bg-white/90 backdrop-blur-md hover:bg-white text-[#172033] flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-110 active:scale-95"
-            aria-label={isSaved ? "Remove from saved" : "Save property"}
-          >
-            <Heart
-              className={`w-4 h-4 transition-colors ${
-                isSaved ? "fill-red-500 text-red-500" : "text-[#667085] hover:text-red-500"
-              }`}
-            />
-          </button>
-        </div>
+          {/* Action Buttons: Share & Favorite */}
+          <div className="flex items-center gap-1.5 pointer-events-auto">
+            <SharePropertyButton property={property} variant="icon" />
 
-        {/* Property Type Badge (bottom left of image) */}
-        <div className="absolute bottom-3 left-3 pointer-events-none">
-          <span className="bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-0.5 rounded-md">
-            {property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1)}
-          </span>
+            {/* Favorite Heart Button */}
+            <button
+              type="button"
+              onClick={toggleFavorite}
+              className="w-8 h-8 rounded-full bg-white/90 backdrop-blur-md hover:bg-white text-[#172033] flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-110 active:scale-95 cursor-pointer"
+              aria-label={isSaved ? "Remove from saved" : "Save property"}
+            >
+              <Heart
+                className={`w-4 h-4 transition-colors ${
+                  isSaved ? "fill-red-500 text-red-500" : "text-[#667085] hover:text-red-500"
+                }`}
+              />
+            </button>
+          </div>
         </div>
-      </Link>
+      </div>
 
       {/* Card Content */}
       <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">

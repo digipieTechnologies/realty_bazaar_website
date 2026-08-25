@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Smartphone, Sparkles, Share2, Target, CheckCircle2, QrCode } from "lucide-react";
 import AppStoreButtons from "@/components/ui/AppStoreButtons";
@@ -10,7 +12,32 @@ interface ListPropertyModalProps {
 }
 
 export default function ListPropertyModal({ isOpen, onClose }: ListPropertyModalProps) {
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") onClose();
+      };
+      window.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isOpen, onClose]);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
@@ -28,14 +55,15 @@ export default function ListPropertyModal({ isOpen, onClose }: ListPropertyModal
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
+            transition={{ type: "spring", duration: 0.35, bounce: 0.15 }}
             className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10 border border-[#E4EAF2]"
           >
             {/* Header */}
             <div className="bg-gradient-to-br from-[#172033] via-[#1e2d47] to-[#253553] p-6 text-white relative">
               <button
+                type="button"
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
@@ -58,64 +86,74 @@ export default function ListPropertyModal({ isOpen, onClose }: ListPropertyModal
             <div className="p-6 space-y-6">
               {/* How it works for brokers */}
               <div className="space-y-3">
-                <div className="text-xs font-bold uppercase tracking-wider text-[#667085]">
-                  How it works:
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <p className="text-xs font-bold text-[#667085] uppercase tracking-wider">
+                  How Listing Works
+                </p>
+                <div className="space-y-2.5">
                   {[
                     {
+                      step: "1",
+                      icon: Smartphone,
+                      title: "Download App & Register",
+                      desc: "Download The Realty Bazaar app from Google Play and verify your broker profile.",
+                    },
+                    {
+                      step: "2",
                       icon: Sparkles,
-                      title: "1. Upload in App",
-                      desc: "Add photos, videos, and property specs from your phone.",
+                      title: "Add Property in 60 Seconds",
+                      desc: "Upload photos/videos. AI auto-generates your title, description and hashtags.",
                     },
                     {
+                      step: "3",
                       icon: Share2,
-                      title: "2. Auto-Publish",
-                      desc: "Go live on therealtybazaar.com + Instagram & Facebook.",
+                      title: "Auto-Publish to Web & Social",
+                      desc: "Your listing appears here on therealtybazaar.com and can be posted to Instagram/Facebook with 1 tap.",
                     },
                     {
+                      step: "4",
                       icon: Target,
-                      title: "3. Direct Buyers",
+                      title: "Receive Direct Leads in App CRM",
                       desc: "Buyers discover your listing and call/WhatsApp directly.",
                     },
-                    {
-                      icon: CheckCircle2,
-                      title: "4. Integrated CRM",
-                      desc: "All enquiries automatically land in your phone's CRM.",
-                    },
-                  ].map((step, idx) => (
-                    <div
-                      key={idx}
-                      className="p-3 bg-[#F8FAFC] border border-[#E4EAF2] rounded-xl flex items-start gap-2.5"
-                    >
-                      <step.icon className="w-4 h-4 text-[#397BCF] mt-0.5 shrink-0" />
+                  ].map((item) => (
+                    <div key={item.step} className="flex items-start gap-3 p-3 rounded-2xl bg-[#F8FAFC] border border-[#E4EAF2]">
+                      <div className="w-7 h-7 rounded-xl bg-[#397BCF] text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                        {item.step}
+                      </div>
                       <div>
-                        <div className="text-xs font-bold text-[#172033]">{step.title}</div>
-                        <div className="text-[11px] text-[#667085] leading-tight mt-0.5">
-                          {step.desc}
+                        <div className="text-xs font-bold text-[#172033] flex items-center gap-1.5">
+                          <item.icon className="w-3.5 h-3.5 text-[#397BCF]" />
+                          {item.title}
                         </div>
+                        <p className="text-[11px] text-[#667085] mt-0.5 leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* App download section */}
+              {/* Download Links */}
               <div className="pt-2 border-t border-[#E4EAF2] text-center space-y-3">
-                <div className="text-sm font-bold text-[#172033]">
-                  Download the Free Mobile App to Start Listing:
-                </div>
-                <div className="flex justify-center">
-                  <AppStoreButtons size="md" />
-                </div>
-                <p className="text-[11px] text-[#98A2B3]">
-                  Available on Android & iOS. No web registration required.
+                <p className="text-xs font-bold text-[#172033]">
+                  Get The Realty Bazaar App to Start Listing
                 </p>
+                <div className="flex justify-center">
+                  <AppStoreButtons className="w-full max-w-xs justify-center" />
+                </div>
+                <div className="flex items-center justify-center gap-4 text-[11px] text-[#667085] pt-1">
+                  <span className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-green-600" /> Free to download
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-green-600" /> Free listing plan
+                  </span>
+                </div>
               </div>
             </div>
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
