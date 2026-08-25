@@ -18,9 +18,32 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://therealtybazaar.com/how-it-works" },
 };
 
+const breadcrumbsLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://therealtybazaar.com",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "How It Works",
+      item: "https://therealtybazaar.com/how-it-works",
+    },
+  ],
+};
+
 export default function HowItWorksPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }}
+      />
       <section className="pt-10 sm:pt-14 pb-8 sm:pb-10 bg-[#F8FAFC] text-center border-b border-[#E4EAF2]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <ScrollReveal>

@@ -87,9 +87,32 @@ const featureSections = [
   },
 ];
 
+const breadcrumbsLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://therealtybazaar.com",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "For Brokers",
+      item: "https://therealtybazaar.com/for-brokers",
+    },
+  ],
+};
+
 export default function ForBrokersPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }}
+      />
       {/* Hero */}
       <section className="section-padding bg-gradient-to-br from-[#172033] via-[#1e2d47] to-[#253553] relative overflow-hidden">
         <div className="absolute inset-0 dot-grid opacity-[0.06]" />

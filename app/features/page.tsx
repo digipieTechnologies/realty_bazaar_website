@@ -63,9 +63,32 @@ const featureHighlights = [
   },
 ];
 
+const breadcrumbsLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://therealtybazaar.com",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Features",
+      item: "https://therealtybazaar.com/features",
+    },
+  ],
+};
+
 export default function FeaturesPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }}
+      />
       {/* Hero */}
       <section className="pt-12 sm:pt-16 pb-10 sm:pb-12 bg-gradient-to-br from-[#F3F8FE] to-white border-b border-[#E4EAF2]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">

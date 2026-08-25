@@ -17,11 +17,12 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
-const SITE_URL = "https://therealtybazaar.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://therealtybazaar.com";
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#172033",
 };
 
 export const metadata: Metadata = {
@@ -31,26 +32,45 @@ export const metadata: Metadata = {
     template: "%s | The Realty Bazaar",
   },
   description:
-    "The Realty Bazaar is a PropTech platform for Indian real-estate brokers. Market properties, generate leads and manage your entire real estate business from one powerful mobile app.",
+    "The Realty Bazaar is India's leading PropTech platform for real-estate brokers. Market properties across Instagram & Facebook, generate verified buyer leads, and manage your pipeline with a mobile CRM.",
   keywords: [
     "real estate CRM India",
     "property marketing app",
-    "broker CRM",
+    "broker CRM India",
     "lead management real estate",
-    "Instagram property marketing",
-    "Facebook property ads",
-    "real estate technology India",
+    "properties for sale Surat",
+    "properties for sale Gujarat",
+    "real estate advertising app",
+    "real estate broker platform",
     "proptech India",
-    "property broker app",
-    "real estate leads India",
+    "property listing marketplace",
   ],
   authors: [{ name: "The Realty Bazaar", url: SITE_URL }],
   creator: "The Realty Bazaar",
   publisher: "The Realty Bazaar",
+  category: "Real Estate & PropTech",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
+    other: {
+      "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION || "",
+    },
   },
   openGraph: {
     type: "website",
@@ -59,7 +79,7 @@ export const metadata: Metadata = {
     siteName: "The Realty Bazaar",
     title: "The Realty Bazaar — Property Marketing & Lead Management for Real Estate Brokers",
     description:
-      "Market properties, generate leads and manage your real estate business from one powerful mobile platform.",
+      "Market properties, generate verified buyer leads and manage your entire real estate business from one powerful mobile platform.",
     images: [
       {
         url: `${SITE_URL}/og-image.jpg`,
@@ -89,21 +109,29 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png",
   },
+  manifest: "/manifest.webmanifest",
 };
 
 // JSON-LD structured data
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": "RealEstateAgent",
   name: "The Realty Bazaar",
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
+  image: `${SITE_URL}/og-image.jpg`,
   description:
-    "PropTech platform for Indian real-estate brokers — property marketing, lead generation and CRM in one mobile app.",
+    "PropTech platform and property discovery marketplace for Indian real-estate brokers — marketing, lead generation and CRM in one app.",
   address: {
     "@type": "PostalAddress",
     addressCountry: "IN",
+    addressRegion: "Gujarat",
   },
+  areaServed: [
+    { "@type": "AdministrativeArea", name: "Surat" },
+    { "@type": "AdministrativeArea", name: "Gujarat" },
+    { "@type": "Country", name: "India" },
+  ],
   sameAs: [
     "https://www.instagram.com/therealtybazaar",
     "https://www.facebook.com/therealtybazaar",

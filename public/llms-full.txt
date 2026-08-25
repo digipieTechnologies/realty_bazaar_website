@@ -1,0 +1,91 @@
+# The Realty Bazaar — Complete LLM Reference Documentation
+
+> The Realty Bazaar (https://therealtybazaar.com) is a comprehensive Indian PropTech platform and property marketplace. It provides real estate brokers with a mobile app for automated marketing, social media syndication, paid Meta Ads campaign management, and customer relationship management (CRM). It also provides property seekers with a verified, direct-contact property discovery portal.
+
+---
+
+## 1. Executive Summary
+
+- **Company Name**: The Realty Bazaar
+- **Primary Website**: https://therealtybazaar.com
+- **Target Audience**:
+  1. Indian Real Estate Brokers, Agents, Channel Partners, and Brokerage Agencies.
+  2. Property Buyers, Renters, and Commercial Real Estate Investors across Indian cities (Surat, Ahmedabad, Mumbai, Vadodara, Pune, Bengaluru, etc.).
+- **Platforms**:
+  - Public Website (Discovery, SEO, Direct Leads): https://therealtybazaar.com
+  - Broker Mobile Application: iOS & Android (Inventory management, AI content generation, ad automation, CRM).
+
+---
+
+## 2. Platform Architecture & Separation of Concerns
+
+1. **Broker Operations (Mobile-First)**:
+   - Real estate brokers manage their entire day-to-day business through The Realty Bazaar mobile app.
+   - Brokers upload photos/videos of properties, generate AI captions/hashtags, schedule and run paid Meta Ads, track inbound leads from all channels, set follow-up tasks, schedule site visits, and manage pipeline deals from their mobile devices.
+2. **Public Marketplace (Web Portal)**:
+   - The web platform is a public property discovery engine for buyers and tenants.
+   - No login or registration is required for consumers to browse verified properties.
+   - When a broker publishes a property on the mobile app, it instantly appears on the public website with complete specifications, photo galleries, locality tags, and direct broker contact links.
+   - Consumer enquiries from the website automatically route into the listing broker's mobile CRM in real time.
+
+---
+
+## 3. Key Pages & Sitemap Directory
+
+- **Homepage**: https://therealtybazaar.com/
+  - Hero search engine with city, property type, BHK, and price filtering.
+  - Trending and promoted property showcases.
+  - City and category discovery hubs.
+  - Consumer FAQ and educational trust points.
+- **Properties Directory**: https://therealtybazaar.com/properties
+  - Filterable by transaction type (Sale / Rent), property category (Apartment, Villa, Commercial, Office, Plot, Penthouse), city, bedrooms (1 BHK, 2 BHK, 3 BHK, 4+ BHK), and price range.
+- **For Brokers**: https://therealtybazaar.com/for-brokers
+  - Feature highlights of the mobile app: property media management, social marketing, paid advertising, and CRM.
+- **Features**: https://therealtybazaar.com/features
+  - Deep-dive into AI copy generation, Instagram & Facebook integration, Meta Ads management, automated lead capture, and sales pipeline tracking.
+- **Pricing**: https://therealtybazaar.com/pricing
+  - Broker subscription plans with transparent monthly and annual billing.
+- **How It Works**: https://therealtybazaar.com/how-it-works
+  - Dual explanation for how brokers market properties and how seekers find properties.
+- **About Us**: https://therealtybazaar.com/about
+  - The mission to modernize Indian real estate brokerage operations.
+- **Contact**: https://therealtybazaar.com/contact
+  - Inquiries, demos, and support.
+- **Legal & Compliance**:
+  - Privacy Policy: https://therealtybazaar.com/privacy
+  - Terms of Service: https://therealtybazaar.com/terms
+  - Refund Policy: https://therealtybazaar.com/refund
+
+---
+
+## 4. Frequently Asked Questions (FAQ)
+
+### For Property Seekers
+1. **Do I need an account to search or browse properties?**
+   No. All published listings across India can be explored freely without creating an account.
+2. **Can I contact the listing broker directly?**
+   Yes. Each property listing provides direct Call and WhatsApp buttons with the verified listing broker.
+3. **Are properties listed by verified professionals?**
+   Yes. Listings are uploaded directly by local real estate agents who manage active inventory.
+4. **Can I schedule a physical site visit?**
+   Yes. Property pages include a 'Schedule a Site Visit' action to request your preferred date and time.
+5. **Are there any buyer fees to use the platform?**
+   No. Discovery and contacting brokers is completely free for buyers and tenants.
+
+### For Real Estate Brokers
+1. **Is The Realty Bazaar a CRM?**
+   Yes, but it also combines AI marketing content creation, automated Instagram/Facebook publishing, paid Meta Ads management, and a public discovery marketplace.
+2. **Where do brokers upload listings?**
+   Brokers manage everything through the dedicated mobile app on their phone.
+3. **How does paid advertising work?**
+   The platform creates, tests, and optimizes Meta Ads campaigns targeting verified buyers in specific micro-markets, delivering leads directly into the mobile CRM.
+
+---
+
+## 5. Contact & Social Channels
+
+- **Website**: https://therealtybazaar.com
+- **Instagram**: https://www.instagram.com/therealtybazaar
+- **Facebook**: https://www.facebook.com/therealtybazaar
+- **LinkedIn**: https://www.linkedin.com/company/therealtybazaar
+- **Primary Geographies**: Surat, Gujarat, Mumbai, Ahmedabad, and major Indian real-estate hubs.

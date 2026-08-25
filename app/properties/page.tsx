@@ -42,8 +42,48 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
     sortBy: sort,
   });
 
+  const itemListLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: properties.map((property, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: property.title,
+      url: `https://therealtybazaar.com/properties/${property.slug}`,
+      image: property.images?.[0] || undefined,
+    })),
+  };
+
+  const breadcrumbsLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://therealtybazaar.com",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Properties",
+        item: "https://therealtybazaar.com/properties",
+      },
+    ],
+  };
+
   return (
     <div className="bg-[#F8FAFC] min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }}
+      />
+
       {/* Top Header Banner */}
       <section className="pt-8 pb-6 bg-white border-b border-[#E4EAF2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -19,12 +19,35 @@ const jsonLd = {
   url: "https://therealtybazaar.com/about",
 };
 
+const breadcrumbsLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://therealtybazaar.com",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "About Us",
+      item: "https://therealtybazaar.com/about",
+    },
+  ],
+};
+
 export default function AboutPage() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }}
       />
 
       {/* Hero */}

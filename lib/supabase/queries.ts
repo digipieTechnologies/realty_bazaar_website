@@ -391,6 +391,35 @@ export async function getAllPropertySlugs(): Promise<string[]> {
   }
 }
 
+export interface PropertySitemapEntry {
+  slug: string;
+  updated_at?: string | null;
+  created_at?: string | null;
+}
+
+// ── Get property entries with dates for XML sitemap ───────────────────────────
+export async function getAllPropertiesForSitemap(): Promise<PropertySitemapEntry[]> {
+  try {
+    const supabase = createPublicServerSupabaseClient();
+    const { data, error } = await supabase
+      .from("properties")
+      .select("id, property_title, updated_at, created_at")
+      .eq("is_active", true)
+      .eq("is_deleted", false)
+      .eq("property_status", "available");
+
+    if (error || !data) return [];
+    return data.map((row: { id: string; property_title: string; updated_at?: string; created_at?: string }) => ({
+      slug: buildPropertySlug(row.property_title, row.id),
+      updated_at: row.updated_at,
+      created_at: row.created_at,
+    }));
+  } catch (err) {
+    console.error("[getAllPropertiesForSitemap] Unexpected error:", err);
+    return [];
+  }
+}
+
 // ── Similar properties ────────────────────────────────────────────────────────
 export async function getSimilarProperties(
   property: Property,
