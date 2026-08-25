@@ -1,34 +1,136 @@
 # The Realty Bazaar
 
-> The Realty Bazaar is India's leading PropTech platform for real-estate brokers and a verified property discovery marketplace. It provides a mobile-first CRM with automated social marketing, AI copy generation, Meta Ads lead generation, and direct client communication for Indian brokers.
+> The Realty Bazaar is a PropTech property discovery website and mobile-first workflow platform for Indian real estate brokers and property seekers.
 
-## Core Platform
+## Overview
 
-- [Home Page](https://therealtybazaar.com/): Public property discovery engine and platform introduction.
-- [Property Marketplace](https://therealtybazaar.com/properties): Real-time searchable catalogue of verified residential apartments, independent villas, commercial spaces, and plots for sale and rent across India (Surat, Ahmedabad, Mumbai, Vadodara, Pune, Bengaluru).
-- [For Brokers](https://therealtybazaar.com/for-brokers): Dedicated overview for real estate professionals on how the mobile app manages property uploads, social marketing, lead capture, and CRM workflows.
-- [Features](https://therealtybazaar.com/features): Comprehensive feature breakdown including AI content creation, Instagram/Facebook auto-publishing, Meta Ads management, and mobile pipeline tracking.
-- [Pricing & Subscription Plans](https://therealtybazaar.com/pricing): Transparent pricing tiers (Starter, Standard, Premium) for individual agents and real estate brokerage agencies.
-- [How It Works](https://therealtybazaar.com/how-it-works): Step-by-step dual workflow for brokers managing listings and property seekers finding homes.
+The Realty Bazaar connects real estate brokers with prospective property buyers and tenants. The platform consists of two integrated components:
+1. **Public Property Discovery Website**: A web portal where end customers can browse, search, and view verified property listings and directly contact listing brokers with zero intermediary fees.
+2. **Broker Mobile Application**: A mobile app (available on Android and iOS) where real estate professionals upload listings, generate AI property descriptions, publish posts to Instagram and Facebook, manage paid Meta advertising campaigns, and organize buyer leads in a built-in CRM.
 
-## Key Features & Capabilities
+## What The Realty Bazaar Does
 
-- **Mobile-First Real Estate CRM**: Manage inventory, leads, site visits, follow-up reminders, and deals on iOS and Android.
-- **Automated Social Publishing**: One-tap publishing of property media, AI captions, and hashtags directly to Instagram and Facebook.
-- **Managed Paid Advertising**: Automated Meta Ads campaigns targeting active local property buyers with cost-per-lead optimization.
-- **Direct Buyer-Broker Connectivity**: Property seekers connect directly with listing brokers via Phone and WhatsApp with zero intermediary fees.
-- **Public Property Marketplace**: Automatically showcases active broker inventory with structured data and rich SEO for organic search discovery.
+- **For Consumers & Property Seekers**: Provides an open real estate catalogue to discover residential flats, independent houses, luxury villas, commercial spaces, and land plots across key Indian cities.
+- **For Real Estate Brokers**: Provides software tools on mobile devices to digitize property marketing, automate social media posting, coordinate paid lead generation campaigns, track client enquiries, and manage site visits.
 
-## Company & Support
+## For Property Seekers
 
-- [About Us](https://therealtybazaar.com/about): Mission, vision, and background on digitizing the Indian real estate market.
-- [Contact & Support](https://therealtybazaar.com/contact): Demo requests, enterprise enquiries, partnerships, and customer support.
-- [Privacy Policy](https://therealtybazaar.com/privacy): Data protection, user privacy, and information handling practices.
-- [Terms of Service](https://therealtybazaar.com/terms): Terms and conditions governing platform usage.
-- [Refund Policy](https://therealtybazaar.com/refund): Policies regarding trial plans and subscription services.
+- Browse properties freely without creating an account or paying discovery fees.
+- Filter properties by city, locality, transaction type (Sale or Rent), property type, BHK configuration, furnishing status, and price range.
+- View detailed property specifications including super built-up area, carpet area, floor number, facing direction, furnishing, possession status, photos, and amenities.
+- Contact the listing broker directly via telephone or WhatsApp.
+- Schedule a physical site visit request with a preferred date and time slot.
+- Share property details and copy structured property drafts across messaging and social platforms.
 
-## Optional / Extended Documentation
+## For Brokers
 
-- [Full Platform LLM Guide](https://therealtybazaar.com/llms-full.txt): Complete detailed text specification for LLMs, AI agents, and search engines.
-- [XML Sitemap](https://therealtybazaar.com/sitemap.xml): Complete machine-readable XML sitemap.
-- [Robots.txt](https://therealtybazaar.com/robots.txt): Web crawler index instructions.
+- Upload and manage property inventory (photos, videos, pricing, specifications) directly from the mobile application.
+- Generate AI-assisted property descriptions, marketing captions, and hashtags.
+- Publish property media directly to connected Instagram and Facebook accounts with one tap.
+- Run and monitor managed Meta Ads campaigns with optimized daily advertising budgets.
+- Capture inbound leads from advertising, social channels, and public website enquiries into a centralized mobile CRM.
+- Set follow-up reminders, log communication history, and manage the sales pipeline on mobile.
+- Note: Broker onboarding, property uploading, and listing management take place exclusively through The Realty Bazaar mobile app and broker portal, not through website account creation.
+
+## Property Listings
+
+Property listings published on the website are uploaded by independent real estate brokers using the mobile app. Publicly displayed listing details include:
+- **Title and Description**: Descriptive property title and detailed overview.
+- **Transaction Type**: Listed for Sale or for Rent.
+- **Property Type**: Apartment / Flat, Villa, Independent House, Plot / Land, Commercial Office, Retail Shop, Studio Apartment, or Penthouse.
+- **Pricing**: Total price, price per square foot (for sale properties), and pricing notes.
+- **Location**: City, locality name, and street address.
+- **Dimensions & Layout**: Number of bedrooms (BHK), bathrooms, super built-up area, and carpet area in square feet.
+- **Additional Specs**: Floor number, facing direction, furnishing status (Unfurnished, Semi-Furnished, Fully Furnished), possession status, and balcony count.
+- **Visuals**: High-resolution photo gallery and fullscreen image lightbox.
+- **Amenities**: Verified amenities such as 24/7 security, power backup, parking, elevator, clubhouse, gymnasium, swimming pool, and gardens.
+- **Broker Attribution**: Name of the listing broker or brokerage agency, with direct contact buttons.
+
+## How It Works
+
+1. **Broker Lists Property**: The real estate broker creates a listing in The Realty Bazaar mobile application by uploading photos, entering specifications, and generating AI marketing copy.
+2. **Instant Web & Social Publishing**: The listing is published to the public website (therealtybazaar.com) and optionally shared to connected social media pages (Instagram and Facebook).
+3. **Property Discovery**: Buyers and tenants discover the property through organic search, website browsing, social media, or targeted advertising campaigns.
+4. **Direct Contact & Site Visits**: Interested seekers call or message the broker directly on WhatsApp, send a free website enquiry, or schedule a physical site visit.
+5. **Lead Capture & CRM**: All website enquiries and visit requests land instantly in the broker's mobile CRM for follow-up and deal closing.
+
+## Property Discovery & Search Filters
+
+The website provides multi-parameter filtering on the properties catalog:
+- **Transaction**: For Sale, For Rent, or All.
+- **Property Category**: Apartments / Flats, Luxury Villas, Independent Houses, Plots / Land, Commercial Offices, Retail Shops, Studio Apartments, and Penthouses.
+- **Bedroom Count**: 1 BHK, 2 BHK, 3 BHK, 4+ BHK.
+- **Price Range**: Budget filters ranging from Under ₹50 Lakh to ₹5 Crore+.
+- **Furnishing**: Unfurnished, Semi-Furnished, Fully Furnished.
+- **Sorting Options**: Relevance, Price (Low to High), Price (High to Low), Newest Listings, and Largest Area.
+
+## Contacting Brokers
+
+Customers can contact the listing broker through three direct channels:
+1. **Direct Phone Call**: Dial the broker's verified phone number directly.
+2. **WhatsApp Chat**: Open a pre-filled WhatsApp conversation referencing the property title, locality, and city.
+3. **Site Visit Booking**: Submit a site visit request with full name, contact number, preferred date, and preferred time slot.
+4. **Web Enquiry Form**: Send an enquiry with name, phone number, and optional message directly to the broker's mobile CRM.
+
+## Property Types Supported
+
+- Apartment / Flat
+- Luxury Villa
+- Independent House
+- Plot / Land
+- Commercial Office
+- Retail Shop
+- Studio Apartment
+- Penthouse
+
+## Geographic Locations Covered
+
+The Realty Bazaar primarily features property listings across major Indian real estate markets, with active hubs in:
+- Surat, Gujarat (e.g., Vesu, Adajan, Pal, Althan, Piplod, City Light, Jahangirpura, Dumas Road)
+- Ahmedabad, Gujarat
+- Vadodara, Gujarat
+- Rajkot, Gujarat
+- Mumbai, Maharashtra
+- Pune, Maharashtra
+- Bengaluru, Karnataka
+
+## Pricing & Subscription Plans (For Brokers)
+
+Brokers access marketing and CRM tools through transparent subscription plans:
+- **Trial Plan (₹4,499 one-time)**: 30-day full access trial, up to 10 active property listings, full CRM, AI content generation, social publishing, and mobile app access.
+- **Starter Broker (₹999/month)**: Unlimited property uploads, integrated CRM and lead tracker, AI property descriptions, Instagram & Facebook publishing, verified website listings, and instant WhatsApp inquiry capture.
+- **Growth Pro (₹14,999/month)**: Everything in Starter plus managed Meta & Google property ads, up to ₹350/day advertising allocation, campaign analytics, lead scoring, automated follow-up reminders, and dedicated account manager.
+- **High-Volume Elite (₹19,999/month)**: Everything in Growth Pro plus up to ₹500/day advertising allocation, video content campaigns and reels, advanced AI property matching, priority WhatsApp and phone support, and custom branding on listing flyers.
+- **Agency & Teams (Custom Pricing)**: Multi-broker logins, custom ad spend allocations, agency performance dashboard, custom CRM integrations, and dedicated account director.
+
+*Note for Seekers*: Browsing properties, viewing details, and contacting brokers is 100% free for buyers and tenants.
+
+## Important Pages & Canonical URLs
+
+- **Homepage**: https://therealtybazaar.com/
+- **Properties Directory**: https://therealtybazaar.com/properties
+- **For Brokers**: https://therealtybazaar.com/for-brokers
+- **Features**: https://therealtybazaar.com/features
+- **Broker Pricing**: https://therealtybazaar.com/pricing
+- **How It Works**: https://therealtybazaar.com/how-it-works
+- **About Us**: https://therealtybazaar.com/about
+- **Contact Us**: https://therealtybazaar.com/contact
+- **Privacy Policy**: https://therealtybazaar.com/privacy
+- **Terms & Conditions**: https://therealtybazaar.com/terms
+- **Refund Policy**: https://therealtybazaar.com/refund
+- **XML Sitemap**: https://therealtybazaar.com/sitemap.xml
+- **Robots Directives**: https://therealtybazaar.com/robots.txt
+
+## Official Contact Information
+
+- **Email**: bazaarrealty@gmail.com
+- **Phone**: +91 90000 00000
+- **Location**: Surat, Gujarat, India
+- **Website**: https://therealtybazaar.com/
+- **Broker Portal**: https://brokers.therealtybazaar.com
+
+## Legal & Disclaimers
+
+- **Technology Intermediary**: The Realty Bazaar operates as an online technology intermediary and discovery platform under Section 79 of the Information Technology Act, 2000 (India).
+- **Not a Broker or Developer**: The Realty Bazaar is not a registered real estate broker, builder, contractor, or financial institution. The platform does not participate in negotiations, title verifications, drafting of sale deeds, or collection of transaction consideration amounts.
+- **Listing Accuracy & RERA**: All listing specifications, prices, dimensions, and visual assets are provided by independent brokers. Users are advised to independently verify Real Estate Regulatory Authority (RERA) registrations, approved layouts, and title clearances prior to entering into financial commitments.
