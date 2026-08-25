@@ -96,7 +96,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
               }`}
               aria-label={`View photo ${idx + 1}`}
             >
-              <img src={img} alt="" className="w-full h-full object-cover" />
+              <img src={img} alt={`${title} – photo ${idx + 1}`} className="w-full h-full object-cover" />
             </button>
           ))}
         </div>
@@ -162,7 +162,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
                     idx === current ? "border-[#397BCF] scale-110" : "border-white/20 opacity-50"
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img src={img} alt={`${title} – photo ${idx + 1}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

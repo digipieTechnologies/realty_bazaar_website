@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default function PrivacyPage() {
         <div className="prose prose-sm max-w-none text-[#172033] space-y-6">
           <section>
             <h2 className="text-lg font-bold text-[#172033] mb-2">1. Information We Collect</h2>
-            <p className="text-[#667085]">We collect information you provide directly to us, such as when you submit an enquiry form, contact us, or use our mobile application. This includes name, phone number, email address, and property preferences.</p>
+            <p className="text-[#667085]">We collect information you provide directly to us, such as when you submit an enquiry form on a <Link href="/properties" className="text-[#397BCF] hover:underline font-medium">property listing</Link>, contact us, or use our mobile application. This includes name, phone number, email address, and property preferences.</p>
           </section>
           <section>
             <h2 className="text-lg font-bold text-[#172033] mb-2">2. How We Use Your Information</h2>
@@ -25,7 +26,7 @@ export default function PrivacyPage() {
           </section>
           <section>
             <h2 className="text-lg font-bold text-[#172033] mb-2">3. Information Sharing</h2>
-            <p className="text-[#667085]">When you submit a property enquiry, your name and phone number are shared with the relevant broker. We do not sell your personal information to third parties.</p>
+            <p className="text-[#667085]">When you submit a property enquiry, your name and phone number are shared with the relevant broker through our <Link href="/for-brokers" className="text-[#397BCF] hover:underline font-medium">broker platform</Link>. We do not sell your personal information to third parties.</p>
           </section>
           <section>
             <h2 className="text-lg font-bold text-[#172033] mb-2">4. Data Security</h2>
@@ -33,7 +34,7 @@ export default function PrivacyPage() {
           </section>
           <section>
             <h2 className="text-lg font-bold text-[#172033] mb-2">5. Contact Us</h2>
-            <p className="text-[#667085]">For privacy-related questions, contact us at <a href="mailto:bazaarrealty@gmail.com" className="text-[#397BCF] hover:underline">bazaarrealty@gmail.com</a>.</p>
+            <p className="text-[#667085]">For privacy-related questions, contact us at <a href="mailto:bazaarrealty@gmail.com" className="text-[#397BCF] hover:underline">bazaarrealty@gmail.com</a> or visit our <Link href="/contact" className="text-[#397BCF] hover:underline font-medium">contact page</Link>.</p>
           </section>
         </div>
       </ScrollReveal>

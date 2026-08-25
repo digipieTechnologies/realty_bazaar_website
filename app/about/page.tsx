@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import FinalCTA from "@/components/home/FinalCTA";
 import { Target, Eye, Users } from "lucide-react";
@@ -78,15 +79,21 @@ export default function AboutPage() {
                 icon: Target,
                 title: "Our Mission",
                 color: "bg-[#EAF3FF] text-[#397BCF]",
-                description:
-                  "Make property marketing and lead management simpler, faster and more effective for real-estate professionals across India.",
+                description: (
+                  <>
+                    Make <Link href="/for-brokers" className="text-[#397BCF] hover:underline font-medium">property marketing and lead management</Link> simpler, faster and more effective for real-estate professionals across India.
+                  </>
+                ),
               },
               {
                 icon: Eye,
                 title: "Our Vision",
                 color: "bg-[#F3F8FE] text-[#245FA8]",
-                description:
-                  "Build a connected ecosystem between brokers, properties and property seekers — where every broker has access to professional marketing tools.",
+                description: (
+                  <>
+                    Build a connected ecosystem between brokers, <Link href="/properties" className="text-[#397BCF] hover:underline font-medium">properties</Link> and property seekers — where every broker has access to professional marketing tools.
+                  </>
+                ),
               },
               {
                 icon: Users,
@@ -147,7 +154,7 @@ export default function AboutPage() {
                 <div>
                   <h3 className="font-bold text-[#172033] mb-2">For Brokers — Mobile App</h3>
                   <p>
-                    The Realty Bazaar mobile app is where brokers manage their
+                    The Realty Bazaar <Link href="/features" className="text-[#397BCF] hover:underline font-medium">mobile app</Link> is where brokers manage their
                     entire business — property uploads, marketing campaigns,
                     lead management and CRM. Everything runs from the phone.
                   </p>
@@ -155,7 +162,7 @@ export default function AboutPage() {
                 <div>
                   <h3 className="font-bold text-[#172033] mb-2">For Property Seekers — Website</h3>
                   <p>
-                    This website is a public property discovery platform.
+                    This website is a public <Link href="/properties" className="text-[#397BCF] hover:underline font-medium">property discovery platform</Link>.
                     Buyers and renters can browse properties listed by brokers
                     and contact them directly — no account required.
                   </p>
