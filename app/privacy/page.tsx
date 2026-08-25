@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — The Realty Bazaar",
-  description: "Privacy Policy for The Realty Bazaar platform.",
+  title: "Privacy Policy | The Realty Bazaar",
+  description:
+    "Learn how The Realty Bazaar collects, uses, and protects your personal information when you browse property listings, submit enquiries, or use our broker platform.",
   alternates: { canonical: "https://therealtybazaar.com/privacy" },
 };
 

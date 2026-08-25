@@ -45,12 +45,13 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
   const itemListLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    name: "Properties for Sale & Rent in India",
+    description: "Verified residential and commercial properties from licensed brokers across India.",
     itemListElement: properties.map((property, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: property.title,
       url: `https://therealtybazaar.com/properties/${property.slug}`,
-      image: property.images?.[0] || undefined,
     })),
   };
 

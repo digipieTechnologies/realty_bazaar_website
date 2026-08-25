@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "The Realty Bazaar — Property Marketing & Lead Management for Real Estate Brokers",
+    default: "The Realty Bazaar | India's Property Discovery Platform",
     template: "%s | The Realty Bazaar",
   },
   description:
@@ -115,10 +115,14 @@ export const metadata: Metadata = {
 // JSON-LD structured data
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "RealEstateAgent",
+  "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
   name: "The Realty Bazaar",
   url: SITE_URL,
-  logo: `${SITE_URL}/logo.png`,
+  logo: {
+    "@type": "ImageObject",
+    url: `${SITE_URL}/logo.png`,
+  },
   image: `${SITE_URL}/og-image.jpg`,
   description:
     "PropTech platform and property discovery marketplace for Indian real-estate brokers — marketing, lead generation and CRM in one app.",
@@ -126,10 +130,11 @@ const organizationSchema = {
     "@type": "PostalAddress",
     addressCountry: "IN",
     addressRegion: "Gujarat",
+    addressLocality: "Surat",
   },
   areaServed: [
-    { "@type": "AdministrativeArea", name: "Surat" },
-    { "@type": "AdministrativeArea", name: "Gujarat" },
+    { "@type": "City", name: "Surat" },
+    { "@type": "State", name: "Gujarat" },
     { "@type": "Country", name: "India" },
   ],
   sameAs: [
@@ -142,9 +147,13 @@ const organizationSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
   name: "The Realty Bazaar",
   url: SITE_URL,
-  description: "Property Marketing & Lead Management for Real Estate Brokers",
+  description: "Property discovery platform for buyers and renters across India.",
+  publisher: {
+    "@id": `${SITE_URL}/#organization`,
+  },
   potentialAction: {
     "@type": "SearchAction",
     target: {
@@ -159,6 +168,7 @@ const softwareSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   name: "The Realty Bazaar",
+  url: SITE_URL,
   applicationCategory: "BusinessApplication",
   operatingSystem: "iOS, Android",
   description:
@@ -167,11 +177,7 @@ const softwareSchema = {
     "@type": "Offer",
     price: "999",
     priceCurrency: "INR",
-    priceSpecification: {
-      "@type": "RecurringChargeSpecification",
-      billingDuration: 1,
-      billingIncrement: "P1M",
-    },
+    availability: "https://schema.org/InStock",
   },
 };
 

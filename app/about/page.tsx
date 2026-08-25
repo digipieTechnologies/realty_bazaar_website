@@ -4,7 +4,7 @@ import FinalCTA from "@/components/home/FinalCTA";
 import { Target, Eye, Users } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Us — Indian PropTech Platform for Real Estate Brokers",
+  title: "About The Realty Bazaar | PropTech Platform for Brokers",
   description:
     "The Realty Bazaar is a PropTech platform designed to help Indian real-estate professionals digitize property marketing, lead management and sales operations.",
   alternates: { canonical: "https://therealtybazaar.com/about" },

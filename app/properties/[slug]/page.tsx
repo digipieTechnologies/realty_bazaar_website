@@ -82,31 +82,38 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   const cleanPhone = property.broker_phone?.replace(/\D/g, "") || "9876543210";
   const cleanWhatsApp = property.broker_whatsapp?.replace(/\D/g, "") || cleanPhone;
 
-  // Schema.org RealEstateListing JSON-LD
-  const jsonLd = {
+  // Schema.org Product JSON-LD (valid Schema.org type for property listings)
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "RealEstateListing",
+    "@type": "Product",
+    "@id": `https://therealtybazaar.com/properties/${slug}`,
     name: property.title,
-    description: property.description,
+    description: property.description || `${property.bedrooms ? `${property.bedrooms} BHK ` : ""}${property.property_type} ${property.transaction_type === "sale" ? "for sale" : "for rent"} in ${property.locality}, ${property.city}.`,
     url: `https://therealtybazaar.com/properties/${slug}`,
-    image: property.images || [],
-    offers: {
-      "@type": "Offer",
-      price: property.price,
-      priceCurrency: "INR",
-      availability: "https://schema.org/InStock",
+    ...(property.images && property.images.length > 0 && { image: property.images }),
+    brand: {
+      "@type": "Organization",
+      "@id": "https://therealtybazaar.com/#organization",
+      name: "The Realty Bazaar",
     },
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: property.address || undefined,
-      addressLocality: property.locality,
-      addressRegion: property.city,
-      addressCountry: "IN",
-    },
-    numberOfRooms: property.bedrooms || undefined,
-    floorSize: property.area_sqft
-      ? { "@type": "QuantitativeValue", value: property.area_sqft, unitCode: "FTK" }
-      : undefined,
+    ...(property.price && {
+      offers: {
+        "@type": "Offer",
+        price: property.price,
+        priceCurrency: "INR",
+        availability: "https://schema.org/InStock",
+        url: `https://therealtybazaar.com/properties/${slug}`,
+        seller: {
+          "@type": "Organization",
+          name: property.broker_agency || property.broker_name || "Verified Broker",
+        },
+      },
+    }),
+    ...(property.bedrooms && { additionalProperty: [
+      { "@type": "PropertyValue", name: "Bedrooms", value: property.bedrooms },
+      ...(property.bathrooms ? [{ "@type": "PropertyValue", name: "Bathrooms", value: property.bathrooms }] : []),
+      ...(property.area_sqft ? [{ "@type": "PropertyValue", name: "Area", value: `${property.area_sqft} sq ft`, unitCode: "FTK" }] : []),
+    ] }),
   };
 
   const breadcrumbLd = {

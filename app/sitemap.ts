@@ -73,36 +73,6 @@ const staticPages: MetadataRoute.Sitemap = [
   },
 ];
 
-// Major city filter landing URLs for targeted local real-estate search indexing
-const cityPages: MetadataRoute.Sitemap = [
-  "Surat",
-  "Ahmedabad",
-  "Mumbai",
-  "Vadodara",
-  "Pune",
-  "Bengaluru",
-].map((city) => ({
-  url: `${SITE_URL}/properties?city=${encodeURIComponent(city)}`,
-  lastModified: new Date(),
-  changeFrequency: "daily",
-  priority: 0.85,
-}));
-
-// Property category filter landing URLs
-const categoryPages: MetadataRoute.Sitemap = [
-  "apartment",
-  "villa",
-  "commercial",
-  "plot",
-  "office",
-  "penthouse",
-].map((type) => ({
-  url: `${SITE_URL}/properties?type=${encodeURIComponent(type)}`,
-  lastModified: new Date(),
-  changeFrequency: "daily",
-  priority: 0.8,
-}));
-
 export const revalidate = 3600; // Revalidate sitemap every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -122,9 +92,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       };
     });
 
-    return [...staticPages, ...cityPages, ...categoryPages, ...propertyPages];
+    return [...staticPages, ...propertyPages];
   } catch (error) {
     console.error("[sitemap] Failed to generate full dynamic sitemap:", error);
-    return [...staticPages, ...cityPages, ...categoryPages];
+    return [...staticPages];
   }
 }

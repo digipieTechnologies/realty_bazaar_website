@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "Refund Policy — The Realty Bazaar",
-  description: "Refund Policy for The Realty Bazaar platform.",
+  title: "Refund Policy | The Realty Bazaar",
+  description:
+    "Understand The Realty Bazaar's refund and cancellation policy for trial plans, monthly broker subscriptions, and advertising budget allocations.",
   alternates: { canonical: "https://therealtybazaar.com/refund" },
 };
 
