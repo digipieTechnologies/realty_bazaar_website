@@ -15,6 +15,26 @@ export function formatArea(sqft: number | null): string {
   return `${sqft.toLocaleString("en-IN")} sq ft`;
 }
 
+export function formatLocation(locality?: string | null, city?: string | null): string {
+  const cleanLoc = (locality || "").trim();
+  const cleanCity = (city || "").trim();
+
+  if (cleanLoc && cleanCity) {
+    if (cleanLoc.toLowerCase() === cleanCity.toLowerCase()) {
+      return cleanCity;
+    }
+    const regex = new RegExp(`\\b${cleanCity.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+    if (regex.test(cleanLoc)) {
+      return cleanLoc;
+    }
+    return `${cleanLoc}, ${cleanCity}`;
+  }
+
+  if (cleanLoc) return cleanLoc;
+  if (cleanCity) return cleanCity;
+  return "India";
+}
+
 export function generatePropertyMetaTitle(property: {
   bedrooms: number | null;
   property_type: string;
@@ -27,12 +47,8 @@ export function generatePropertyMetaTitle(property: {
     property.property_type.charAt(0).toUpperCase() +
     property.property_type.slice(1);
   const txn = property.transaction_type === "sale" ? "for Sale" : "for Rent";
-  const locParts = [property.locality, property.city]
-    .filter(Boolean)
-    .map((s) => s.trim())
-    .filter((v, i, a) => a.indexOf(v) === i && v.length > 0);
-  const locStr = locParts.join(", ") || "India";
-  return `${bhk}${type} ${txn} in ${locStr} | The Realty Bazaar`;
+  const locStr = formatLocation(property.locality, property.city);
+  return `${bhk}${type} ${txn} in ${locStr}`;
 }
 
 export function slugify(text: string): string {

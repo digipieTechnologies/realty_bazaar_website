@@ -22,7 +22,7 @@ import {
   getAllPropertySlugs,
   getSimilarProperties,
 } from "@/lib/supabase/queries";
-import { generatePropertyMetaTitle, formatPrice } from "@/lib/utils";
+import { generatePropertyMetaTitle, formatPrice, formatLocation } from "@/lib/utils";
 import PropertyGallery from "@/components/property/PropertyGallery";
 import EnquiryForm from "@/components/property/EnquiryForm";
 import PropertyCard from "@/components/property/PropertyCard";
@@ -46,11 +46,7 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
   }
 
   const title = generatePropertyMetaTitle(property);
-  const locParts = [property.locality, property.city]
-    .filter(Boolean)
-    .map((s) => s.trim())
-    .filter((v, i, a) => a.indexOf(v) === i && v.length > 0);
-  const locText = locParts.join(", ") || "India";
+  const locText = formatLocation(property.locality, property.city);
 
   const description = property.description
     ? `${property.description.slice(0, 155).trim()}...`
@@ -110,11 +106,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     }
   })();
 
-  const locDisplay = [property.locality, property.city]
-    .filter(Boolean)
-    .map((s) => s.trim())
-    .filter((v, i, a) => a.indexOf(v) === i && v.length > 0)
-    .join(", ") || property.city;
+  const locDisplay = formatLocation(property.locality, property.city);
 
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",

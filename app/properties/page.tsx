@@ -5,7 +5,7 @@ import PropertyGridClient from "@/components/property/PropertyGridClient";
 import QuickDiscoveryChips from "@/components/home/QuickDiscoveryChips";
 
 export const metadata: Metadata = {
-  title: "Properties for Sale & Rent in Surat & Across India | The Realty Bazaar",
+  title: "Properties for Sale & Rent in Surat & Across India",
   description:
     "Explore verified residential apartments, independent villas, commercial spaces, and plots for sale and rent in Surat, Gujarat and across India. Connect directly with licensed local real-estate brokers.",
   alternates: { canonical: "https://therealtybazaar.com/properties" },

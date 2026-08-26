@@ -3,7 +3,7 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import ContactForm from "@/components/contact/ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact Us — The Realty Bazaar",
+  title: "Contact Us",
   description:
     "Get in touch with The Realty Bazaar. For platform demos, enterprise enquiries, partnerships or support.",
   alternates: { canonical: "https://therealtybazaar.com/contact" },

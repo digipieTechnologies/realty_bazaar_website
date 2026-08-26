@@ -15,7 +15,7 @@ import {
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "Terms and Conditions — The Realty Bazaar",
+  title: "Terms and Conditions",
   description:
     "Review the terms of service, platform disclaimers, listing policies, broker obligations, and user agreements for The Realty Bazaar (therealtybazaar.com).",
   alternates: { canonical: "https://therealtybazaar.com/terms" },

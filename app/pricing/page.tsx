@@ -4,7 +4,7 @@ import FAQSection from "@/components/home/FAQSection";
 import FinalCTA from "@/components/home/FinalCTA";
 
 export const metadata: Metadata = {
-  title: "Broker Pricing & Subscription Plans | The Realty Bazaar",
+  title: "Broker Pricing & Subscription Plans",
   description:
     "Explore transparent pricing plans for real estate brokers on The Realty Bazaar. Get automated property marketing, Meta Ads management, and mobile CRM.",
   alternates: { canonical: "https://therealtybazaar.com/pricing" },
