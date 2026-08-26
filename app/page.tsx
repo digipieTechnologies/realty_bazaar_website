@@ -18,9 +18,9 @@ import ConsumerFAQSection from "@/components/home/ConsumerFAQSection";
 import FinalCTA from "@/components/home/FinalCTA";
 
 export const metadata: Metadata = {
-  title: "Browse Properties for Sale & Rent in India | The Realty Bazaar",
+  title: "Properties for Sale & Rent in Surat & India | The Realty Bazaar",
   description:
-    "Search verified residential apartments, independent villas, commercial spaces, and plots in Surat, Ahmedabad, Mumbai and across India. Connect directly with licensed real-estate brokers.",
+    "Discover verified residential apartments, independent villas, commercial spaces, and plots in Surat, Gujarat and across India. Connect directly with local licensed real-estate brokers.",
   alternates: {
     canonical: "https://therealtybazaar.com",
   },

@@ -5,9 +5,9 @@ import PropertyGridClient from "@/components/property/PropertyGridClient";
 import QuickDiscoveryChips from "@/components/home/QuickDiscoveryChips";
 
 export const metadata: Metadata = {
-  title: "Browse Properties for Sale & Rent in India | The Realty Bazaar",
+  title: "Properties for Sale & Rent in Surat & Across India | The Realty Bazaar",
   description:
-    "Explore verified residential apartments, independent villas, commercial office spaces, and plots for sale and rent in Surat, Ahmedabad, Mumbai and across India. Connect directly with local real estate brokers.",
+    "Explore verified residential apartments, independent villas, commercial spaces, and plots for sale and rent in Surat, Gujarat and across India. Connect directly with licensed local real-estate brokers.",
   alternates: { canonical: "https://therealtybazaar.com/properties" },
 };
 
@@ -45,8 +45,8 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
   const itemListLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Properties for Sale & Rent in India",
-    description: "Verified residential and commercial properties from licensed brokers across India.",
+    name: "Properties for Sale & Rent in Surat & Across India",
+    description: "Verified residential and commercial properties from licensed brokers across Surat, Gujarat and India.",
     itemListElement: properties.map((property, index) => ({
       "@type": "ListItem",
       position: index + 1,
@@ -89,10 +89,10 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
       <section className="pt-8 pb-6 bg-white border-b border-[#E4EAF2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-2xl sm:text-4xl font-display font-bold text-[#172033] tracking-tight mb-2">
-            Property Marketplace
+            Properties for Sale & Rent in Surat & Across India
           </h1>
           <p className="text-sm sm:text-base text-[#667085] max-w-2xl">
-            Explore verified residential and commercial properties from licensed local brokers across Surat, Gujarat and India.
+            Explore verified residential apartments, independent villas, commercial spaces, and plots from licensed local brokers across Surat, Gujarat and India.
           </p>
         </div>
       </section>

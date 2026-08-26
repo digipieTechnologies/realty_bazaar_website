@@ -164,23 +164,6 @@ const websiteSchema = {
   },
 };
 
-const softwareSchema = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "The Realty Bazaar",
-  url: SITE_URL,
-  applicationCategory: "BusinessApplication",
-  operatingSystem: "iOS, Android",
-  description:
-    "Mobile app for real-estate brokers to market properties, generate leads and manage their CRM.",
-  offers: {
-    "@type": "Offer",
-    price: "999",
-    priceCurrency: "INR",
-    availability: "https://schema.org/InStock",
-  },
-};
-
 export default function RootLayout({
   children,
 }: {
@@ -196,10 +179,6 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
         />
       </head>
       <body className="antialiased">

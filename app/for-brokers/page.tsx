@@ -106,12 +106,33 @@ const breadcrumbsLd = {
   ],
 };
 
+const softwareAppLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "The Realty Bazaar — Broker App",
+  url: "https://therealtybazaar.com/for-brokers",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Android, iOS",
+  description:
+    "Mobile app for Indian real-estate brokers to market properties, run Meta Ads campaigns, capture leads, and manage their CRM pipeline.",
+  offers: {
+    "@type": "Offer",
+    price: "999",
+    priceCurrency: "INR",
+    availability: "https://schema.org/InStock",
+  },
+};
+
 export default function ForBrokersPage() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppLd) }}
       />
       {/* Hero */}
       <section className="section-padding bg-gradient-to-br from-[#172033] via-[#1e2d47] to-[#253553] relative overflow-hidden">

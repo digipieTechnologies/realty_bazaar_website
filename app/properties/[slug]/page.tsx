@@ -46,9 +46,15 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
   }
 
   const title = generatePropertyMetaTitle(property);
+  const locParts = [property.locality, property.city]
+    .filter(Boolean)
+    .map((s) => s.trim())
+    .filter((v, i, a) => a.indexOf(v) === i && v.length > 0);
+  const locText = locParts.join(", ") || "India";
+
   const description = property.description
-    ? `${property.description.slice(0, 155)}...`
-    : `Explore photos, pricing, amenities, and broker details for ${property.title} in ${property.locality}, ${property.city}.`;
+    ? `${property.description.slice(0, 155).trim()}...`
+    : `Explore photos, verified pricing, floor plans, amenities, and direct broker contact for ${property.title} in ${locText}.`;
 
   const image = property.images?.[0];
 
@@ -82,19 +88,76 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   const cleanPhone = property.broker_phone?.replace(/\D/g, "") || "9876543210";
   const cleanWhatsApp = property.broker_whatsapp?.replace(/\D/g, "") || cleanPhone;
 
-  // Schema.org Product JSON-LD (valid Schema.org type for property listings)
+  // Real Estate structured data mapping according to Schema.org standards
+  const propertySchemaType = (() => {
+    switch (property.property_type) {
+      case "apartment":
+      case "studio":
+        return "Apartment";
+      case "villa":
+        return "SingleFamilyResidence";
+      case "house":
+        return "House";
+      case "commercial":
+      case "office":
+      case "shop":
+      case "warehouse":
+        return "CommercialProperty";
+      case "plot":
+        return "Landform";
+      default:
+        return "Accommodation";
+    }
+  })();
+
+  const locDisplay = [property.locality, property.city]
+    .filter(Boolean)
+    .map((s) => s.trim())
+    .filter((v, i, a) => a.indexOf(v) === i && v.length > 0)
+    .join(", ") || property.city;
+
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "Product",
-    "@id": `https://therealtybazaar.com/properties/${slug}`,
+    "@type": "RealEstateListing",
+    "@id": `https://therealtybazaar.com/properties/${slug}#listing`,
     name: property.title,
-    description: property.description || `${property.bedrooms ? `${property.bedrooms} BHK ` : ""}${property.property_type} ${property.transaction_type === "sale" ? "for sale" : "for rent"} in ${property.locality}, ${property.city}.`,
+    description:
+      property.description ||
+      `${property.bedrooms ? `${property.bedrooms} BHK ` : ""}${property.property_type} ${
+        property.transaction_type === "sale" ? "for sale" : "for rent"
+      } in ${locDisplay}.`,
     url: `https://therealtybazaar.com/properties/${slug}`,
+    datePosted: property.created_at,
+    dateModified: property.updated_at || property.created_at,
     ...(property.images && property.images.length > 0 && { image: property.images }),
-    brand: {
-      "@type": "Organization",
-      "@id": "https://therealtybazaar.com/#organization",
-      name: "The Realty Bazaar",
+    mainEntity: {
+      "@type": propertySchemaType,
+      name: property.title,
+      description: property.description || property.title,
+      url: `https://therealtybazaar.com/properties/${slug}`,
+      ...(property.bedrooms && { numberOfRooms: property.bedrooms, numberOfBedrooms: property.bedrooms }),
+      ...(property.bathrooms && { numberOfBathroomsTotal: property.bathrooms }),
+      ...(property.area_sqft && {
+        floorSize: {
+          "@type": "QuantitativeValue",
+          value: property.area_sqft,
+          unitCode: "FTK",
+        },
+      }),
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: property.locality || property.city,
+        addressRegion: "Gujarat",
+        addressCountry: "IN",
+        ...(property.address ? { streetAddress: property.address } : {}),
+      },
+      ...(property.amenities && property.amenities.length > 0 && {
+        amenityFeature: property.amenities.map((a) => ({
+          "@type": "LocationFeatureSpecification",
+          name: a,
+          value: true,
+        })),
+      }),
     },
     ...(property.price && {
       offers: {
@@ -103,17 +166,16 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         priceCurrency: "INR",
         availability: "https://schema.org/InStock",
         url: `https://therealtybazaar.com/properties/${slug}`,
+        businessFunction:
+          property.transaction_type === "sale"
+            ? "https://schema.org/Sell"
+            : "https://schema.org/LeaseOut",
         seller: {
           "@type": "Organization",
           name: property.broker_agency || property.broker_name || "Verified Broker",
         },
       },
     }),
-    ...(property.bedrooms && { additionalProperty: [
-      { "@type": "PropertyValue", name: "Bedrooms", value: property.bedrooms },
-      ...(property.bathrooms ? [{ "@type": "PropertyValue", name: "Bathrooms", value: property.bathrooms }] : []),
-      ...(property.area_sqft ? [{ "@type": "PropertyValue", name: "Area", value: `${property.area_sqft} sq ft`, unitCode: "FTK" }] : []),
-    ] }),
   };
 
   const breadcrumbLd = {

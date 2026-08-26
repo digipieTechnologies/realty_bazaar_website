@@ -27,7 +27,12 @@ export function generatePropertyMetaTitle(property: {
     property.property_type.charAt(0).toUpperCase() +
     property.property_type.slice(1);
   const txn = property.transaction_type === "sale" ? "for Sale" : "for Rent";
-  return `${bhk}${type} ${txn} in ${property.locality}, ${property.city} | The Realty Bazaar`;
+  const locParts = [property.locality, property.city]
+    .filter(Boolean)
+    .map((s) => s.trim())
+    .filter((v, i, a) => a.indexOf(v) === i && v.length > 0);
+  const locStr = locParts.join(", ") || "India";
+  return `${bhk}${type} ${txn} in ${locStr} | The Realty Bazaar`;
 }
 
 export function slugify(text: string): string {
