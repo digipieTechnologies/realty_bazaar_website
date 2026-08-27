@@ -45,7 +45,7 @@ export default function PropertyMobileStickyBar({
 
         <SharePropertyButton
           property={property}
-          variant="icon"
+          variant="sticky"
           id="mobile-share-broker"
         />
       </div>

@@ -9,7 +9,7 @@ import { trackPropertyShare } from "@/lib/analytics/clarity";
 interface SharePropertyButtonProps {
   property: Property;
   className?: string;
-  variant?: "primary" | "secondary" | "outline" | "icon" | "pill";
+  variant?: "primary" | "secondary" | "outline" | "icon" | "pill" | "sticky";
   label?: string;
   id?: string;
 }
@@ -30,7 +30,9 @@ export default function SharePropertyButton({
       case "outline":
         return "border border-[#397BCF] text-[#397BCF] hover:bg-[#EAF3FF] font-bold px-4 py-2.5 rounded-xl";
       case "icon":
-        return "w-11 h-11 rounded-2xl bg-[#F8FAFC] hover:bg-[#EAF3FF] text-[#172033] hover:text-[#397BCF] border border-[#E4EAF2] hover:border-[#397BCF]/40 flex items-center justify-center shadow-2xs hover:shadow-xs";
+        return "w-8 h-8 rounded-full bg-white/90 backdrop-blur-md hover:bg-white text-[#667085] hover:text-[#172033] flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-110 active:scale-95";
+      case "sticky":
+        return "w-11 h-11 rounded-2xl bg-[#F8FAFC] hover:bg-[#EAF3FF] text-[#172033] hover:text-[#397BCF] border border-[#E4EAF2] hover:border-[#397BCF]/40 flex items-center justify-center shadow-2xs shrink-0";
       case "pill":
         return "bg-white/90 hover:bg-white backdrop-blur-md text-[#172033] font-bold px-3 py-1.5 rounded-full text-xs shadow-xs border border-[#E4EAF2]";
       case "secondary":
