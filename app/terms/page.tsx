@@ -163,7 +163,7 @@ export default function TermsPage() {
             </p>
             <ul className="list-disc pl-5 space-y-1.5">
               <li>
-                <strong className="text-[#172033]">Onboarding:</strong> Access to broker management tools and payment of subscription fees is handled via the official broker application/portal (<span className="font-mono text-xs text-[#397BCF]">brokers.therealtybazaar.com</span>).
+                <strong className="text-[#172033]">Onboarding:</strong> Access to broker management tools and payment of subscription fees is handled via the official broker application/portal (<span className="font-mono text-xs text-[#397BCF]">partners.therealtybazaar.com</span>).
               </li>
               <li>
                 <strong className="text-[#172033]">Listing Authorization:</strong> Brokers represent that they possess lawful authorization from the property owner/developer to market, advertise, and solicit inquiries for listed properties.

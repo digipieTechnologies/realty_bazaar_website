@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Smartphone, Sparkles, Share2, Target, CheckCircle2, QrCode } from "lucide-react";
+import { X, Smartphone, Sparkles, Share2, Target, CheckCircle2, QrCode, ExternalLink, Globe } from "lucide-react";
 import AppStoreButtons from "@/components/ui/AppStoreButtons";
+import { BROKER_PORTAL_URL } from "@/lib/constants";
 
 interface ListPropertyModalProps {
   isOpen: boolean;
@@ -50,21 +51,20 @@ export default function ListPropertyModal({ isOpen, onClose }: ListPropertyModal
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"
           />
 
-          {/* Modal Card */}
+          {/* Modal Container */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: "spring", duration: 0.35, bounce: 0.15 }}
-            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10"
+            exit={{ opacity: 0, scale: 0.95, y: 16 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10 my-auto"
           >
             {/* Header */}
-            <div className="bg-gradient-to-br from-[#172033] via-[#1e2d47] to-[#253553] p-6 text-white relative">
+            <div className="relative bg-gradient-to-br from-[#172033] to-[#245FA8] p-6 text-white">
               <button
-                type="button"
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-                aria-label="Close modal"
+                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors cursor-pointer"
+                aria-label="Close"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -75,10 +75,10 @@ export default function ListPropertyModal({ isOpen, onClose }: ListPropertyModal
               </div>
 
               <h2 className="text-xl sm:text-2xl font-display font-bold mb-2">
-                List Properties via the Mobile App
+                List &amp; Manage Properties
               </h2>
               <p className="text-sm text-white/70 leading-relaxed">
-                Brokers list and manage properties exclusively from The Realty Bazaar mobile app. Everything syncs instantly to our public discovery marketplace.
+                Brokers list and manage properties via the official Partner Portal and mobile app. Listings sync instantly to our public discovery marketplace.
               </p>
             </div>
 
@@ -93,9 +93,9 @@ export default function ListPropertyModal({ isOpen, onClose }: ListPropertyModal
                   {[
                     {
                       step: "1",
-                      icon: Smartphone,
-                      title: "Download App & Register",
-                      desc: "Download The Realty Bazaar app from Google Play and verify your broker profile.",
+                      icon: Globe,
+                      title: "Open Partner Portal or App",
+                      desc: "Log in via partners.therealtybazaar.com or download the mobile app.",
                     },
                     {
                       step: "2",
@@ -132,20 +132,31 @@ export default function ListPropertyModal({ isOpen, onClose }: ListPropertyModal
                 </div>
               </div>
 
-              {/* Download Links */}
+              {/* Partner Portal & Download Links */}
               <div className="pt-2 border-t border-[#E4EAF2] text-center space-y-3">
-                <p className="text-xs font-bold text-[#172033]">
-                  Get The Realty Bazaar App to Start Listing
+                <a
+                  href={BROKER_PORTAL_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  id="list-modal-partner-portal-btn"
+                  className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#397BCF] hover:bg-[#245FA8] text-white font-bold rounded-2xl text-sm transition-all shadow-sm active:scale-98"
+                >
+                  <span>Launch Broker Partner Web Portal</span>
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+
+                <p className="text-xs font-bold text-[#667085] pt-1">
+                  Or Get the Mobile App
                 </p>
                 <div className="flex justify-center">
                   <AppStoreButtons className="w-full max-w-xs justify-center" />
                 </div>
                 <div className="flex items-center justify-center gap-4 text-[11px] text-[#667085] pt-1">
                   <span className="flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-green-600" /> Free to download
+                    <CheckCircle2 className="w-3.5 h-3.5 text-green-600" /> Free broker account
                   </span>
                   <span className="flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-green-600" /> Free listing plan
+                    <CheckCircle2 className="w-3.5 h-3.5 text-green-600" /> Free listing tier
                   </span>
                 </div>
               </div>

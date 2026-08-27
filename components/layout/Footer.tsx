@@ -27,6 +27,7 @@ const footerLinks = {
   ],
   brokers: [
     { label: "For Real Estate Brokers", href: "/for-brokers" },
+    { label: "Broker Partner Portal", href: "https://partners.therealtybazaar.com" },
     { label: "Mobile App Features", href: "/features" },
     { label: "Broker Pricing Plans", href: "/pricing" },
     { label: "How the Platform Works", href: "/how-it-works" },

@@ -1,5 +1,5 @@
 export const BROKER_PORTAL_URL =
-  process.env.NEXT_PUBLIC_BROKER_PORTAL_URL || "https://brokers.therealtybazaar.com";
+  process.env.NEXT_PUBLIC_BROKER_PORTAL_URL || "https://partners.therealtybazaar.com";
 
 export const PLAY_STORE_URL =
   process.env.NEXT_PUBLIC_PLAY_STORE_URL ||

@@ -154,15 +154,24 @@ export default function ForBrokersPage() {
               their phone.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a
+                href="https://partners.therealtybazaar.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                id="for-brokers-launch-portal"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-[#397BCF] hover:bg-[#245FA8] text-white font-semibold rounded-xl transition-all duration-200 shadow-lg active:scale-[0.98]"
+              >
+                Launch Partner Portal
+              </a>
               <Link
                 href={APP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 id="for-brokers-page-get-app"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-[#397BCF] hover:bg-[#245FA8] text-white font-semibold rounded-xl transition-all duration-200 shadow-lg active:scale-[0.98]"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all duration-200 border border-white/20 active:scale-[0.98]"
               >
                 <Download className="w-5 h-5" />
-                Get the App
+                Get Mobile App
               </Link>
               <Link
                 href="/pricing"
@@ -181,9 +190,16 @@ export default function ForBrokersPage() {
           <div className="flex items-start gap-3">
             <Smartphone className="w-5 h-5 text-[#397BCF] mt-0.5 shrink-0" />
             <p className="text-sm text-[#172033]">
-              <strong>All broker operations happen in the mobile app.</strong>{" "}
-              There is no broker dashboard on this website. The website is the
-              public-facing property discovery and lead-generation platform.
+              <strong>Broker Platform Access:</strong> Brokers can list properties, manage CRM leads, and run Meta advertising campaigns directly from the official web portal at{" "}
+              <a
+                href="https://partners.therealtybazaar.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#245FA8] font-bold underline underline-offset-2 hover:text-[#172033]"
+              >
+                partners.therealtybazaar.com
+              </a>{" "}
+              or via our Android &amp; iOS mobile apps.
             </p>
           </div>
         </div>
