@@ -43,13 +43,13 @@ export function generatePropertyMetaTitle(property: {
   city: string;
 }): string {
   const bhk = property.bedrooms ? `${property.bedrooms} BHK ` : "";
-  const type =
-    property.property_type.charAt(0).toUpperCase() +
-    property.property_type.slice(1);
+  const rawType = property.property_type.replace(/_/g, " ").trim();
+  const type = rawType.charAt(0).toUpperCase() + rawType.slice(1);
   const txn = property.transaction_type === "sale" ? "for Sale" : "for Rent";
   const locStr = formatLocation(property.locality, property.city);
   return `${bhk}${type} ${txn} in ${locStr}`;
 }
+
 
 export function slugify(text: string): string {
   return text
