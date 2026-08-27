@@ -81,23 +81,23 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: SITE_URL,
     siteName: "The Realty Bazaar",
-    title: "The Realty Bazaar — Property Marketing & Lead Management for Real Estate Brokers",
+    title: "The Realty Bazaar — Real Estate Growth Platform",
     description:
-      "Market properties, generate verified buyer leads and manage your entire real estate business from one powerful mobile platform.",
+      "Discover verified residential and commercial properties for sale and rent across India, and connect directly with trusted local real estate brokers.",
     images: [
       {
         url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "The Realty Bazaar — PropTech Platform for Indian Brokers",
+        alt: "The Realty Bazaar — Real Estate Growth Platform",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Realty Bazaar — Property Marketing & Lead Management",
+    title: "The Realty Bazaar — Real Estate Growth Platform",
     description:
-      "Market properties, generate leads and manage your real estate business from one powerful mobile platform.",
+      "Discover verified residential and commercial properties for sale and rent across India, and connect directly with trusted local real estate brokers.",
     images: [`${SITE_URL}/og-image.jpg`],
     site: "@therealtybazaar",
     creator: "@therealtybazaar",
