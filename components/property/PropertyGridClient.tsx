@@ -8,6 +8,7 @@ import PropertySearchFilters, { type FilterState } from "@/components/property/P
 import CustomSelect from "@/components/ui/CustomSelect";
 import type { Property } from "@/types";
 import { fetchPropertiesPage } from "@/app/properties/actions";
+import { trackPropertySearch, trackPropertyFilter } from "@/lib/analytics/clarity";
 
 const PAGE_SIZE = 12;
 
@@ -159,6 +160,28 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
 
     const str = params.toString();
     router.replace(`/properties${str ? `?${str}` : ""}`, { scroll: false });
+
+    // Track in Clarity
+    if (newFilters.q.trim() && newFilters.q !== filters.q) {
+      trackPropertySearch({
+        search_query: newFilters.q.trim(),
+        city: newFilters.city !== "All Cities" ? newFilters.city : undefined,
+        locality: newFilters.locality.trim() || undefined,
+        property_type: newFilters.propertyType !== "All Types" ? newFilters.propertyType : undefined,
+        purpose: newFilters.transactionType !== "all" ? newFilters.transactionType : undefined,
+        bhk: newFilters.bhk !== "Any" ? newFilters.bhk : undefined,
+      });
+    } else {
+      trackPropertyFilter({
+        bhk: newFilters.bhk !== "Any" ? newFilters.bhk : undefined,
+        property_type: newFilters.propertyType !== "All Types" ? newFilters.propertyType : undefined,
+        purpose: newFilters.transactionType !== "all" ? newFilters.transactionType : undefined,
+        city: newFilters.city !== "All Cities" ? newFilters.city : undefined,
+        locality: newFilters.locality.trim() || undefined,
+        min_price: newFilters.minPrice || undefined,
+        max_price: newFilters.maxPrice || undefined,
+      });
+    }
 
     // Fetch fresh page 0 for new filters
     setLoadingMore(true);

@@ -5,6 +5,7 @@ import { submitContactForm, type ContactFormState } from "@/app/actions";
 import { Send, Phone, Mail, MapPin } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import CustomSelect from "@/components/ui/CustomSelect";
+import { trackContactFormSubmit } from "@/lib/analytics/clarity";
 
 const subjectOptions = [
   { value: "general", label: "General Enquiry" },
@@ -22,6 +23,12 @@ export default function ContactForm() {
     submitContactForm,
     initialState
   );
+
+  useEffect(() => {
+    if (state.success) {
+      trackContactFormSubmit();
+    }
+  }, [state.success]);
 
   return (
     <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">

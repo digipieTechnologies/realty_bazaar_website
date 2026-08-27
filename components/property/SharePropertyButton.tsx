@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Share2 } from "lucide-react";
 import type { Property } from "@/types";
 import SharePropertyModal from "./SharePropertyModal";
+import { trackPropertyShare } from "@/lib/analytics/clarity";
 
 interface SharePropertyButtonProps {
   property: Property;
@@ -41,6 +42,7 @@ export default function SharePropertyButton({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    trackPropertyShare(property, variant);
     setIsOpen(true);
   };
 

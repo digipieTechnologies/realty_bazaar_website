@@ -6,6 +6,7 @@ import { Bed, Bath, Square, MapPin, Heart, ShieldCheck, ArrowUpRight } from "luc
 import type { Property } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import SharePropertyButton from "./SharePropertyButton";
+import { trackPropertyCardClick, trackPropertyFavourite } from "@/lib/analytics/clarity";
 
 interface PropertyCardProps {
   property: Property;
@@ -22,7 +23,17 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
   const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsSaved((prev) => !prev);
+    setIsSaved((prev) => {
+      const next = !prev;
+      if (next) {
+        trackPropertyFavourite(property);
+      }
+      return next;
+    });
+  };
+
+  const handleCardClick = () => {
+    trackPropertyCardClick(property);
   };
 
   const imageAlt = `${property.bedrooms ? `${property.bedrooms} BHK ` : ""}${
@@ -35,6 +46,7 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F3F8FE]">
         <Link
           href={`/properties/${property.slug}`}
+          onClick={handleCardClick}
           className="block w-full h-full"
         >
           <img
@@ -107,7 +119,11 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
           </div>
 
           {/* Title */}
-          <Link href={`/properties/${property.slug}`} className="block group-hover:text-[#397BCF] transition-colors">
+          <Link
+            href={`/properties/${property.slug}`}
+            onClick={handleCardClick}
+            className="block group-hover:text-[#397BCF] transition-colors"
+          >
             <h3 className="font-bold text-sm sm:text-base text-[#172033] line-clamp-1 mb-1">
               {property.title}
             </h3>
@@ -155,6 +171,7 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
 
           <Link
             href={`/properties/${property.slug}`}
+            onClick={handleCardClick}
             className="inline-flex items-center gap-1 text-xs font-bold text-[#397BCF] hover:text-[#245FA8] shrink-0 bg-[#EAF3FF] hover:bg-[#397BCF] hover:text-white px-2.5 py-1.5 rounded-lg transition-all"
           >
             View Details

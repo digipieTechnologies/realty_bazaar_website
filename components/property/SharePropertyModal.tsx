@@ -20,6 +20,7 @@ import {
 import type { Property } from "@/types";
 import { generatePropertyDraftText } from "@/lib/share";
 import { formatPrice } from "@/lib/utils";
+import { trackPropertyShare } from "@/lib/analytics/clarity";
 
 interface SharePropertyModalProps {
   property: Property;
@@ -85,6 +86,7 @@ export default function SharePropertyModal({
     try {
       await navigator.clipboard.writeText(draftText);
       setCopiedType("draft");
+      trackPropertyShare(property, "copy_draft");
       setTimeout(() => setCopiedType(null), 2500);
     } catch {
       // Fallback
@@ -95,6 +97,7 @@ export default function SharePropertyModal({
     try {
       await navigator.clipboard.writeText(propertyUrl);
       setCopiedType("link");
+      trackPropertyShare(property, "copy_link");
       setTimeout(() => setCopiedType(null), 2500);
     } catch {
       // Fallback
@@ -104,6 +107,7 @@ export default function SharePropertyModal({
   const handleNativeShare = async () => {
     if (navigator.share) {
       try {
+        trackPropertyShare(property, "native");
         await navigator.share({
           title: property.title,
           text: draftText,
@@ -290,6 +294,7 @@ export default function SharePropertyModal({
                       href={whatsappShareUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackPropertyShare(property, "whatsapp")}
                       className="flex items-center justify-center gap-2 py-3 px-4 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl text-xs font-bold transition-all shadow-xs active:scale-95"
                     >
                       <MessageCircle className="w-4 h-4" />
@@ -306,6 +311,7 @@ export default function SharePropertyModal({
                       href={whatsappShareUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackPropertyShare(property, "whatsapp")}
                       className="flex flex-col items-center justify-center p-3.5 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-2xl transition-all group active:scale-95"
                     >
                       <div className="w-10 h-10 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">

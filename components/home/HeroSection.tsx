@@ -33,6 +33,8 @@ const bhkOptions = [
   { value: "4", label: "4+ BHK" },
 ];
 
+import { trackPropertySearch } from "@/lib/analytics/clarity";
+
 export default function HeroSection() {
   const router = useRouter();
   const [transactionType, setTransactionType] = useState<"sale" | "rent">("sale");
@@ -50,11 +52,24 @@ export default function HeroSection() {
     if (propertyType !== "Any") params.set("type", propertyType);
     if (bhk !== "Any") params.set("bhk", bhk);
 
+    let minPrice: string | undefined;
+    let maxPrice: string | undefined;
     if (budget !== "Any") {
       const [min, max] = budget.split("-");
+      minPrice = min;
+      maxPrice = max;
       if (min) params.set("minPrice", min);
       if (max) params.set("maxPrice", max);
     }
+
+    trackPropertySearch({
+      search_query: query.trim() || undefined,
+      property_type: propertyType !== "Any" ? propertyType : undefined,
+      purpose: transactionType,
+      bhk: bhk !== "Any" ? bhk : undefined,
+      min_price: minPrice,
+      max_price: maxPrice,
+    });
 
     router.push(`/properties?${params.toString()}`);
   };

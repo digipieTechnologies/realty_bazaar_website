@@ -6,6 +6,11 @@ import { Send, Phone, MessageCircle, Calendar, ShieldCheck, CheckCircle2, Buildi
 import ScheduleVisitModal from "@/components/property/ScheduleVisitModal";
 import SharePropertyModal from "@/components/property/SharePropertyModal";
 import type { Property } from "@/types";
+import {
+  trackPropertyCallClick,
+  trackPropertyWhatsAppClick,
+  trackPropertyLeadSubmit,
+} from "@/lib/analytics/clarity";
 
 interface EnquiryFormProps {
   property: Property;
@@ -32,6 +37,7 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
     try {
       await submitEnquiry(property.id, null, name, phone, message);
       setSubmitted(true);
+      trackPropertyLeadSubmit(property);
     } catch {
       setError("Something went wrong. Please call or WhatsApp the broker directly.");
     } finally {
@@ -68,6 +74,7 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
           <a
             href={`tel:${property.broker_phone || "+919876543210"}`}
             id="property-call-broker"
+            onClick={() => trackPropertyCallClick(property)}
             className="flex items-center justify-center gap-2 py-3 bg-[#F3F8FE] hover:bg-[#EAF3FF] text-[#245FA8] font-bold rounded-2xl text-xs transition-all border border-[#6FA5E5]/30 shadow-2xs active:scale-95"
           >
             <Phone className="w-3.5 h-3.5" />
@@ -81,6 +88,7 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
             target="_blank"
             rel="noopener noreferrer"
             id="property-whatsapp-broker"
+            onClick={() => trackPropertyWhatsAppClick(property)}
             className="flex items-center justify-center gap-2 py-3 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] font-bold rounded-2xl text-xs transition-all border border-[#25D366]/30 shadow-2xs active:scale-95"
           >
             <MessageCircle className="w-3.5 h-3.5" />
