@@ -1,7 +1,8 @@
 "use client";
 
-import { Phone, MessageCircle } from "lucide-react";
+import { Phone } from "lucide-react";
 import SharePropertyButton from "./SharePropertyButton";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import { trackPropertyCallClick, trackPropertyWhatsAppClick } from "@/lib/analytics/clarity";
 import type { Property } from "@/types";
 
@@ -36,7 +37,7 @@ export default function PropertyMobileStickyBar({
           className="flex-1 flex items-center justify-center gap-1.5 py-3 bg-[#25D366] hover:bg-[#1eb858] text-white font-bold rounded-2xl text-xs transition-all shadow-sm active:scale-95"
           id="mobile-whatsapp-broker"
         >
-          <MessageCircle className="w-3.5 h-3.5" />
+          <WhatsAppIcon className="w-4 h-4" variant="white" />
           WhatsApp
         </a>
         <SharePropertyButton

@@ -56,7 +56,7 @@ export default function ListPropertyModal({ isOpen, onClose }: ListPropertyModal
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", duration: 0.35, bounce: 0.15 }}
-            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10 border border-[#E4EAF2]"
+            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10"
           >
             {/* Header */}
             <div className="bg-gradient-to-br from-[#172033] via-[#1e2d47] to-[#253553] p-6 text-white relative">

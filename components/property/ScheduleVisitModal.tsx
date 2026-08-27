@@ -5,7 +5,15 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, CheckCircle2 } from "lucide-react";
 import { submitEnquiry } from "@/app/actions";
+import CustomSelect from "@/components/ui/CustomSelect";
 import type { Property } from "@/types";
+
+const timeSlotOptions = [
+  { value: "10:00 AM", label: "Morning (10:00 AM – 12:00 PM)" },
+  { value: "02:00 PM", label: "Afternoon (02:00 PM – 04:00 PM)" },
+  { value: "05:00 PM", label: "Evening (05:00 PM – 07:00 PM)" },
+  { value: "Weekend Slot", label: "Weekend Slot" },
+];
 
 interface ScheduleVisitModalProps {
   property: Property;
@@ -22,7 +30,7 @@ export default function ScheduleVisitModal({
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState("");
-  const [time, setTime] = useState("11:00 AM");
+  const [time, setTime] = useState("10:00 AM");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -90,7 +98,7 @@ export default function ScheduleVisitModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", duration: 0.35, bounce: 0.1 }}
-            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10 border border-[#E4EAF2]"
+            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10"
           >
             {/* Modal Header */}
             <div className="bg-gradient-to-r from-[#172033] to-[#253553] p-6 text-white relative">
@@ -159,16 +167,13 @@ export default function ScheduleVisitModal({
                       <label className="block text-xs font-bold text-[#172033] mb-1">
                         Preferred Time Slot
                       </label>
-                      <select
+                      <CustomSelect
                         value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                        className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] text-xs font-medium text-[#172033] outline-none bg-white"
-                      >
-                        <option value="10:00 AM">Morning (10:00 AM – 12:00 PM)</option>
-                        <option value="02:00 PM">Afternoon (02:00 PM – 04:00 PM)</option>
-                        <option value="05:00 PM">Evening (05:00 PM – 07:00 PM)</option>
-                        <option value="Weekend Slot">Weekend Slot</option>
-                      </select>
+                        onChange={setTime}
+                        options={timeSlotOptions}
+                        size="sm"
+                        triggerClassName="!py-2.5 !text-xs !font-medium text-[#172033]"
+                      />
                     </div>
                   </div>
 

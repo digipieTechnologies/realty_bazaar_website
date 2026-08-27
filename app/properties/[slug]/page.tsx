@@ -13,9 +13,6 @@ import {
   Layers,
   Sparkles,
   Phone,
-  MessageCircle,
-  Building2,
-  ShieldCheck,
 } from "lucide-react";
 import {
   getPropertyBySlug,
@@ -249,7 +246,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                     <SharePropertyButton
                       property={property}
                       variant="secondary"
-                      label="Share & Draft"
+                      label="Share"
                       id="property-header-share-btn"
                     />
                   </div>

@@ -8,7 +8,6 @@ import {
   Share2,
   Copy,
   Check,
-  MessageCircle,
   Send,
   Mail,
   Smartphone,
@@ -21,6 +20,7 @@ import type { Property } from "@/types";
 import { generatePropertyDraftText } from "@/lib/share";
 import { formatPrice } from "@/lib/utils";
 import { trackPropertyShare } from "@/lib/analytics/clarity";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
 interface SharePropertyModalProps {
   property: Property;
@@ -34,7 +34,6 @@ export default function SharePropertyModal({
   onClose,
 }: SharePropertyModalProps) {
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState<"quick" | "draft">("draft");
   const [copiedType, setCopiedType] = useState<"draft" | "link" | null>(null);
   const [draftText, setDraftText] = useState("");
   const [canNativeShare, setCanNativeShare] = useState(false);
@@ -156,7 +155,7 @@ export default function SharePropertyModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", duration: 0.35, bounce: 0.1 }}
-            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10 border border-[#E4EAF2] flex flex-col max-h-[90vh]"
+            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh]"
           >
             {/* Modal Header */}
             <div className="bg-[#172033] p-5 text-white relative">
@@ -171,7 +170,7 @@ export default function SharePropertyModal({
 
               <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#397BCF]/30 text-[#6FA5E5] rounded-full text-xs font-semibold mb-2">
                 <Share2 className="w-3.5 h-3.5" />
-                Share &amp; Draft Text
+                Share Property
               </div>
 
               {/* Property Mini Preview */}
@@ -196,193 +195,158 @@ export default function SharePropertyModal({
               </div>
             </div>
 
-            {/* Navigation Tabs: Quick Share vs Draft Text */}
-            <div className="flex border-b border-[#E4EAF2] bg-[#F8FAFC] px-5 pt-3 gap-2">
-              <button
-                type="button"
-                onClick={() => setActiveTab("draft")}
-                className={`pb-2.5 px-3 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 cursor-pointer ${
-                  activeTab === "draft"
-                    ? "border-[#397BCF] text-[#397BCF]"
-                    : "border-transparent text-[#667085] hover:text-[#172033]"
-                }`}
-              >
-                <FileText className="w-4 h-4" />
-                Open Draft Text
-                <span className="bg-[#397BCF]/10 text-[#397BCF] text-[10px] font-bold px-1.5 py-0.2 rounded-md">
-                  Ready
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab("quick")}
-                className={`pb-2.5 px-3 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 cursor-pointer ${
-                  activeTab === "quick"
-                    ? "border-[#397BCF] text-[#397BCF]"
-                    : "border-transparent text-[#667085] hover:text-[#172033]"
-                }`}
-              >
-                <Share2 className="w-4 h-4" />
-                Quick Channels
-              </button>
-            </div>
-
             {/* Modal Body */}
             <div className="p-5 overflow-y-auto space-y-4 flex-1">
-              {activeTab === "draft" ? (
-                <div className="space-y-3">
-                  {/* Draft Description / Header */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-[#172033]">
-                      <Sparkles className="w-3.5 h-3.5 text-[#397BCF]" />
-                      <span>Ready-to-Share Draft Message</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleResetDraft}
-                      className="inline-flex items-center gap-1 text-[11px] text-[#667085] hover:text-[#397BCF] transition-colors cursor-pointer"
-                      title="Reset to default template"
-                    >
-                      <RotateCcw className="w-3 h-3" />
-                      Reset
-                    </button>
+              {/* Ready-to-Share Message Section */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#172033]">
+                    <Sparkles className="w-3.5 h-3.5 text-[#397BCF]" />
+                    <span>Ready-to-Share Message</span>
                   </div>
+                  <button
+                    type="button"
+                    onClick={handleResetDraft}
+                    className="inline-flex items-center gap-1 text-[11px] text-[#667085] hover:text-[#397BCF] transition-colors cursor-pointer"
+                    title="Reset to default template"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    Reset
+                  </button>
+                </div>
 
-                  {/* Editable Draft Text Area */}
-                  <div className="relative">
-                    <textarea
-                      value={draftText}
-                      onChange={(e) => setDraftText(e.target.value)}
-                      rows={8}
-                      className="w-full p-3.5 bg-[#F8FAFC] border-2 border-[#E4EAF2] focus:border-[#397BCF] rounded-2xl text-xs font-mono text-[#172033] outline-none resize-none leading-relaxed transition-colors shadow-inner"
-                      placeholder="Property draft text will appear here..."
-                      aria-label="Property draft text"
-                    />
-                    <div className="absolute bottom-3 right-3 text-[10px] text-[#98A2B3] bg-white/90 backdrop-blur-xs px-2 py-0.5 rounded-md border border-[#E4EAF2]">
-                      Editable draft
-                    </div>
-                  </div>
-
-                  {/* Action Row for Draft Mode */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                    {/* Copy Draft Button */}
-                    <button
-                      type="button"
-                      onClick={handleCopyDraft}
-                      className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs ${
-                        copiedType === "draft"
-                          ? "bg-green-600 text-white"
-                          : "bg-[#172033] hover:bg-[#253553] text-white"
-                      }`}
-                    >
-                      {copiedType === "draft" ? (
-                        <>
-                          <Check className="w-4 h-4 text-white" />
-                          Draft Text Copied!
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-4 h-4" />
-                          Copy Draft Text
-                        </>
-                      )}
-                    </button>
-
-                    {/* Send on WhatsApp Button */}
-                    <a
-                      href={whatsappShareUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => trackPropertyShare(property, "whatsapp")}
-                      className="flex items-center justify-center gap-2 py-3 px-4 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl text-xs font-bold transition-all shadow-xs active:scale-95"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      Send on WhatsApp
-                    </a>
+                {/* Editable Message Text Area */}
+                <div className="relative">
+                  <textarea
+                    value={draftText}
+                    onChange={(e) => setDraftText(e.target.value)}
+                    rows={6}
+                    className="w-full p-3.5 bg-[#F8FAFC] border-2 border-[#E4EAF2] focus:border-[#397BCF] rounded-2xl text-xs font-mono text-[#172033] outline-none resize-none leading-relaxed transition-colors shadow-inner"
+                    placeholder="Property message will appear here..."
+                    aria-label="Property message text"
+                  />
+                  <div className="absolute bottom-3 right-3 text-[10px] text-[#98A2B3] bg-white/90 backdrop-blur-xs px-2 py-0.5 rounded-md border border-[#E4EAF2]">
+                    Editable message
                   </div>
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  {/* Quick Share Apps Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                    {/* WhatsApp */}
-                    <a
-                      href={whatsappShareUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => trackPropertyShare(property, "whatsapp")}
-                      className="flex flex-col items-center justify-center p-3.5 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-2xl transition-all group active:scale-95"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-                        <MessageCircle className="w-5 h-5" />
-                      </div>
-                      <span className="text-xs font-bold text-[#172033] mt-2">
-                        WhatsApp
-                      </span>
-                      <span className="text-[10px] text-[#667085]">With Draft</span>
-                    </a>
 
-                    {/* Telegram */}
-                    <a
-                      href={telegramShareUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex flex-col items-center justify-center p-3.5 bg-[#229ED9]/10 hover:bg-[#229ED9]/20 border border-[#229ED9]/30 rounded-2xl transition-all group active:scale-95"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-[#229ED9] text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-                        <Send className="w-5 h-5" />
-                      </div>
-                      <span className="text-xs font-bold text-[#172033] mt-2">
-                        Telegram
-                      </span>
-                      <span className="text-[10px] text-[#667085]">Direct Share</span>
-                    </a>
+                {/* Action Row for Message */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                  {/* Copy Message Button */}
+                  <button
+                    type="button"
+                    onClick={handleCopyDraft}
+                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs ${
+                      copiedType === "draft"
+                        ? "bg-green-600 text-white"
+                        : "bg-[#172033] hover:bg-[#253553] text-white"
+                    }`}
+                  >
+                    {copiedType === "draft" ? (
+                      <>
+                        <Check className="w-4 h-4 text-white" />
+                        Message Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4" />
+                        Copy Message
+                      </>
+                    )}
+                  </button>
 
-                    {/* Email */}
-                    <a
-                      href={emailShareUrl}
-                      className="flex flex-col items-center justify-center p-3.5 bg-[#397BCF]/10 hover:bg-[#397BCF]/20 border border-[#397BCF]/30 rounded-2xl transition-all group active:scale-95"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-[#397BCF] text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-                        <Mail className="w-5 h-5" />
-                      </div>
-                      <span className="text-xs font-bold text-[#172033] mt-2">
-                        Email
-                      </span>
-                      <span className="text-[10px] text-[#667085]">Draft Email</span>
-                    </a>
-
-                    {/* SMS */}
-                    <a
-                      href={smsShareUrl}
-                      className="flex flex-col items-center justify-center p-3.5 bg-[#F8FAFC] hover:bg-[#EAF3FF] border border-[#E4EAF2] rounded-2xl transition-all group active:scale-95"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-[#172033] text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-                        <Smartphone className="w-5 h-5" />
-                      </div>
-                      <span className="text-xs font-bold text-[#172033] mt-2">
-                        SMS
-                      </span>
-                      <span className="text-[10px] text-[#667085]">Text Message</span>
-                    </a>
-                  </div>
-
-                  {/* Native Device Share Sheet Button if supported */}
-                  {canNativeShare && (
-                    <button
-                      type="button"
-                      onClick={handleNativeShare}
-                      className="w-full flex items-center justify-center gap-2 py-3 bg-[#F3F8FE] hover:bg-[#EAF3FF] border border-[#397BCF]/30 text-[#245FA8] font-bold rounded-xl text-xs transition-all active:scale-95 cursor-pointer"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Open System Share Sheet (More Apps)
-                    </button>
-                  )}
+                  {/* Send on WhatsApp Button */}
+                  <a
+                    href={whatsappShareUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackPropertyShare(property, "whatsapp")}
+                    className="flex items-center justify-center gap-2 py-3 px-4 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl text-xs font-bold transition-all shadow-xs active:scale-95"
+                  >
+                    <WhatsAppIcon className="w-4 h-4" variant="white" />
+                    Send on WhatsApp
+                  </a>
                 </div>
-              )}
+              </div>
 
-              {/* Quick Links & Copy Footer */}
+              {/* Quick Channels */}
+              <div className="pt-3 border-t border-[#E4EAF2] space-y-2.5">
+                <div className="text-[11px] font-bold text-[#667085] uppercase tracking-wider">
+                  Quick Channels
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {/* WhatsApp */}
+                  <a
+                    href={whatsappShareUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackPropertyShare(property, "whatsapp")}
+                    className="flex flex-col items-center justify-center p-3 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-2xl transition-all group active:scale-95"
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                      <WhatsAppIcon className="w-4 h-4" variant="white" />
+                    </div>
+                    <span className="text-xs font-bold text-[#172033] mt-1.5">
+                      WhatsApp
+                    </span>
+                  </a>
+
+                  {/* Telegram */}
+                  <a
+                    href={telegramShareUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center justify-center p-3 bg-[#229ED9]/10 hover:bg-[#229ED9]/20 border border-[#229ED9]/30 rounded-2xl transition-all group active:scale-95"
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-[#229ED9] text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                      <Send className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-bold text-[#172033] mt-1.5">
+                      Telegram
+                    </span>
+                  </a>
+
+                  {/* Email */}
+                  <a
+                    href={emailShareUrl}
+                    className="flex flex-col items-center justify-center p-3 bg-[#397BCF]/10 hover:bg-[#397BCF]/20 border border-[#397BCF]/30 rounded-2xl transition-all group active:scale-95"
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-[#397BCF] text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                      <Mail className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-bold text-[#172033] mt-1.5">
+                      Email
+                    </span>
+                  </a>
+
+                  {/* SMS */}
+                  <a
+                    href={smsShareUrl}
+                    className="flex flex-col items-center justify-center p-3 bg-[#F8FAFC] hover:bg-[#EAF3FF] border border-[#E4EAF2] rounded-2xl transition-all group active:scale-95"
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-[#172033] text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                      <Smartphone className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-bold text-[#172033] mt-1.5">
+                      SMS
+                    </span>
+                  </a>
+                </div>
+
+                {/* Native Device Share Sheet Button if supported */}
+                {canNativeShare && (
+                  <button
+                    type="button"
+                    onClick={handleNativeShare}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#F3F8FE] hover:bg-[#EAF3FF] border border-[#397BCF]/30 text-[#245FA8] font-bold rounded-xl text-xs transition-all active:scale-95 cursor-pointer mt-2"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Open System Share Sheet (More Apps)
+                  </button>
+                )}
+              </div>
+
+              {/* Direct Copy Actions */}
               <div className="pt-3 border-t border-[#E4EAF2] space-y-2.5">
                 <div className="text-[11px] font-bold text-[#667085] uppercase tracking-wider">
                   Direct Copy Actions
@@ -395,7 +359,7 @@ export default function SharePropertyModal({
                   >
                     <span className="flex items-center gap-1.5">
                       <FileText className="w-3.5 h-3.5 text-[#397BCF]" />
-                      Copy Draft Text
+                      Copy Message
                     </span>
                     {copiedType === "draft" ? (
                       <span className="text-green-600 text-[11px] flex items-center gap-0.5">
@@ -429,7 +393,7 @@ export default function SharePropertyModal({
 
             {/* Modal Footer Note */}
             <div className="px-5 py-3 bg-[#F8FAFC] border-t border-[#E4EAF2] text-center text-[11px] text-[#98A2B3]">
-              ✨ Draft text includes price, key specifications, and direct link.
+              ✨ Includes price, key specifications, and direct link.
             </div>
           </motion.div>
         </div>

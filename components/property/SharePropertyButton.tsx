@@ -35,7 +35,7 @@ export default function SharePropertyButton({
         return "bg-white/90 hover:bg-white backdrop-blur-md text-[#172033] font-bold px-3 py-1.5 rounded-full text-xs shadow-xs border border-[#E4EAF2]";
       case "secondary":
       default:
-        return "bg-[#F3F8FE] hover:bg-[#EAF3FF] text-[#245FA8] border border-[#6FA5E5]/30 font-bold px-3.5 py-2 rounded-xl text-xs";
+        return "bg-white hover:bg-[#F3F8FE] text-[#172033] hover:text-[#397BCF] border border-[#E4EAF2] hover:border-[#397BCF]/50 font-semibold px-3.5 py-1.5 rounded-xl text-xs shadow-2xs hover:shadow-xs";
     }
   };
 

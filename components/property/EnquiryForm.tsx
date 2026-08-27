@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { submitEnquiry } from "@/app/actions";
-import { Send, Phone, MessageCircle, Calendar, ShieldCheck, CheckCircle2, Building, Share2 } from "lucide-react";
+import { Send, Phone, Calendar, ShieldCheck, CheckCircle2, Building } from "lucide-react";
 import ScheduleVisitModal from "@/components/property/ScheduleVisitModal";
-import SharePropertyModal from "@/components/property/SharePropertyModal";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import type { Property } from "@/types";
 import {
   trackPropertyCallClick,
@@ -24,7 +24,6 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
-  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,13 +90,13 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
             onClick={() => trackPropertyWhatsAppClick(property)}
             className="flex items-center justify-center gap-2 py-3 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] font-bold rounded-2xl text-xs transition-all border border-[#25D366]/30 shadow-2xs active:scale-95"
           >
-            <MessageCircle className="w-3.5 h-3.5" />
+            <WhatsAppIcon className="w-4 h-4" variant="brand" />
             WhatsApp
           </a>
         </div>
 
-        {/* Site Visit and Share / Open Draft Actions */}
-        <div className="space-y-2">
+        {/* Site Visit Action */}
+        <div>
           <button
             type="button"
             onClick={() => setScheduleModalOpen(true)}
@@ -106,16 +105,6 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
           >
             <Calendar className="w-4 h-4" />
             Schedule a Physical Site Visit
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setShareModalOpen(true)}
-            id="property-open-draft-btn"
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#F8FAFC] hover:bg-[#F3F8FE] text-[#172033] hover:text-[#397BCF] border border-[#E4EAF2] hover:border-[#397BCF]/40 font-bold rounded-2xl text-xs transition-all active:scale-95 cursor-pointer"
-          >
-            <Share2 className="w-3.5 h-3.5 text-[#397BCF]" />
-            Open Draft Text &amp; Share Listing
           </button>
         </div>
 
@@ -215,12 +204,6 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
         property={property}
         isOpen={scheduleModalOpen}
         onClose={() => setScheduleModalOpen(false)}
-      />
-
-      <SharePropertyModal
-        property={property}
-        isOpen={shareModalOpen}
-        onClose={() => setShareModalOpen(false)}
       />
     </div>
   );

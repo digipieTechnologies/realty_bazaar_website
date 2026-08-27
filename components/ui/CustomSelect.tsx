@@ -146,7 +146,7 @@ export default function CustomSelect({
             exit={{ opacity: 0, y: -4, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
             role="listbox"
-            className="absolute z-50 left-0 right-0 top-full mt-1.5 bg-white border border-[#E4EAF2] rounded-xl shadow-[0_12px_32px_-4px_rgba(23,32,51,0.15)] p-1.5 max-h-64 overflow-y-auto"
+            className="absolute z-50 left-0 right-0 top-full mt-1.5 bg-white border border-[#E4EAF2] rounded-2xl shadow-[0_16px_40px_-8px_rgba(23,32,51,0.18)] p-1.5 max-h-64 overflow-y-auto"
           >
             {normalizedOptions.map((option) => {
               const isSelected = option.value === currentValue;
@@ -158,15 +158,18 @@ export default function CustomSelect({
                   aria-selected={isSelected}
                   onClick={() => handleSelect(option.value)}
                   className={cn(
-                    "w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-left transition-colors text-sm",
+                    "w-full flex items-center justify-between text-left transition-all duration-150 cursor-pointer",
+                    size === "sm"
+                      ? "px-3 py-2 rounded-lg text-xs"
+                      : "px-3.5 py-2.5 rounded-xl text-sm",
                     isSelected
-                      ? "bg-[#EAF3FF] text-[#397BCF] font-semibold"
-                      : "text-[#172033] hover:bg-[#F3F8FE] hover:text-[#397BCF]"
+                      ? "bg-[#EAF3FF] text-[#397BCF] font-bold"
+                      : "text-[#172033] hover:bg-[#F3F8FE] hover:text-[#397BCF] font-medium"
                   )}
                 >
                   <span className="truncate">{option.label}</span>
                   {isSelected && (
-                    <Check className="w-4 h-4 text-[#397BCF] shrink-0 ml-2" />
+                    <Check className={cn(size === "sm" ? "w-3.5 h-3.5" : "w-4 h-4", "text-[#397BCF] shrink-0 ml-2")} />
                   )}
                 </button>
               );
