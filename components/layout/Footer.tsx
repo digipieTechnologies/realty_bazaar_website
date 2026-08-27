@@ -150,6 +150,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
+                    rel={link.href.includes("?") ? "nofollow" : undefined}
                     className="text-xs sm:text-sm text-white/70 hover:text-white transition-colors"
                   >
                     {link.label}
@@ -169,6 +170,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
+                    rel={link.href.includes("?") ? "nofollow" : undefined}
                     className="text-xs sm:text-sm text-white/70 hover:text-white transition-colors"
                   >
                     {link.label}

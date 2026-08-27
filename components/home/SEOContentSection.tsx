@@ -26,27 +26,27 @@ export default function SEOContentSection() {
                 </h3>
                 <ul className="space-y-1.5 text-xs text-[#475467]">
                   <li>
-                    <Link href="/properties?city=Surat&bhk=2" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?city=Surat&bhk=2" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       2 BHK Flats in Surat
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?city=Surat&bhk=3" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?city=Surat&bhk=3" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       3 BHK Luxury Apartments in Vesu
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?type=villa&city=Surat" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?type=villa&city=Surat" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Villas in Adajan & Pal
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?city=Ahmedabad&type=apartment" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?city=Ahmedabad&type=apartment" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Apartments on SG Highway Ahmedabad
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?city=Mumbai&bhk=2" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?city=Mumbai&bhk=2" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Sea View Apartments in Bandra Mumbai
                     </Link>
                   </li>
@@ -59,27 +59,27 @@ export default function SEOContentSection() {
                 </h3>
                 <ul className="space-y-1.5 text-xs text-[#475467]">
                   <li>
-                    <Link href="/properties?type=commercial&city=Surat" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?type=commercial&city=Surat" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Office Space on Ring Road Surat
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?type=shop&city=Surat" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?type=shop&city=Surat" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Retail Shops on Ghod Dod Road
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?type=plot" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?type=plot" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Residential Plots on Dumas Road
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?type=commercial&transaction=rent" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?type=commercial&transaction=rent" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Commercial Space for Rent in Gujarat
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?type=warehouse" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?type=warehouse" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Warehouses & Godowns in Industrial Hubs
                     </Link>
                   </li>
@@ -92,27 +92,27 @@ export default function SEOContentSection() {
                 </h3>
                 <ul className="space-y-1.5 text-xs text-[#475467]">
                   <li>
-                    <Link href="/properties?maxPrice=5000000" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?maxPrice=5000000" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Affordable Homes Under ₹50 Lakh
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?minPrice=5000000&maxPrice=10000000" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?minPrice=5000000&maxPrice=10000000" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Mid-Segment Flats ₹50L – ₹1 Crore
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?minPrice=10000000&maxPrice=25000000" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?minPrice=10000000&maxPrice=25000000" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Premium Homes ₹1 Crore – ₹2.5 Crore
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?minPrice=25000000" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?minPrice=25000000" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Ultra-Luxury Properties Above ₹2.5 Crore
                     </Link>
                   </li>
                   <li>
-                    <Link href="/properties?transaction=rent" className="hover:text-[#397BCF] transition-colors">
+                    <Link href="/properties?transaction=rent" rel="nofollow" className="hover:text-[#397BCF] transition-colors">
                       Rental Properties in Top Locations
                     </Link>
                   </li>

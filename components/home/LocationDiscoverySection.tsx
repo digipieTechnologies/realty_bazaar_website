@@ -87,6 +87,7 @@ export default function LocationDiscoverySection({ counts = {} }: LocationDiscov
               <ScrollReveal key={city.name} delay={idx * 0.06}>
                 <Link
                   href={city.href}
+                  rel="nofollow"
                   className="group relative block rounded-3xl overflow-hidden aspect-[16/10] sm:aspect-[4/3] bg-[#172033] shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                 >
                   {/* Background Image */}

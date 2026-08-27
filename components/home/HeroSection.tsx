@@ -84,7 +84,7 @@ export default function HeroSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-3xl sm:text-5xl lg:text-6xl font-display font-bold text-[#172033] tracking-tight leading-[1.12] mb-3"
           >
-            Find a Property <span className="gradient-text">You&apos;ll Love.</span>
+            Find Properties for Sale &amp; Rent
           </motion.h1>
 
           <motion.p
@@ -109,22 +109,20 @@ export default function HeroSection() {
             <button
               type="button"
               onClick={() => setTransactionType("sale")}
-              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer ${
-                transactionType === "sale"
+              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer ${transactionType === "sale"
                   ? "bg-[#397BCF] text-white shadow-xs"
                   : "text-[#667085] hover:text-[#172033] hover:bg-[#F3F8FE]"
-              }`}
+                }`}
             >
               Buy Property
             </button>
             <button
               type="button"
               onClick={() => setTransactionType("rent")}
-              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer ${
-                transactionType === "rent"
+              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer ${transactionType === "rent"
                   ? "bg-[#397BCF] text-white shadow-xs"
                   : "text-[#667085] hover:text-[#172033] hover:bg-[#F3F8FE]"
-              }`}
+                }`}
             >
               Rent Property
             </button>

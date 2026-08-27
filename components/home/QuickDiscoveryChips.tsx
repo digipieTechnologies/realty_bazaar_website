@@ -34,6 +34,7 @@ export default function QuickDiscoveryChips() {
               <Link
                 key={idx}
                 href={chip.href}
+                rel="nofollow"
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#475467] bg-[#F8FAFC] hover:bg-[#EAF3FF] hover:text-[#397BCF] hover:border-[#397BCF]/40 border border-[#E4EAF2] whitespace-nowrap transition-all duration-200 shadow-2xs hover:shadow-xs active:scale-95"
               >
                 {Icon && <Icon className="w-3 h-3 text-[#397BCF]" />}

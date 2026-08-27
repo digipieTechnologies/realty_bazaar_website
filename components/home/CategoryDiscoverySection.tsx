@@ -103,6 +103,7 @@ export default function CategoryDiscoverySection({ counts = {} }: CategoryDiscov
               <ScrollReveal key={category.title} delay={idx * 0.04}>
                 <Link
                   href={category.href}
+                  rel="nofollow"
                   className="group relative block p-5 sm:p-6 bg-white border border-[#E4EAF2] rounded-2xl hover:border-[#397BCF] hover:shadow-[0_12px_24px_-8px_rgb(57_123_207/0.12)] hover:-translate-y-1 transition-all duration-300 h-full flex flex-col justify-between"
                 >
                   <div>

@@ -20,7 +20,7 @@ import FinalCTA from "@/components/home/FinalCTA";
 export const metadata: Metadata = {
   title: "Properties for Sale & Rent in Surat & India | The Realty Bazaar",
   description:
-    "Discover verified residential apartments, independent villas, commercial spaces, and plots in Surat, Gujarat and across India. Connect directly with local licensed real-estate brokers.",
+    "Discover verified apartments, villas, and commercial properties in Surat and across India. Connect directly with licensed local real estate brokers.",
   alternates: {
     canonical: "https://therealtybazaar.com",
   },
