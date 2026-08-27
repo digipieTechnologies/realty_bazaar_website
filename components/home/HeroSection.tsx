@@ -67,12 +67,12 @@ export default function HeroSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Header Copy */}
-        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+        <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-10">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-[#E4EAF2] rounded-full text-xs font-semibold text-[#172033] shadow-2xs mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/90 backdrop-blur-xs border border-[#E4EAF2] rounded-full text-xs font-semibold text-[#172033] shadow-2xs mb-4"
           >
             <span className="flex h-2 w-2 rounded-full bg-[#397BCF] animate-pulse" />
             <span>India&apos;s Verified Real Estate Discovery Platform</span>
@@ -82,16 +82,16 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl sm:text-5xl lg:text-6xl font-display font-bold text-[#172033] tracking-tight leading-[1.12] mb-3"
+            className="text-3xl sm:text-5xl lg:text-[54px] font-display font-bold text-[#172033] tracking-tight leading-[1.15] mb-3 text-balance"
           >
-            Find Properties for Sale &amp; Rent
+            Find Properties for <span className="gradient-text">Sale &amp; Rent</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-base sm:text-lg text-[#667085] leading-relaxed max-w-2xl mx-auto"
+            className="text-base sm:text-lg text-[#667085] leading-relaxed max-w-2xl mx-auto text-balance"
           >
             Discover verified residential and commercial properties directly from local real estate brokers across Surat, Gujarat and India.
           </motion.p>
