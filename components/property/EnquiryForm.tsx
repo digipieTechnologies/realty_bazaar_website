@@ -68,8 +68,8 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
       </div>
 
       <div className="p-5 space-y-4">
-        {/* Quick Action Buttons (Call & WhatsApp) */}
-        <div className="grid grid-cols-2 gap-2.5">
+        {/* Quick Action Buttons (Call & WhatsApp - Desktop sidebar only, mobile has sticky bar) */}
+        <div className="hidden lg:grid grid-cols-2 gap-2.5">
           <a
             href={`tel:${property.broker_phone || "+919876543210"}`}
             id="property-call-broker"
