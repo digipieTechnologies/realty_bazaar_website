@@ -100,7 +100,7 @@ export default function BrokerSecondaryCTA() {
                   aria-label="Learn more about The Realty Bazaar platform and mobile CRM"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-slate-200 hover:text-white text-sm font-semibold transition-all underline underline-offset-4 decoration-white/30 hover:decoration-white"
                 >
-                  <span>Learn More</span>
+                  <span>Learn More <span className="sr-only">about The Realty Bazaar for real estate brokers</span></span>
                 </Link>
               </div>
             </ScrollReveal>

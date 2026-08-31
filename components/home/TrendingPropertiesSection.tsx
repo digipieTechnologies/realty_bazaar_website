@@ -56,7 +56,7 @@ export default function TrendingPropertiesSection({ properties }: TrendingProper
         <div className="text-center mt-10 sm:mt-14">
           <Link
             href="/properties"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-[#397BCF] hover:bg-[#245FA8] text-white font-bold rounded-2xl text-sm sm:text-base transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98]"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-[#245FA8] hover:bg-[#1E4E8C] text-white font-bold rounded-2xl text-sm sm:text-base transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98]"
           >
             <span>View All Properties for Sale & Rent</span>
             <ArrowRight className="w-4 h-4" />

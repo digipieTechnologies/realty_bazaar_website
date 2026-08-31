@@ -176,7 +176,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${dmSans.variable}`}>
       <head>
-        <link rel="preconnect" href="https://www.clarity.ms" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://scripts.clarity.ms" />
+        <link rel="preconnect" href="https://www.clarity.ms" />
+        <link rel="dns-prefetch" href="https://scripts.clarity.ms" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
         <script
           type="application/ld+json"

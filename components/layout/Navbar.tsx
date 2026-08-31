@@ -113,7 +113,7 @@ export default function Navbar() {
               <button
                 onClick={() => setListModalOpen(true)}
                 id="nav-list-property"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#397BCF] hover:bg-[#245FA8] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#245FA8] hover:bg-[#1E4E8C] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer"
               >
                 <PlusCircle className="w-4 h-4" />
                 List Your Property
@@ -204,7 +204,7 @@ export default function Navbar() {
                     setMobileOpen(false);
                     setListModalOpen(true);
                   }}
-                  className="flex items-center justify-center gap-2 w-full px-5 py-3 bg-[#397BCF] hover:bg-[#245FA8] text-white text-sm font-semibold rounded-xl transition-all shadow-sm"
+                  className="flex items-center justify-center gap-2 w-full px-5 py-3 bg-[#245FA8] hover:bg-[#1E4E8C] text-white text-sm font-semibold rounded-xl transition-all shadow-sm"
                   id="mobile-nav-list-property"
                 >
                   <PlusCircle className="w-4 h-4" />

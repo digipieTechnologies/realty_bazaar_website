@@ -96,7 +96,7 @@ export default function LocationDiscoverySection({ counts = {} }: LocationDiscov
                     src={city.image}
                     alt={`Real estate in ${city.name}`}
                     fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                    sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) calc(50vw - 32px), 380px"
                     className="w-full h-full object-cover opacity-80 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700 ease-out"
                     loading="lazy"
                   />

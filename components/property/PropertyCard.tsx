@@ -55,7 +55,7 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
             src={imageUrl}
             alt={imageAlt}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+            sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) calc(50vw - 32px), 380px"
             priority={priorityImage}
             loading={priorityImage ? "eager" : "lazy"}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
