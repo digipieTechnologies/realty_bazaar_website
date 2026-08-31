@@ -225,23 +225,9 @@ export default function Footer() {
           <p className="text-xs text-slate-300">
             © {new Date().getFullYear()} The Realty Bazaar. All rights reserved.
           </p>
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-xs text-slate-300">
-            <span>
-              Powered by{" "}
-              <Link
-                href="https://digipie.net"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#6FA5E5] hover:text-white font-medium transition-colors underline underline-offset-2"
-              >
-                Digipie Technologies
-              </Link>
-            </span>
-            <span className="hidden sm:inline text-white/30">•</span>
-            <span className="text-slate-300">
-              India&apos;s Modern Real Estate Property Discovery Platform
-            </span>
-          </div>
+          <p className="text-xs text-slate-300">
+            India&apos;s Modern Real Estate Property Discovery Platform
+          </p>
         </div>
       </div>
     </footer>
