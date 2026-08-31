@@ -27,6 +27,8 @@ import SharePropertyButton from "@/components/property/SharePropertyButton";
 import PropertyViewTracker from "@/components/property/PropertyViewTracker";
 import PropertyMobileStickyBar from "@/components/property/PropertyMobileStickyBar";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://therealtybazaar.com";
+
 interface PropertyPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -41,7 +43,14 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
   const property = await getPropertyBySlug(slug);
 
   if (!property) {
-    return { title: "Property Not Found" };
+    return {
+      title: "Property Not Found",
+      description: "The requested property listing could not be found.",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
   }
 
   const title = generatePropertyMetaTitle(property);
@@ -51,19 +60,57 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
     ? `${property.description.slice(0, 155).trim()}...`
     : `Explore photos, verified pricing, floor plans, amenities, and direct broker contact for ${property.title} in ${locText}.`;
 
-  const image = property.images?.[0];
+  const canonicalUrl = `${SITE_URL}/properties/${slug}`;
+  const defaultOgImage = `${SITE_URL}/og-image.jpg`;
+
+  // Filter valid absolute image URLs
+  const validImages: string[] = (property.images ?? []).filter(
+    (img): img is string =>
+      typeof img === "string" &&
+      img.trim().length > 0 &&
+      (img.startsWith("https://") || img.startsWith("http://"))
+  );
+
+  const primaryImageUrl = validImages.length > 0 ? validImages[0] : defaultOgImage;
+
+  const ogImages = validImages.length > 0
+    ? validImages.slice(0, 4).map((url, idx) => ({
+        url,
+        width: 1200,
+        height: 630,
+        alt: `${property.title}${idx > 0 ? ` – Photo ${idx + 1}` : ""}`,
+      }))
+    : [
+        {
+          url: defaultOgImage,
+          width: 1200,
+          height: 630,
+          alt: `${property.title} | The Realty Bazaar`,
+        },
+      ];
 
   return {
     title,
     description,
     alternates: {
-      canonical: `https://therealtybazaar.com/properties/${slug}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
+      type: "website",
+      siteName: "The Realty Bazaar",
+      locale: "en_IN",
       title,
       description,
-      url: `https://therealtybazaar.com/properties/${slug}`,
-      images: image ? [{ url: image, width: 1200, height: 630, alt: property.title }] : [],
+      url: canonicalUrl,
+      images: ogImages,
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@therealtybazaar",
+      creator: "@therealtybazaar",
+      title,
+      description,
+      images: [primaryImageUrl],
     },
   };
 }

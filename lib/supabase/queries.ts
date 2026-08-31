@@ -35,11 +35,14 @@ function mapDbRowToProperty(row: DbPropertyRow): Property {
   const locality = addr?.landmark ?? addr?.city ?? "";
   const fullAddress = addr?.full_address ?? null;
 
-  // Extract image URLs from the medias JSONB array
+  // Extract image URLs from the medias JSONB array (images, photos, or video thumbnails)
   const images: string[] = (row.medias ?? [])
-    .filter((m) => m.type === "image" || m.type === "photo" || !m.type)
-    .map((m) => m.url)
-    .filter(Boolean);
+    .map((m) => {
+      if (m.type === "image" || m.type === "photo" || !m.type) return m.url;
+      if (m.thumbnail) return m.thumbnail;
+      return null;
+    })
+    .filter((url): url is string => typeof url === "string" && url.trim().length > 0);
 
   // Build human-readable floor string
   let floor: string | null = null;
