@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, ArrowRight } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
@@ -91,9 +92,11 @@ export default function LocationDiscoverySection({ counts = {} }: LocationDiscov
                   className="group relative block rounded-3xl overflow-hidden aspect-[16/10] sm:aspect-[4/3] bg-[#172033] shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                 >
                   {/* Background Image */}
-                  <img
+                  <Image
                     src={city.image}
                     alt={`Real estate in ${city.name}`}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
                     className="w-full h-full object-cover opacity-80 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700 ease-out"
                     loading="lazy"
                   />

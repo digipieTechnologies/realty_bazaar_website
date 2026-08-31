@@ -97,7 +97,8 @@ export default function BrokerSecondaryCTA() {
 
                 <Link
                   href="/for-brokers"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-white/70 hover:text-white text-sm font-semibold transition-all"
+                  aria-label="Learn more about The Realty Bazaar platform and mobile CRM"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-slate-200 hover:text-white text-sm font-semibold transition-all underline underline-offset-4 decoration-white/30 hover:decoration-white"
                 >
                   <span>Learn More</span>
                 </Link>

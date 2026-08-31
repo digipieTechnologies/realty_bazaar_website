@@ -81,7 +81,7 @@ export default function Footer() {
                     <path d="M3.18 23.76A1.96 1.96 0 0 1 2 22V2C2 1.36 2.37.82 2.93.53L14.36 12 3.18 23.76ZM15.54 13.19l2.8 2.8-10.96 6.23 8.16-9.03ZM21.14 10.17c.57.31.86.79.86 1.83s-.29 1.52-.86 1.83l-2.57 1.46-3.16-3.16 3.16-3.16 2.57 1.2ZM7.38 1.81l10.96 6.23-2.8 2.8L6.38 1.81l1-.0Z" />
                   </svg>
                   <div>
-                    <div className="text-[8px] text-white/50 leading-none">Get it on</div>
+                    <div className="text-[10px] text-slate-300 leading-none">Get it on</div>
                     <div className="text-xs font-semibold text-white leading-tight">Google Play</div>
                   </div>
                 </Link>
@@ -96,7 +96,7 @@ export default function Footer() {
                     <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11Z" />
                   </svg>
                   <div>
-                    <div className="text-[8px] text-white/50 leading-none">Download on the</div>
+                    <div className="text-[10px] text-slate-300 leading-none">Download on the</div>
                     <div className="text-xs font-semibold text-white leading-tight">App Store</div>
                   </div>
                 </Link>
@@ -222,23 +222,23 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/50">
+          <p className="text-xs text-slate-300">
             © {new Date().getFullYear()} The Realty Bazaar. All rights reserved.
           </p>
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-xs text-white/40">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-xs text-slate-300">
             <span>
               Powered by{" "}
               <Link
                 href="https://digipie.net"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#6FA5E5] hover:text-white font-medium transition-colors"
+                className="text-[#6FA5E5] hover:text-white font-medium transition-colors underline underline-offset-2"
               >
                 Digipie Technologies
               </Link>
             </span>
-            <span className="hidden sm:inline text-white/20">•</span>
-            <span className="text-white/40">
+            <span className="hidden sm:inline text-white/30">•</span>
+            <span className="text-slate-300">
               India&apos;s Modern Real Estate Property Discovery Platform
             </span>
           </div>

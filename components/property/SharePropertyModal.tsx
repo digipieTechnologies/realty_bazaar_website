@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -175,11 +176,15 @@ export default function SharePropertyModal({
 
               {/* Property Mini Preview */}
               <div className="flex items-center gap-3 mt-1 pr-8">
-                <img
-                  src={imageUrl}
-                  alt={property.title}
-                  className="w-14 h-14 rounded-2xl object-cover border border-white/10 shrink-0 bg-[#253553]"
-                />
+                <div className="relative w-14 h-14 rounded-2xl overflow-hidden border border-white/10 shrink-0 bg-[#253553]">
+                  <Image
+                    src={imageUrl}
+                    alt={property.title}
+                    fill
+                    sizes="56px"
+                    className="object-cover"
+                  />
+                </div>
                 <div className="min-w-0">
                   <h3 className="font-bold text-sm text-white truncate">
                     {property.title}

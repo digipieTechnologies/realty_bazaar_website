@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight, Maximize2, X, Image as ImageIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -32,9 +33,12 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
     <div className="space-y-3">
       {/* Main Image Banner */}
       <div className="relative aspect-[16/10] sm:aspect-[16/9] rounded-3xl overflow-hidden bg-[#172033] group shadow-sm border border-[#E4EAF2]">
-        <img
+        <Image
           src={list[current]}
           alt={`${title} - Photo ${current + 1}`}
+          fill
+          priority
+          sizes="(max-width: 1024px) 100vw, 800px"
           className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 cursor-pointer"
           onClick={() => setLightboxOpen(true)}
         />
@@ -45,7 +49,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
             <button
               type="button"
               onClick={prev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md shadow-md flex items-center justify-center opacity-80 sm:opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-110 active:scale-95 cursor-pointer"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md shadow-md flex items-center justify-center opacity-80 sm:opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-110 active:scale-95 cursor-pointer z-10"
               aria-label="Previous photo"
             >
               <ChevronLeft className="w-5 h-5 text-[#172033]" />
@@ -53,7 +57,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
             <button
               type="button"
               onClick={next}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md shadow-md flex items-center justify-center opacity-80 sm:opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-110 active:scale-95 cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md shadow-md flex items-center justify-center opacity-80 sm:opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-110 active:scale-95 cursor-pointer z-10"
               aria-label="Next photo"
             >
               <ChevronRight className="w-5 h-5 text-[#172033]" />
@@ -62,7 +66,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
         )}
 
         {/* Bottom Bar: Photo Count & Lightbox Trigger */}
-        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
           <div className="bg-black/60 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
             <ImageIcon className="w-3.5 h-3.5" />
             <span>
@@ -89,14 +93,21 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
               key={idx}
               type="button"
               onClick={() => setCurrent(idx)}
-              className={`shrink-0 w-24 h-16 rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${
+              className={`relative shrink-0 w-24 h-16 rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${
                 idx === current
                   ? "border-[#397BCF] ring-2 ring-[#397BCF]/20 scale-102"
                   : "border-[#E4EAF2] hover:border-[#397BCF]/60 opacity-70 hover:opacity-100"
               }`}
               aria-label={`View photo ${idx + 1}`}
             >
-              <img src={img} alt={`${title} – photo ${idx + 1}`} className="w-full h-full object-cover" />
+              <Image
+                src={img}
+                alt={`${title} – photo ${idx + 1}`}
+                fill
+                sizes="96px"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </button>
           ))}
         </div>
@@ -122,19 +133,23 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
             </div>
 
             {/* Lightbox Center Image */}
-            <div className="relative flex-1 flex items-center justify-center py-4">
-              <img
-                src={list[current]}
-                alt={`${title} - Fullscreen photo ${current + 1}`}
-                className="max-h-[80vh] max-w-full object-contain rounded-2xl shadow-2xl"
-              />
+            <div className="relative flex-1 w-full max-w-6xl mx-auto flex items-center justify-center py-4">
+              <div className="relative w-full h-full max-h-[78vh] flex items-center justify-center">
+                <Image
+                  src={list[current]}
+                  alt={`${title} - Fullscreen photo ${current + 1}`}
+                  fill
+                  sizes="100vw"
+                  className="object-contain rounded-2xl shadow-2xl"
+                />
+              </div>
 
               {list.length > 1 && (
                 <>
                   <button
                     type="button"
                     onClick={prev}
-                    className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all cursor-pointer"
+                    className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all cursor-pointer z-10"
                     aria-label="Previous"
                   >
                     <ChevronLeft className="w-7 h-7" />
@@ -142,7 +157,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
                   <button
                     type="button"
                     onClick={next}
-                    className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all cursor-pointer"
+                    className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all cursor-pointer z-10"
                     aria-label="Next"
                   >
                     <ChevronRight className="w-7 h-7" />
@@ -158,11 +173,19 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
                   key={idx}
                   type="button"
                   onClick={() => setCurrent(idx)}
-                  className={`w-16 h-12 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                  className={`relative w-16 h-12 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 ${
                     idx === current ? "border-[#397BCF] scale-110" : "border-white/20 opacity-50"
                   }`}
+                  aria-label={`Select photo ${idx + 1}`}
                 >
-                  <img src={img} alt={`${title} – photo ${idx + 1}`} className="w-full h-full object-cover" />
+                  <Image
+                    src={img}
+                    alt={`${title} – thumbnail ${idx + 1}`}
+                    fill
+                    sizes="64px"
+                    className="object-cover"
+                    loading="lazy"
+                  />
                 </button>
               ))}
             </div>

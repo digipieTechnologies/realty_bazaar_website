@@ -1,5 +1,6 @@
 import { Bed, Bath, Square, MapPin, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { StaggerReveal, StaggerItem } from "@/components/ui/ScrollReveal";
 
@@ -105,18 +106,20 @@ export default function PropertyMarketplaceSection() {
               >
                 {/* Image */}
                 <div className="relative aspect-[4/3] overflow-hidden bg-[#F3F8FE]">
-                  <img
+                  <Image
                     src={property.image}
                     alt={property.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
                   {property.featured && (
-                    <span className="absolute top-3 left-3 bg-[#EAF3FF] text-[#245FA8] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#6FA5E5]/30">
+                    <span className="absolute top-3 left-3 bg-[#EAF3FF] text-[#245FA8] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#6FA5E5]/30 z-10">
                       Featured
                     </span>
                   )}
-                  <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-[#172033] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#E4EAF2]">
+                  <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-[#172033] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#E4EAF2] z-10">
                     {property.type}
                   </span>
                 </div>

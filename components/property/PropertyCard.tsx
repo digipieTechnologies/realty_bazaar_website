@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Bed, Bath, Square, MapPin, Heart, ShieldCheck, ArrowUpRight } from "lucide-react";
 import type { Property } from "@/types";
 import { formatPrice } from "@/lib/utils";
@@ -47,17 +48,21 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
         <Link
           href={`/properties/${property.slug}`}
           onClick={handleCardClick}
-          className="block w-full h-full"
+          className="block w-full h-full relative"
+          aria-label={`View details for ${property.title}`}
         >
-          <img
+          <Image
             src={imageUrl}
             alt={imageAlt}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+            priority={priorityImage}
             loading={priorityImage ? "eager" : "lazy"}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
 
           {/* Property Type Badge (bottom left of image) */}
-          <div className="absolute bottom-3 left-3 pointer-events-none">
+          <div className="absolute bottom-3 left-3 pointer-events-none z-10">
             <span className="bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-0.5 rounded-md">
               {property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1)}
             </span>
@@ -172,9 +177,10 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
           <Link
             href={`/properties/${property.slug}`}
             onClick={handleCardClick}
-            className="inline-flex items-center gap-1 text-xs font-bold text-[#397BCF] hover:text-[#245FA8] shrink-0 bg-[#EAF3FF] hover:bg-[#397BCF] hover:text-white px-2.5 py-1.5 rounded-lg transition-all"
+            aria-label={`View details for ${property.title}`}
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#245FA8] hover:text-white shrink-0 bg-[#EAF3FF] hover:bg-[#397BCF] px-2.5 py-1.5 rounded-lg transition-all"
           >
-            View Details
+            <span>View Details</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
