@@ -6,6 +6,7 @@ import {
 } from "@/lib/supabase/queries";
 import HeroSection from "@/components/home/HeroSection";
 import QuickDiscoveryChips from "@/components/home/QuickDiscoveryChips";
+import TrustFeaturesBanner from "@/components/home/TrustFeaturesBanner";
 import TrendingPropertiesSection from "@/components/home/TrendingPropertiesSection";
 import LocationDiscoverySection from "@/components/home/LocationDiscoverySection";
 import CategoryDiscoverySection from "@/components/home/CategoryDiscoverySection";
@@ -103,7 +104,10 @@ export default async function HomePage() {
       {/* 2. Quick Discovery Chips */}
       <QuickDiscoveryChips />
 
-      {/* 3. Featured / Trending Properties */}
+      {/* 3. Value Proposition & Trust Features Banner */}
+      <TrustFeaturesBanner />
+
+      {/* 4. Featured / Trending Properties */}
       <TrendingPropertiesSection properties={properties} />
 
       {/* 4. Search by Location (Surat, Ahmedabad, Mumbai, etc.) */}
