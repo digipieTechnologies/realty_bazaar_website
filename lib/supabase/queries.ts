@@ -165,8 +165,9 @@ function formatPhone(
 }
 
 // ── Supabase join select ──────────────────────────────────────────────────────
-const PROPERTY_SELECT_BASE = `
+const PROPERTY_SELECT = `
   id,
+  property_code,
   broker_id,
   address_id,
   property_title,
@@ -207,8 +208,6 @@ const PROPERTY_SELECT_BASE = `
     is_active
   )
 `.trim();
-
-const PROPERTY_SELECT = `property_code, ${PROPERTY_SELECT_BASE}`;
 
 // ── Query options ─────────────────────────────────────────────────────────────
 export interface GetPropertiesOptions {
@@ -290,49 +289,7 @@ export async function getPublishedProperties(
     const offset = options?.offset ?? 0;
     query = query.range(offset, offset + pageSize - 1);
 
-    let { data, error } = await query;
-    if (error && error.message?.includes("property_code")) {
-      // Fallback query if property_code column is not yet present in DB
-      let fallbackQuery = supabase
-        .from("properties")
-        .select(PROPERTY_SELECT_BASE)
-        .eq("is_active", true)
-        .eq("is_deleted", false)
-        .eq("property_status", "available");
-
-      if (options?.transactionType && options.transactionType !== "any") {
-        fallbackQuery = fallbackQuery.eq("listing_type", options.transactionType);
-      }
-      if (options?.propertyType && options.propertyType !== "Any" && options.propertyType !== "All Types") {
-        fallbackQuery = fallbackQuery.eq("property_type", options.propertyType);
-      }
-      if (options?.bedrooms && options.bedrooms !== "Any") {
-        const beds = typeof options.bedrooms === "string" ? parseInt(options.bedrooms, 10) : options.bedrooms;
-        if (!isNaN(beds)) fallbackQuery = fallbackQuery.gte("bedrooms", beds);
-      }
-      if (options?.minPrice) fallbackQuery = fallbackQuery.gte("price", options.minPrice);
-      if (options?.maxPrice) fallbackQuery = fallbackQuery.lte("price", options.maxPrice);
-
-      switch (options?.sortBy) {
-        case "price_asc":
-          fallbackQuery = fallbackQuery.order("price", { ascending: true });
-          break;
-        case "price_desc":
-          fallbackQuery = fallbackQuery.order("price", { ascending: false });
-          break;
-        case "area_desc":
-          fallbackQuery = fallbackQuery.order("area", { ascending: false });
-          break;
-        case "newest":
-        default:
-          fallbackQuery = fallbackQuery.order("created_at", { ascending: false });
-          break;
-      }
-      const res = await fallbackQuery.range(offset, offset + pageSize - 1);
-      data = res.data;
-      error = res.error;
-    }
-
+    const { data, error } = await query;
     if (error) {
       console.error("[getPublishedProperties] Supabase error:", error.message);
       return [];
@@ -380,11 +337,7 @@ export async function getPublishedProperties(
   }
 }
 
-// ── Look up a single property by its generated slug ───────────────────────────
-// New slug format: <slugified-title>-<32hexUUID>  (e.g. "...-a1b2c3d4e5f6...")
-// Legacy format:   <slugified-title>-<8hexSuffix> (e.g. "...-00000035")
-//
-// ── Helper to query single property row with graceful column fallback ────────
+// ── Helper to query single property row ───────────────────────────────────────
 async function fetchPropertyRow(
   supabase: any,
   filterFn: (q: any) => any
@@ -397,20 +350,7 @@ async function fetchPropertyRow(
       .eq("is_deleted", false);
 
     query = filterFn(query);
-    let { data, error } = await query.maybeSingle();
-
-    if (error && error.message?.includes("property_code")) {
-      let fallbackQuery = supabase
-        .from("properties")
-        .select(PROPERTY_SELECT_BASE)
-        .eq("is_active", true)
-        .eq("is_deleted", false);
-
-      fallbackQuery = filterFn(fallbackQuery);
-      const res = await fallbackQuery.maybeSingle();
-      data = res.data;
-      error = res.error;
-    }
+    const { data, error } = await query.maybeSingle();
 
     if (!error && data) {
       return data as unknown as DbPropertyRow;
@@ -423,8 +363,8 @@ async function fetchPropertyRow(
 
 // ── Look up a single property by its generated slug or property_code ──────────
 // Slug formats:
-//   1. <slugified-title>-<property_code> (e.g. "...-trb-1001" or "...-trb-e7e3e4")
-//   2. Direct <property_code>            (e.g. "TRB-1001" or "trb-1001")
+//   1. <slugified-title>-<property_code> (e.g. "modern-4-bhk-penthouse-dp1-011")
+//   2. Direct <property_code>            (e.g. "DP1-011" or "dp1-011")
 //   3. Legacy UUID format                (e.g. "...-92299dcc65c842a09c36e89453255582")
 export async function getPropertyBySlug(
   slug: string
@@ -443,10 +383,9 @@ export async function getPropertyBySlug(
 
     // ── Strategy 2: Match by candidate property_code suffix in slug ─────────
     const candidates = [
-      segments.slice(-2).join("-"), // e.g. "trb-1001" or "trb-e7e3e4"
-      segments.slice(-1)[0],        // e.g. "trb1001" or "1001" or "e7e3e4"
-      segments.slice(-3).join("-"), // e.g. "prop-trb-1001"
-      segments.slice(-2).join(""),  // e.g. "trb1001"
+      segments.slice(-2).join("-"), // e.g. "dp1-011"
+      segments.slice(-1)[0],        // e.g. "011"
+      segments.slice(-3).join("-"), // e.g. "penthouse-dp1-011"
     ].filter(Boolean);
 
     for (const candidate of candidates) {
@@ -462,37 +401,6 @@ export async function getPropertyBySlug(
     if (uuid) {
       const byUuid = await fetchPropertyRow(supabase, (q) => q.eq("id", uuid));
       if (byUuid) return mapDbRowToProperty(byUuid);
-    }
-
-    // ── Strategy 4: Find across active properties by slug or code or ID prefix ─
-    let query = supabase
-      .from("properties")
-      .select(PROPERTY_SELECT)
-      .eq("is_active", true)
-      .eq("is_deleted", false);
-
-    let { data, error } = await query;
-    if (error && error.message?.includes("property_code")) {
-      const res = await supabase
-        .from("properties")
-        .select(PROPERTY_SELECT_BASE)
-        .eq("is_active", true)
-        .eq("is_deleted", false);
-      data = res.data;
-      error = res.error;
-    }
-
-    if (!error && data) {
-      const matched = (data as unknown as DbPropertyRow[]).find((p) => {
-        if (p.property_code && p.property_code.toLowerCase() === cleanSlug) return true;
-        if (p.property_code && cleanSlug.endsWith(slugify(p.property_code))) return true;
-        const pSlug = buildPropertySlug(p.property_title, p.property_code);
-        if (pSlug && pSlug === cleanSlug) return true;
-        if (cleanSlug.endsWith(p.id.replace(/-/g, "").toLowerCase())) return true;
-        return false;
-      });
-
-      if (matched) return mapDbRowToProperty(matched);
     }
 
     console.error(`[getPropertyBySlug] Property not found for slug: ${slug}`);
@@ -534,23 +442,12 @@ export function isTestProperty(title: string | null | undefined, id?: string | n
 export async function getAllPropertySlugs(): Promise<string[]> {
   try {
     const supabase = createPublicServerSupabaseClient();
-    let { data, error } = await supabase
+    const { data, error } = await supabase
       .from("properties")
       .select("id, property_title, property_code")
       .eq("is_active", true)
       .eq("is_deleted", false)
       .eq("property_status", "available");
-
-    if (error && error.message?.includes("property_code")) {
-      const res = await supabase
-        .from("properties")
-        .select("id, property_title")
-        .eq("is_active", true)
-        .eq("is_deleted", false)
-        .eq("property_status", "available");
-      data = res.data as any;
-      error = res.error;
-    }
 
     if (error || !data) return [];
     return data
@@ -574,23 +471,12 @@ export interface PropertySitemapEntry {
 export async function getAllPropertiesForSitemap(): Promise<PropertySitemapEntry[]> {
   try {
     const supabase = createPublicServerSupabaseClient();
-    let { data, error } = await supabase
+    const { data, error } = await supabase
       .from("properties")
       .select("id, property_title, property_code, updated_at, created_at")
       .eq("is_active", true)
       .eq("is_deleted", false)
       .eq("property_status", "available");
-
-    if (error && error.message?.includes("property_code")) {
-      const res = await supabase
-        .from("properties")
-        .select("id, property_title, updated_at, created_at")
-        .eq("is_active", true)
-        .eq("is_deleted", false)
-        .eq("property_status", "available");
-      data = res.data as any;
-      error = res.error;
-    }
 
     if (error || !data) return [];
     return data
