@@ -6,7 +6,6 @@ import { StaggerReveal, StaggerItem } from "@/components/ui/ScrollReveal";
 import FinalCTA from "@/components/home/FinalCTA";
 import MarketingSection from "@/components/home/MarketingSection";
 import CRMSection from "@/components/home/CRMSection";
-import AISection from "@/components/home/AISection";
 import SocialMediaSection from "@/components/home/SocialMediaSection";
 
 const APP_URL =
@@ -16,7 +15,7 @@ const APP_URL =
 export const metadata: Metadata = {
   title: "Features — Property Marketing, CRM & Lead Management App",
   description:
-    "Explore all features of The Realty Bazaar: AI content generation, Instagram & Facebook publishing, paid campaign management, mobile CRM and property marketplace.",
+    "Explore all features of The Realty Bazaar: Instagram & Facebook publishing, paid campaign management, mobile CRM and property marketplace.",
   alternates: { canonical: "https://therealtybazaar.com/features" },
 };
 
@@ -25,11 +24,6 @@ const featureHighlights = [
     emoji: "📱",
     title: "Mobile-First Platform",
     description: "Every feature is built for your phone. Manage properties, campaigns and leads on the go.",
-  },
-  {
-    emoji: "🤖",
-    title: "AI Content Generation",
-    description: "AI writes property captions, hashtags and marketing copy — instantly, every time.",
   },
   {
     emoji: "📢",
@@ -60,6 +54,11 @@ const featureHighlights = [
     emoji: "🔔",
     title: "Smart Reminders",
     description: "Never miss a follow-up. The app sends reminders for overdue leads and upcoming visits.",
+  },
+  {
+    emoji: "🤝",
+    title: "Verified Broker Network",
+    description: "Connect directly with local real estate brokers with genuine ground inventory.",
   },
 ];
 
@@ -133,7 +132,6 @@ export default function FeaturesPage() {
       {/* Detailed feature sections */}
       <MarketingSection />
       <CRMSection />
-      <AISection />
       <SocialMediaSection />
       <FinalCTA />
     </>
