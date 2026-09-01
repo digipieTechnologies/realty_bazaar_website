@@ -44,6 +44,8 @@ export interface DbPropertyRow {
   is_deleted: boolean;
   created_at: string;
   updated_at: string;
+  search_text?: string | null;
+  property_code?: string | null;
   // Joined address fields (prefixed via PostgREST)
   addresses?: {
     full_address: string;
@@ -72,7 +74,8 @@ export interface DbPropertyRow {
 // Used by all marketplace components. Mapper converts DbPropertyRow → Property.
 export interface Property {
   id: string;
-  slug: string;                    // generated: slugify(title)+hexId
+  property_code?: string | null;   // unique property code e.g. "TRB-1001"
+  slug: string;                    // generated: slugify(title) + property_code
   title: string;
   description: string | null;
   property_type: PropertyType;

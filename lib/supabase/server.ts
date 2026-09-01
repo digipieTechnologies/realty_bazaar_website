@@ -1,21 +1,22 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Server-side Supabase client — uses service role for protected operations
+// Server-side Supabase client — uses secret key for elevated operations (e.g., submitting enquiries)
 // NEVER import this in client components
 export function createServerSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  // Use service role for server actions that need elevated access (e.g., inserting enquiries)
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  return createClient(supabaseUrl, serviceRoleKey, {
+  const secretKey = process.env.SUPABASE_SECRET_KEY!;
+
+  return createClient(supabaseUrl, secretKey, {
     auth: { persistSession: false },
   });
 }
 
-// Read-only server client using anon key (for public property reads)
+// Server client using publishable key for standard public property reads
 export function createPublicServerSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  return createClient(supabaseUrl, anonKey, {
+  const pubKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+
+  return createClient(supabaseUrl, pubKey, {
     auth: { persistSession: false },
   });
 }

@@ -149,6 +149,11 @@ function PropertySummaryCard({
             <span className="bg-[#F3F8FE] text-[#245FA8] border border-[#6FA5E5]/30 text-xs font-bold px-3 py-1 rounded-lg uppercase">
               {property.property_type}
             </span>
+            {property.property_code && (
+              <span className="bg-[#F8FAFC] text-[#245FA8] border border-[#E4EAF2] text-xs font-bold px-2.5 py-1 rounded-lg font-mono">
+                #{property.property_code}
+              </span>
+            )}
             {property.promoted && (
               <span className="bg-[#172033] text-[#6FA5E5] text-xs font-bold px-3 py-1 rounded-lg">
                 Promoted
@@ -619,6 +624,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
                 {[
+                  property.property_code ? { label: "Property Code", value: `#${property.property_code}` } : null,
                   { label: "Property Type", value: property.property_type.toUpperCase() },
                   { label: "Transaction", value: property.transaction_type === "sale" ? "For Sale" : "For Rent" },
                   { label: "City", value: property.city },

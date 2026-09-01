@@ -3,14 +3,36 @@ import type { Property, DbPropertyRow } from "@/types";
 import { formatPrice, slugify } from "@/lib/utils";
 
 // ── Slug helpers ──────────────────────────────────────────────────────────────
-// URL slug = slugify(property_title) + full UUID without dashes (32 hex chars)
-// e.g. "3-bhk-apartment-vesu-surat-a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4"
-// Using the full UUID lets us do an exact .eq("id", uuid) lookup — ilike on
-// the native uuid column type does not work reliably in PostgreSQL.
+// URL slug = cleanTitleSlug(property_title) + "-" + slugify(property_code)
+// Produces concise, clean SEO URLs e.g. "modern-4-bhk-penthouse-dp1-011"
 
-export function buildPropertySlug(title: string, id: string): string {
-  const cleanId = id.replace(/-/g, ""); // 32 hex chars, no dashes
-  return `${slugify(title)}-${cleanId}`;
+export function cleanTitleSlug(title: string): string {
+  // Split at natural dividers: commas, ' at ', ' with ', ' on ', ' near ', ' featuring ', etc.
+  const parts = title.split(/\s*,\s*|\s+(?:at|with|on|near|featuring|overlooking)\s+/i);
+  let main = parts[0].trim();
+
+  // If main title part is long, limit to first 5 words or max 40 chars
+  const words = main.split(/\s+/);
+  if (words.length > 6 || main.length > 45) {
+    main = words.slice(0, 5).join(" ");
+  }
+
+  let slug = slugify(main);
+  if (slug.length > 40) {
+    slug = slug.slice(0, 40).replace(/-[^-]*$/, "");
+  }
+  return slug;
+}
+
+export function buildPropertySlug(
+  title: string,
+  propertyCode?: string | null
+): string {
+  const shortTitle = cleanTitleSlug(title);
+  const code = propertyCode ? slugify(propertyCode.trim()) : "";
+  if (!shortTitle) return code;
+  if (!code) return shortTitle;
+  return `${shortTitle}-${code}`;
 }
 
 /** Reconstruct a standard UUID (8-4-4-4-12) from the 32-char raw hex suffix */
@@ -80,7 +102,8 @@ function mapDbRowToProperty(row: DbPropertyRow): Property {
 
   return {
     id: row.id,
-    slug: buildPropertySlug(row.property_title, row.id),
+    property_code: row.property_code ?? null,
+    slug: buildPropertySlug(row.property_title, row.property_code),
     title: row.property_title,
     description: row.property_description ?? null,
     property_type: (row.property_type ?? "apartment") as Property["property_type"],
@@ -142,7 +165,7 @@ function formatPhone(
 }
 
 // ── Supabase join select ──────────────────────────────────────────────────────
-const PROPERTY_SELECT = `
+const PROPERTY_SELECT_BASE = `
   id,
   broker_id,
   address_id,
@@ -184,6 +207,8 @@ const PROPERTY_SELECT = `
     is_active
   )
 `.trim();
+
+const PROPERTY_SELECT = `property_code, ${PROPERTY_SELECT_BASE}`;
 
 // ── Query options ─────────────────────────────────────────────────────────────
 export interface GetPropertiesOptions {
@@ -265,7 +290,49 @@ export async function getPublishedProperties(
     const offset = options?.offset ?? 0;
     query = query.range(offset, offset + pageSize - 1);
 
-    const { data, error } = await query;
+    let { data, error } = await query;
+    if (error && error.message?.includes("property_code")) {
+      // Fallback query if property_code column is not yet present in DB
+      let fallbackQuery = supabase
+        .from("properties")
+        .select(PROPERTY_SELECT_BASE)
+        .eq("is_active", true)
+        .eq("is_deleted", false)
+        .eq("property_status", "available");
+
+      if (options?.transactionType && options.transactionType !== "any") {
+        fallbackQuery = fallbackQuery.eq("listing_type", options.transactionType);
+      }
+      if (options?.propertyType && options.propertyType !== "Any" && options.propertyType !== "All Types") {
+        fallbackQuery = fallbackQuery.eq("property_type", options.propertyType);
+      }
+      if (options?.bedrooms && options.bedrooms !== "Any") {
+        const beds = typeof options.bedrooms === "string" ? parseInt(options.bedrooms, 10) : options.bedrooms;
+        if (!isNaN(beds)) fallbackQuery = fallbackQuery.gte("bedrooms", beds);
+      }
+      if (options?.minPrice) fallbackQuery = fallbackQuery.gte("price", options.minPrice);
+      if (options?.maxPrice) fallbackQuery = fallbackQuery.lte("price", options.maxPrice);
+
+      switch (options?.sortBy) {
+        case "price_asc":
+          fallbackQuery = fallbackQuery.order("price", { ascending: true });
+          break;
+        case "price_desc":
+          fallbackQuery = fallbackQuery.order("price", { ascending: false });
+          break;
+        case "area_desc":
+          fallbackQuery = fallbackQuery.order("area", { ascending: false });
+          break;
+        case "newest":
+        default:
+          fallbackQuery = fallbackQuery.order("created_at", { ascending: false });
+          break;
+      }
+      const res = await fallbackQuery.range(offset, offset + pageSize - 1);
+      data = res.data;
+      error = res.error;
+    }
+
     if (error) {
       console.error("[getPublishedProperties] Supabase error:", error.message);
       return [];
@@ -317,55 +384,118 @@ export async function getPublishedProperties(
 // New slug format: <slugified-title>-<32hexUUID>  (e.g. "...-a1b2c3d4e5f6...")
 // Legacy format:   <slugified-title>-<8hexSuffix> (e.g. "...-00000035")
 //
-// Strategy:
-//   1. If last segment is 32 hex chars → reconstruct full UUID → exact .eq("id")
-//   2. Otherwise (short/sequential IDs) → use PostgREST text cast filter as fallback
+// ── Helper to query single property row with graceful column fallback ────────
+async function fetchPropertyRow(
+  supabase: any,
+  filterFn: (q: any) => any
+): Promise<DbPropertyRow | null> {
+  try {
+    let query = supabase
+      .from("properties")
+      .select(PROPERTY_SELECT)
+      .eq("is_active", true)
+      .eq("is_deleted", false);
+
+    query = filterFn(query);
+    let { data, error } = await query.maybeSingle();
+
+    if (error && error.message?.includes("property_code")) {
+      let fallbackQuery = supabase
+        .from("properties")
+        .select(PROPERTY_SELECT_BASE)
+        .eq("is_active", true)
+        .eq("is_deleted", false);
+
+      fallbackQuery = filterFn(fallbackQuery);
+      const res = await fallbackQuery.maybeSingle();
+      data = res.data;
+      error = res.error;
+    }
+
+    if (!error && data) {
+      return data as unknown as DbPropertyRow;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+// ── Look up a single property by its generated slug or property_code ──────────
+// Slug formats:
+//   1. <slugified-title>-<property_code> (e.g. "...-trb-1001" or "...-trb-e7e3e4")
+//   2. Direct <property_code>            (e.g. "TRB-1001" or "trb-1001")
+//   3. Legacy UUID format                (e.g. "...-92299dcc65c842a09c36e89453255582")
 export async function getPropertyBySlug(
   slug: string
 ): Promise<Property | null> {
-  const segments = slug.split("-");
-  const rawHex = segments[segments.length - 1] ?? "";
+  const cleanSlug = decodeURIComponent(slug).toLowerCase().trim();
+  const segments = cleanSlug.split("-");
 
   try {
     const supabase = createPublicServerSupabaseClient();
 
-    // ── Path 1: full 32-char UUID suffix (new format) ──────────────────────
+    // ── Strategy 1: Direct property_code match ──────────────────────────────
+    const byDirectCode = await fetchPropertyRow(supabase, (q) =>
+      q.ilike("property_code", cleanSlug)
+    );
+    if (byDirectCode) return mapDbRowToProperty(byDirectCode);
+
+    // ── Strategy 2: Match by candidate property_code suffix in slug ─────────
+    const candidates = [
+      segments.slice(-2).join("-"), // e.g. "trb-1001" or "trb-e7e3e4"
+      segments.slice(-1)[0],        // e.g. "trb1001" or "1001" or "e7e3e4"
+      segments.slice(-3).join("-"), // e.g. "prop-trb-1001"
+      segments.slice(-2).join(""),  // e.g. "trb1001"
+    ].filter(Boolean);
+
+    for (const candidate of candidates) {
+      const byCandidate = await fetchPropertyRow(supabase, (q) =>
+        q.ilike("property_code", candidate)
+      );
+      if (byCandidate) return mapDbRowToProperty(byCandidate);
+    }
+
+    // ── Strategy 3: Full 32-char UUID suffix fallback (for backward compatibility) ─
+    const rawHex = segments[segments.length - 1] ?? "";
     const uuid = rawHexToUuid(rawHex);
     if (uuid) {
-      const { data, error } = await supabase
-        .from("properties")
-        .select(PROPERTY_SELECT)
-        .eq("is_active", true)
-        .eq("is_deleted", false)
-        .eq("id", uuid)
-        .single();
-
-      if (!error && data) {
-        return mapDbRowToProperty(data as unknown as DbPropertyRow);
-      }
-      // Fall through to text-cast approach if exact match fails
+      const byUuid = await fetchPropertyRow(supabase, (q) => q.eq("id", uuid));
+      if (byUuid) return mapDbRowToProperty(byUuid);
     }
 
-    // ── Path 2: short suffix fallback — cast UUID to text for suffix match ─
-    // PostgREST supports column type casting in filter column names: "id::text"
-    if (rawHex.length > 0 && /^[0-9a-f]+$/i.test(rawHex)) {
-      const { data, error } = await supabase
-        .from("properties")
-        .select(PROPERTY_SELECT)
-        .eq("is_active", true)
-        .eq("is_deleted", false)
-        .filter("id::text", "ilike", `%${rawHex}`)
-        .limit(1)
-        .single();
+    // ── Strategy 4: Find across active properties by slug or code or ID prefix ─
+    let query = supabase
+      .from("properties")
+      .select(PROPERTY_SELECT)
+      .eq("is_active", true)
+      .eq("is_deleted", false);
 
-      if (!error && data) {
-        return mapDbRowToProperty(data as unknown as DbPropertyRow);
-      }
-      console.error(`[getPropertyBySlug] Not found for slug="${slug}" hex="${rawHex}":`, error?.message);
-    } else {
-      console.error(`[getPropertyBySlug] Could not extract valid hex suffix from slug: ${slug}`);
+    let { data, error } = await query;
+    if (error && error.message?.includes("property_code")) {
+      const res = await supabase
+        .from("properties")
+        .select(PROPERTY_SELECT_BASE)
+        .eq("is_active", true)
+        .eq("is_deleted", false);
+      data = res.data;
+      error = res.error;
     }
 
+    if (!error && data) {
+      const matched = (data as unknown as DbPropertyRow[]).find((p) => {
+        if (p.property_code && p.property_code.toLowerCase() === cleanSlug) return true;
+        if (p.property_code && cleanSlug.endsWith(slugify(p.property_code))) return true;
+        const pSlug = buildPropertySlug(p.property_title, p.property_code);
+        if (pSlug && pSlug === cleanSlug) return true;
+        if (cleanSlug.endsWith(p.id.replace(/-/g, "").toLowerCase())) return true;
+        return false;
+      });
+
+      if (matched) return mapDbRowToProperty(matched);
+    }
+
+    console.error(`[getPropertyBySlug] Property not found for slug: ${slug}`);
     return null;
   } catch (err) {
     console.error("[getPropertyBySlug] Unexpected error:", err);
@@ -404,18 +534,29 @@ export function isTestProperty(title: string | null | undefined, id?: string | n
 export async function getAllPropertySlugs(): Promise<string[]> {
   try {
     const supabase = createPublicServerSupabaseClient();
-    const { data, error } = await supabase
+    let { data, error } = await supabase
       .from("properties")
-      .select("id, property_title")
+      .select("id, property_title, property_code")
       .eq("is_active", true)
       .eq("is_deleted", false)
       .eq("property_status", "available");
 
+    if (error && error.message?.includes("property_code")) {
+      const res = await supabase
+        .from("properties")
+        .select("id, property_title")
+        .eq("is_active", true)
+        .eq("is_deleted", false)
+        .eq("property_status", "available");
+      data = res.data as any;
+      error = res.error;
+    }
+
     if (error || !data) return [];
     return data
-      .filter((row: { id: string; property_title: string }) => !isTestProperty(row.property_title, row.id))
-      .map((row: { id: string; property_title: string }) =>
-        buildPropertySlug(row.property_title, row.id)
+      .filter((row: { id: string; property_title: string; property_code?: string | null }) => !isTestProperty(row.property_title, row.id))
+      .map((row: { id: string; property_title: string; property_code?: string | null }) =>
+        buildPropertySlug(row.property_title, row.property_code)
       );
   } catch (err) {
     console.error("[getAllPropertySlugs] Unexpected error:", err);
@@ -433,21 +574,32 @@ export interface PropertySitemapEntry {
 export async function getAllPropertiesForSitemap(): Promise<PropertySitemapEntry[]> {
   try {
     const supabase = createPublicServerSupabaseClient();
-    const { data, error } = await supabase
+    let { data, error } = await supabase
       .from("properties")
-      .select("id, property_title, updated_at, created_at")
+      .select("id, property_title, property_code, updated_at, created_at")
       .eq("is_active", true)
       .eq("is_deleted", false)
       .eq("property_status", "available");
 
+    if (error && error.message?.includes("property_code")) {
+      const res = await supabase
+        .from("properties")
+        .select("id, property_title, updated_at, created_at")
+        .eq("is_active", true)
+        .eq("is_deleted", false)
+        .eq("property_status", "available");
+      data = res.data as any;
+      error = res.error;
+    }
+
     if (error || !data) return [];
     return data
       .filter(
-        (row: { id: string; property_title: string; updated_at?: string; created_at?: string }) =>
+        (row: { id: string; property_title: string; property_code?: string | null; updated_at?: string; created_at?: string }) =>
           !isTestProperty(row.property_title, row.id)
       )
-      .map((row: { id: string; property_title: string; updated_at?: string; created_at?: string }) => ({
-        slug: buildPropertySlug(row.property_title, row.id),
+      .map((row: { id: string; property_title: string; property_code?: string | null; updated_at?: string; created_at?: string }) => ({
+        slug: buildPropertySlug(row.property_title, row.property_code),
         updated_at: row.updated_at,
         created_at: row.created_at,
       }));
