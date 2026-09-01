@@ -13,6 +13,10 @@ import {
   Layers,
   Sparkles,
   Phone,
+  Key,
+  Car,
+  Building2,
+  IndianRupee,
 } from "lucide-react";
 import {
   getPropertyBySlug,
@@ -24,6 +28,7 @@ import PropertyGallery from "@/components/property/PropertyGallery";
 import EnquiryForm from "@/components/property/EnquiryForm";
 import PropertyCard from "@/components/property/PropertyCard";
 import SharePropertyButton from "@/components/property/SharePropertyButton";
+import SavePropertyButton from "@/components/property/SavePropertyButton";
 import PropertyViewTracker from "@/components/property/PropertyViewTracker";
 import PropertyMobileStickyBar from "@/components/property/PropertyMobileStickyBar";
 
@@ -113,6 +118,156 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
       images: [primaryImageUrl],
     },
   };
+}
+
+function PropertySummaryCard({
+  property,
+  price,
+  areaSqm,
+  isPlot,
+  className = "",
+}: {
+  property: any;
+  price: string;
+  areaSqm: string | null;
+  isPlot: boolean;
+  className?: string;
+}) {
+  return (
+    <section
+      className={`bg-white rounded-3xl p-5 sm:p-7 border border-[#E4EAF2] shadow-2xs ${className}`}
+      aria-label="Property Summary"
+    >
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        {/* Left: Badges, Title, Location */}
+        <div className="space-y-2.5 min-w-0 flex-1">
+          {/* Badges Row */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="bg-[#245FA8] text-white text-xs font-bold px-3 py-1 rounded-lg shadow-2xs">
+              {property.transaction_type === "sale" ? "For Sale" : "For Rent"}
+            </span>
+            <span className="bg-[#F3F8FE] text-[#245FA8] border border-[#6FA5E5]/30 text-xs font-bold px-3 py-1 rounded-lg uppercase">
+              {property.property_type}
+            </span>
+            {property.promoted && (
+              <span className="bg-[#172033] text-[#6FA5E5] text-xs font-bold px-3 py-1 rounded-lg">
+                Promoted
+              </span>
+            )}
+            {property.featured && !property.promoted && (
+              <span className="bg-[#EAF3FF] text-[#245FA8] border border-[#6FA5E5]/40 text-xs font-bold px-3 py-1 rounded-lg">
+                Featured
+              </span>
+            )}
+            {property.broker_verified && (
+              <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-1 rounded-lg">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>Verified Listing</span>
+              </span>
+            )}
+          </div>
+
+          {/* Title */}
+          <h1 className="text-2xl sm:text-3xl lg:text-[32px] font-display font-bold text-[#172033] tracking-tight leading-tight">
+            {property.title}
+          </h1>
+
+          {/* Location */}
+          <div className="flex items-center gap-1.5 text-xs sm:text-sm text-[#667085]">
+            <MapPin className="w-4 h-4 text-[#397BCF] shrink-0" />
+            <span>{property.address || `${property.locality}, ${property.city}`}</span>
+          </div>
+        </div>
+
+        {/* Right: Key Commercial Metrics & Actions */}
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 sm:gap-6 lg:gap-8 pt-4 lg:pt-0 border-t lg:border-t-0 border-[#E4EAF2] shrink-0">
+          {/* Metric 1: Price */}
+          <div className="min-w-[120px]">
+            <div className="text-[11px] font-bold text-[#667085] uppercase tracking-wider mb-0.5 flex items-center gap-1">
+              <IndianRupee className="w-3.5 h-3.5 text-[#397BCF]" />
+              <span>Price</span>
+            </div>
+            <div className="text-2xl sm:text-3xl font-display font-bold text-[#172033] tracking-tight">
+              {price}
+            </div>
+            {property.price_per_sqft && property.transaction_type === "sale" && (
+              <div className="text-xs text-[#667085] font-medium mt-0.5">
+                ₹{property.price_per_sqft.toLocaleString("en-IN")} / sq ft
+              </div>
+            )}
+          </div>
+
+          {/* Divider */}
+          {property.area_sqft && (
+            <div className="hidden sm:block w-px h-12 bg-[#E4EAF2]" aria-hidden="true" />
+          )}
+
+          {/* Metric 2: Area */}
+          {property.area_sqft && (
+            <div className="min-w-[110px]">
+              <div className="text-[11px] font-bold text-[#667085] uppercase tracking-wider mb-0.5 flex items-center gap-1">
+                <Square className="w-3.5 h-3.5 text-[#397BCF]" />
+                <span>{isPlot ? "Plot Area" : "Super Built-up"}</span>
+              </div>
+              <div className="text-2xl sm:text-3xl font-display font-bold text-[#172033] tracking-tight">
+                {property.area_sqft.toLocaleString("en-IN")}{" "}
+                <span className="text-base sm:text-lg font-medium text-[#667085]">sq ft</span>
+              </div>
+              {areaSqm && (
+                <div className="text-xs text-[#667085] font-medium mt-0.5">
+                  {areaSqm} sq m
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Divider */}
+          {(property.bedrooms || property.bathrooms || isPlot) && (
+            <div className="hidden sm:block w-px h-12 bg-[#E4EAF2]" aria-hidden="true" />
+          )}
+
+          {/* Metric 3: Configuration */}
+          <div className="min-w-[110px]">
+            <div className="text-[11px] font-bold text-[#667085] uppercase tracking-wider mb-0.5 flex items-center gap-1">
+              <Bed className="w-3.5 h-3.5 text-[#397BCF]" />
+              <span>Configuration</span>
+            </div>
+            <div className="text-2xl sm:text-3xl font-display font-bold text-[#172033] tracking-tight">
+              {property.bedrooms
+                ? `${property.bedrooms} BHK`
+                : property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1)}
+            </div>
+            <div className="text-xs text-[#667085] font-medium mt-0.5">
+              {property.bedrooms
+                ? `${property.bedrooms} Bed${property.bedrooms > 1 ? "s" : ""}`
+                : ""}
+              {property.bedrooms && property.bathrooms ? " · " : ""}
+              {property.bathrooms
+                ? `${property.bathrooms} Bath${property.bathrooms > 1 ? "s" : ""}`
+                : ""}
+              {!property.bedrooms && !property.bathrooms ? "Direct Property" : ""}
+            </div>
+          </div>
+
+          {/* Action Buttons: Share & Save */}
+          <div className="flex sm:flex-col items-center gap-2 ml-auto sm:ml-0 w-full sm:w-auto pt-2 sm:pt-0">
+            <SharePropertyButton
+              property={property}
+              variant="secondary"
+              label="Share"
+              className="flex-1 sm:flex-none w-full sm:w-24 justify-center"
+              id="property-header-share-btn"
+            />
+            <SavePropertyButton
+              property={property}
+              className="flex-1 sm:flex-none w-full sm:w-24 justify-center"
+              id="property-header-save-btn"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export const revalidate = 60;
@@ -226,6 +381,9 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     ],
   };
 
+  const areaSqm = property.area_sqft ? (property.area_sqft * 0.092903).toFixed(1) : null;
+  const isPlot = property.property_type === "plot";
+
   return (
     <div className="bg-[#F8FAFC] min-h-screen">
       <PropertyViewTracker property={property} />
@@ -265,104 +423,157 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
       </nav>
 
       {/* Main Content Layout */}
-      <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left 8 Cols (Gallery + Key Specs + Details) */}
+      <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        {/* 1. DESKTOP VIEW: ABOVE-THE-FOLD PROPERTY SUMMARY BANNER */}
+        <PropertySummaryCard
+          property={property}
+          price={price}
+          areaSqm={areaSqm}
+          isPlot={isPlot}
+          className="hidden lg:block mb-6 sm:mb-8"
+        />
+
+        {/* 2. MAIN 2-COLUMN VIEW: GALLERY & DETAILS (8 cols) + BROKER ENQUIRY (4 cols) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+          {/* Left 8 Cols (Gallery + Mobile Summary + Key Specs Badges + Description + Amenities + Overview Table) */}
           <div className="lg:col-span-8 space-y-6">
-            {/* Gallery */}
+            {/* Gallery Component (Appears first on Mobile & Top of 8-col on Desktop) */}
             <PropertyGallery images={property.images || []} title={property.title} />
 
-            {/* Header: Title, Price, Location */}
-            <div className="bg-white rounded-3xl p-6 border border-[#E4EAF2] shadow-2xs space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="bg-[#397BCF] text-white text-xs font-bold px-3 py-1 rounded-lg">
-                        {property.transaction_type === "sale" ? "For Sale" : "For Rent"}
-                      </span>
-                      <span className="bg-[#F3F8FE] text-[#245FA8] border border-[#6FA5E5]/30 text-xs font-bold px-3 py-1 rounded-lg">
-                        {property.property_type.toUpperCase()}
-                      </span>
-                      {property.promoted && (
-                        <span className="bg-[#172033] text-[#6FA5E5] text-xs font-bold px-3 py-1 rounded-lg">
-                          Promoted
-                        </span>
-                      )}
-                    </div>
-                    <SharePropertyButton
-                      property={property}
-                      variant="secondary"
-                      label="Share"
-                      id="property-header-share-btn"
-                    />
-                  </div>
+            {/* MOBILE VIEW: Property Summary Appears Immediately Below Images on Mobile */}
+            <PropertySummaryCard
+              property={property}
+              price={price}
+              areaSqm={areaSqm}
+              isPlot={isPlot}
+              className="block lg:hidden"
+            />
 
-                  <h1 className="text-2xl sm:text-3xl font-display font-bold text-[#172033] tracking-tight leading-tight">
-                    {property.title}
-                  </h1>
-
-                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-[#667085] mt-2">
-                    <MapPin className="w-4 h-4 text-[#397BCF] shrink-0" />
-                    <span>{property.address || `${property.locality}, ${property.city}`}</span>
-                  </div>
-                </div>
-
-                {/* Price Display */}
-                <div className="sm:text-right shrink-0">
-                  <div className="text-2xl sm:text-3xl font-display font-bold text-[#172033]">
-                    {price}
-                  </div>
-                  {property.price_per_sqft && property.transaction_type === "sale" && (
-                    <div className="text-xs text-[#667085] font-medium mt-0.5">
-                      ₹{property.price_per_sqft.toLocaleString("en-IN")} / sq ft
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Key Specs Row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-[#E4EAF2]">
+            {/* Quick Specs 8-Box Features Card */}
+            <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E4EAF2] shadow-2xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {property.bedrooms && (
-                  <div className="p-3 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2]">
-                    <div className="flex items-center gap-1.5 text-[#667085] text-xs mb-1">
-                      <Bed className="w-4 h-4 text-[#397BCF]" />
-                      <span>Bedrooms</span>
+                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
+                      <Bed className="w-4 h-4" />
                     </div>
-                    <div className="font-bold text-sm text-[#172033]">{property.bedrooms} BHK</div>
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
+                        Bedrooms
+                      </div>
+                      <div className="font-bold text-sm text-[#172033] truncate">
+                        {property.bedrooms}
+                      </div>
+                    </div>
                   </div>
                 )}
 
                 {property.bathrooms && (
-                  <div className="p-3 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2]">
-                    <div className="flex items-center gap-1.5 text-[#667085] text-xs mb-1">
-                      <Bath className="w-4 h-4 text-[#397BCF]" />
-                      <span>Bathrooms</span>
+                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
+                      <Bath className="w-4 h-4" />
                     </div>
-                    <div className="font-bold text-sm text-[#172033]">{property.bathrooms} Baths</div>
-                  </div>
-                )}
-
-                {property.area_sqft && (
-                  <div className="p-3 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2]">
-                    <div className="flex items-center gap-1.5 text-[#667085] text-xs mb-1">
-                      <Square className="w-4 h-4 text-[#397BCF]" />
-                      <span>Super Built-up</span>
-                    </div>
-                    <div className="font-bold text-sm text-[#172033]">
-                      {property.area_sqft.toLocaleString("en-IN")} sq ft
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
+                        Bathrooms
+                      </div>
+                      <div className="font-bold text-sm text-[#172033] truncate">
+                        {property.bathrooms}
+                      </div>
                     </div>
                   </div>
                 )}
 
-                {property.carpet_sqft && (
-                  <div className="p-3 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2]">
-                    <div className="flex items-center gap-1.5 text-[#667085] text-xs mb-1">
-                      <Layers className="w-4 h-4 text-[#397BCF]" />
-                      <span>Carpet Area</span>
+                {property.balconies && (
+                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
+                      <Layers className="w-4 h-4" />
                     </div>
-                    <div className="font-bold text-sm text-[#172033]">
-                      {property.carpet_sqft.toLocaleString("en-IN")} sq ft
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
+                        Balcony
+                      </div>
+                      <div className="font-bold text-sm text-[#172033] truncate">
+                        {property.balconies}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {property.floor && (
+                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
+                      <Building2 className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
+                        Floor
+                      </div>
+                      <div className="font-bold text-sm text-[#172033] truncate">
+                        {property.floor}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
+                    <Building2 className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
+                      Property Type
+                    </div>
+                    <div className="font-bold text-sm text-[#172033] truncate capitalize">
+                      {property.property_type}
+                    </div>
+                  </div>
+                </div>
+
+                {property.possession && (
+                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
+                      <Key className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
+                        Possession
+                      </div>
+                      <div className="font-bold text-sm text-[#172033] truncate capitalize">
+                        {property.possession.replace(/-/g, " ")}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {property.facing && (
+                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
+                      <Compass className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
+                        Facing
+                      </div>
+                      <div className="font-bold text-sm text-[#172033] truncate">
+                        {property.facing}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {property.parking && (
+                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
+                      <Car className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
+                        Parking
+                      </div>
+                      <div className="font-bold text-sm text-[#172033] truncate">
+                        {property.parking} Reserved
+                      </div>
                     </div>
                   </div>
                 )}
@@ -385,7 +596,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             {property.amenities && property.amenities.length > 0 && (
               <div className="bg-white rounded-3xl p-6 border border-[#E4EAF2] shadow-2xs space-y-4">
                 <h2 className="text-lg font-display font-bold text-[#172033]">
-                  Amenities & Facilities
+                  Amenities &amp; Facilities
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                   {property.amenities.map((amenity) => (
@@ -393,7 +604,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                       key={amenity}
                       className="flex items-center gap-2 p-3 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] text-xs font-semibold text-[#172033]"
                     >
-                      <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                       <span>{amenity}</span>
                     </div>
                   ))}
@@ -421,14 +632,14 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   .filter(Boolean)
                   .map((item) => (
                     <div key={item!.label} className="p-3 bg-[#F8FAFC] rounded-xl border border-[#E4EAF2]">
-                      <div className="text-[10px] font-bold text-[#98A2B3] uppercase tracking-wider mb-0.5">
+                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider mb-0.5">
                         {item!.label}
                       </div>
                       <div className="font-bold text-[#172033]">{item!.value}</div>
                     </div>
                   ))}
               </div>
-              <div className="pt-2 text-[11px] text-[#98A2B3] flex items-center gap-1.5">
+              <div className="pt-2 text-[11px] text-[#667085] flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5" />
                 <span>
                   Listed on {new Date(property.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}

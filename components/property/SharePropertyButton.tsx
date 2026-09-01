@@ -48,6 +48,8 @@ export default function SharePropertyButton({
     setIsOpen(true);
   };
 
+  const isIconOnly = variant === "icon" || variant === "sticky";
+
   return (
     <>
       <button
@@ -57,8 +59,8 @@ export default function SharePropertyButton({
         aria-label={`Share ${property.title}`}
         className={`inline-flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer ${getVariantStyles()} ${className}`}
       >
-        <Share2 className={variant === "icon" ? "w-4 h-4 text-current" : "w-3.5 h-3.5"} />
-        {variant !== "icon" && <span>{label}</span>}
+        <Share2 className={isIconOnly ? "w-4 h-4 text-current" : "w-3.5 h-3.5"} />
+        {!isIconOnly && <span>{label}</span>}
       </button>
 
       <SharePropertyModal
