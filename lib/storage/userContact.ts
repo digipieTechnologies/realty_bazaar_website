@@ -7,9 +7,11 @@
 const STORAGE_KEY_NAME = "trb_user_name";
 const STORAGE_KEY_PHONE = "trb_user_phone";
 const STORAGE_KEY_SUBMITTED = "trb_user_contact_submitted";
+const STORAGE_KEY_SNOOZED_UNTIL = "trb_user_contact_snoozed_until";
 const SESSION_KEY_DISMISSED = "trb_user_contact_popup_dismissed";
 const SESSION_KEY_START_TIME = "trb_session_start_time";
 
+const SNOOZE_HOURS_DEFAULT = 24; // 24-hour snooze if dismissed
 
 const EVENT_USER_CONTACT_UPDATED = "trb_user_contact_updated";
 
@@ -75,30 +77,50 @@ export function saveUserContact(contact: Partial<UserContact>): void {
 }
 
 /**
- * Check if the popup was dismissed in current browsing session or submitted
+ * Check if the popup was dismissed/snoozed or already completed
  */
 export function isPopupDismissed(): boolean {
   if (typeof window === "undefined") return true;
   try {
+    // 1. If user details already exist, permanently suppress
     if (hasUserContact()) return true;
     if (localStorage.getItem(STORAGE_KEY_SUBMITTED) === "true") return true;
-    return sessionStorage.getItem(SESSION_KEY_DISMISSED) === "true";
+
+    // 2. If dismissed during the current active session, suppress
+    if (sessionStorage.getItem(SESSION_KEY_DISMISSED) === "true") return true;
+
+    // 3. Check 24-hour snooze window in localStorage
+    const snoozedUntil = localStorage.getItem(STORAGE_KEY_SNOOZED_UNTIL);
+    if (snoozedUntil) {
+      const timestamp = parseInt(snoozedUntil, 10);
+      if (!isNaN(timestamp) && Date.now() < timestamp) {
+        return true;
+      }
+    }
+
+    return false;
   } catch {
     return false;
   }
 }
 
 /**
- * Mark the popup as dismissed for current session so it won't interrupt again
+ * Mark the popup as dismissed for current session and snooze for 24 hours
  */
-export function setPopupDismissed(): void {
+export function setPopupDismissed(snoozeHours: number = SNOOZE_HOURS_DEFAULT): void {
   if (typeof window === "undefined") return;
   try {
+    // Suppress for current tab/window session
     sessionStorage.setItem(SESSION_KEY_DISMISSED, "true");
+
+    // Snooze for specified hours (default 24h) across browser sessions
+    const snoozedUntil = Date.now() + snoozeHours * 60 * 60 * 1000;
+    localStorage.setItem(STORAGE_KEY_SNOOZED_UNTIL, snoozedUntil.toString());
   } catch {
     // Fail-safe
   }
 }
+
 
 /**
  * Get or initialize session start timestamp to track 30 seconds across multi-page navigation
