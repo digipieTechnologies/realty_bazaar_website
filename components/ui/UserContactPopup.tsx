@@ -43,6 +43,11 @@ export default function UserContactPopup() {
     const remainingTime = Math.max(0, POPUP_DELAY_MS - timeSpent);
 
     const timer = setTimeout(() => {
+      // If user is currently on a specific property detail page, let the 25s property popup take precedence
+      if (typeof window !== "undefined" && window.location.pathname.startsWith("/properties/")) {
+        return;
+      }
+
       // Re-check before showing in case the user filled a form in the meantime
       if (!hasUserContact() && !isPopupDismissed()) {
         const saved = getUserContact();
@@ -52,6 +57,7 @@ export default function UserContactPopup() {
         trackUserContactPopupOpen();
       }
     }, remainingTime);
+
 
     return () => clearTimeout(timer);
   }, []);

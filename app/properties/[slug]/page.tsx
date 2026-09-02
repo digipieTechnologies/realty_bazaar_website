@@ -31,6 +31,8 @@ import SharePropertyButton from "@/components/property/SharePropertyButton";
 import SavePropertyButton from "@/components/property/SavePropertyButton";
 import PropertyViewTracker from "@/components/property/PropertyViewTracker";
 import PropertyMobileStickyBar from "@/components/property/PropertyMobileStickyBar";
+import PropertyInterestedPopup from "@/components/property/PropertyInterestedPopup";
+
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://therealtybazaar.com";
 
@@ -691,6 +693,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
       {/* Mobile Sticky Contact Bar (Bottom) */}
       <PropertyMobileStickyBar property={property} cleanWhatsApp={cleanWhatsApp} />
+
+      {/* 25-Second Timed Interest Popup for this Property */}
+      <PropertyInterestedPopup property={property} />
     </div>
   );
 }
+
