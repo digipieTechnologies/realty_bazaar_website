@@ -1,8 +1,10 @@
 "use server";
 
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { parsePhoneNumber } from "@/lib/utils";
 
 export interface ContactFormState {
+
   success: boolean;
   message: string;
 }
@@ -55,26 +57,57 @@ export async function submitContactForm(
 }
 
 export async function submitEnquiry(
-  propertyId: string,
+
+  propertyId: string | null,
   brokerId: string | null,
   name: string,
   phone: string,
-  message: string
+  message: string,
+  propertyDetails?: string | null
 ): Promise<{ success: boolean }> {
   if (!name || !phone) return { success: false };
 
+  const parsed = parsePhoneNumber(phone);
+
   try {
     const supabase = createServerSupabaseClient();
-    await supabase.from("enquiries").insert({
-      property_id: propertyId,
-      broker_id: brokerId,
-      name: name.trim(),
-      phone: phone.trim(),
-      message: message?.trim() || null,
-      lead_source: "website",
+
+    // 1. Insert lead into social_leads table (triggers broker CRM notification & indexing)
+    const { error: leadError } = await supabase.from("social_leads").insert({
+      user_name: name.trim(),
+      phone: parsed.phone,
+      phone_country_code: parsed.phone_country_code,
+      phone_country_iso: parsed.phone_country_iso,
+      notes: message?.trim() || null,
+      property_id: propertyId || null,
+      broker_id: brokerId || null,
+      property_details: propertyDetails || null,
+      is_deleted: false,
     });
+
+    if (leadError) {
+      console.error("Supabase social_leads insert error:", leadError);
+    }
+
+    // 2. Also keep enquiries table sync for website analytics / logging
+    try {
+      if (propertyId) {
+        await supabase.from("enquiries").insert({
+          property_id: propertyId,
+          broker_id: brokerId,
+          name: name.trim(),
+          phone: phone.trim(),
+          message: message?.trim() || null,
+          lead_source: "website",
+        });
+      }
+    } catch {
+      // Non-blocking fallback
+    }
+
     return { success: true };
-  } catch {
+  } catch (error) {
+    console.error("submitEnquiry error:", error);
     return { success: true }; // Return success for UX
   }
 }
@@ -86,19 +119,33 @@ export async function submitQuickLead(
 ): Promise<{ success: boolean }> {
   if (!name || !phone) return { success: false };
 
+  const parsed = parsePhoneNumber(phone);
+
   try {
     const supabase = createServerSupabaseClient();
-    await supabase.from("enquiries").insert({
+
+    // Insert lead into social_leads table
+    const { error: leadError } = await supabase.from("social_leads").insert({
+      user_name: name.trim(),
+      phone: parsed.phone,
+      phone_country_code: parsed.phone_country_code,
+      phone_country_iso: parsed.phone_country_iso,
+      notes: sourcePath ? `Contact details saved via website popup on ${sourcePath}` : "Contact details saved via website popup",
       property_id: null,
       broker_id: null,
-      name: name.trim(),
-      phone: phone.trim(),
-      message: sourcePath ? `Quick Lead captured on ${sourcePath}` : "Quick Lead captured from website popup",
-      lead_source: "timed_popup",
+      property_details: sourcePath ? `Visited URL: ${sourcePath}` : null,
+      is_deleted: false,
     });
+
+    if (leadError) {
+      console.error("Supabase quick social_leads insert error:", leadError);
+    }
+
     return { success: true };
-  } catch {
+  } catch (error) {
+    console.error("submitQuickLead error:", error);
     return { success: true };
   }
 }
+
 

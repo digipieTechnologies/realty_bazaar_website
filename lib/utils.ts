@@ -57,3 +57,102 @@ export function slugify(text: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
+
+export interface ParsedPhone {
+  phone: string;
+  phone_country_code: string;
+  phone_country_iso: string;
+}
+
+const COUNTRY_PREFIXES: Array<{ prefix: string; code: string; iso: string }> = [
+  { prefix: "91", code: "91", iso: "IN" },
+  { prefix: "1", code: "1", iso: "US" },
+  { prefix: "44", code: "44", iso: "GB" },
+  { prefix: "971", code: "971", iso: "AE" },
+  { prefix: "65", code: "65", iso: "SG" },
+  { prefix: "61", code: "61", iso: "AU" },
+  { prefix: "966", code: "966", iso: "SA" },
+  { prefix: "974", code: "974", iso: "QA" },
+  { prefix: "968", code: "968", iso: "OM" },
+  { prefix: "965", code: "965", iso: "KW" },
+  { prefix: "973", code: "973", iso: "BH" },
+  { prefix: "49", code: "49", iso: "DE" },
+  { prefix: "33", code: "33", iso: "FR" },
+  { prefix: "81", code: "81", iso: "JP" },
+  { prefix: "86", code: "86", iso: "CN" },
+];
+
+/**
+ * Parses user-provided phone number into phone digits, country code and ISO
+ * Defaults to 91 and IN if unspecified.
+ */
+export function parsePhoneNumber(raw: string): ParsedPhone {
+  if (!raw) {
+    return { phone: "", phone_country_code: "91", phone_country_iso: "IN" };
+  }
+
+  const trimmed = raw.trim();
+  const digits = trimmed.replace(/\D/g, "");
+
+  // If user explicitly provided + prefix
+  if (trimmed.startsWith("+")) {
+    for (const item of COUNTRY_PREFIXES) {
+      if (digits.startsWith(item.prefix)) {
+        const localPhone = digits.slice(item.prefix.length);
+        if (localPhone.length >= 5) {
+          return {
+            phone: localPhone,
+            phone_country_code: item.code,
+            phone_country_iso: item.iso,
+          };
+        }
+      }
+    }
+  }
+
+  // If 12 digits starting with 91 (e.g. 919876543210)
+  if (digits.length === 12 && digits.startsWith("91")) {
+    return {
+      phone: digits.slice(2),
+      phone_country_code: "91",
+      phone_country_iso: "IN",
+    };
+  }
+
+  // If standard 10-digit Indian mobile number (e.g. 9876543210)
+  if (digits.length === 10) {
+    return {
+      phone: digits,
+      phone_country_code: "91",
+      phone_country_iso: "IN",
+    };
+  }
+
+  // If starting with 0 followed by 10 digits
+  if (digits.length === 11 && digits.startsWith("0")) {
+    return {
+      phone: digits.slice(1),
+      phone_country_code: "91",
+      phone_country_iso: "IN",
+    };
+  }
+
+  // Check matching other prefix lengths
+  for (const item of COUNTRY_PREFIXES) {
+    if (digits.startsWith(item.prefix) && digits.length > item.prefix.length + 6) {
+      return {
+        phone: digits.slice(item.prefix.length),
+        phone_country_code: item.code,
+        phone_country_iso: item.iso,
+      };
+    }
+  }
+
+  // Default fallback
+  return {
+    phone: digits || trimmed,
+    phone_country_code: "91",
+    phone_country_iso: "IN",
+  };
+}
+

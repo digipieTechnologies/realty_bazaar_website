@@ -102,7 +102,9 @@ function mapDbRowToProperty(row: DbPropertyRow): Property {
 
   return {
     id: row.id,
+    broker_id: row.broker_id ?? null,
     property_code: row.property_code ?? null,
+
     slug: buildPropertySlug(row.property_title, row.property_code),
     title: row.property_title,
     description: row.property_description ?? null,

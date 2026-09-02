@@ -74,7 +74,9 @@ export interface DbPropertyRow {
 // Used by all marketplace components. Mapper converts DbPropertyRow → Property.
 export interface Property {
   id: string;
+  broker_id?: string | null;
   property_code?: string | null;   // unique property code e.g. "TRB-1001"
+
   slug: string;                    // generated: slugify(title) + property_code
   title: string;
   description: string | null;

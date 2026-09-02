@@ -54,10 +54,21 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
     setError("");
     try {
       saveUserContact({ name: name.trim(), phone: phone.trim() });
-      await submitEnquiry(property.id, null, name, phone, message);
+      const propertyDetails = property.title
+        ? `${property.title} (${property.locality ? property.locality + ", " : ""}${property.city})`
+        : null;
+      await submitEnquiry(
+        property.id,
+        property.broker_id || null,
+        name,
+        phone,
+        message,
+        propertyDetails
+      );
       setSubmitted(true);
       trackPropertyLeadSubmit(property);
     } catch {
+
       setError("Something went wrong. Please call or WhatsApp the broker directly.");
     } finally {
       setSubmitting(false);

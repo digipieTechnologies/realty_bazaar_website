@@ -79,10 +79,19 @@ export default function ScheduleVisitModal({
     try {
       saveUserContact({ name: name.trim(), phone: phone.trim() });
       const message = `Site Visit Request for ${property.title} on ${date} at ${time}.`;
-      await submitEnquiry(property.id, null, name, phone, message);
+      const propertyDetails = `${property.title} (${property.locality ? property.locality + ", " : ""}${property.city})`;
+      await submitEnquiry(
+        property.id,
+        property.broker_id || null,
+        name,
+        phone,
+        message,
+        propertyDetails
+      );
       trackScheduleVisitSubmit(property);
       setSubmitted(true);
     } catch {
+
       setError("Could not submit your request. Please try again or WhatsApp the broker directly.");
     } finally {
       setSubmitting(false);
