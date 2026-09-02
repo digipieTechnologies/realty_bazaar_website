@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { submitEnquiry } from "@/app/actions";
 import { Send, Phone, Calendar, ShieldCheck, CheckCircle2, Building } from "lucide-react";
 import ScheduleVisitModal from "@/components/property/ScheduleVisitModal";
@@ -11,6 +11,11 @@ import {
   trackPropertyWhatsAppClick,
   trackPropertyLeadSubmit,
 } from "@/lib/analytics/clarity";
+import {
+  getUserContact,
+  saveUserContact,
+  subscribeUserContact,
+} from "@/lib/storage/userContact";
 
 interface EnquiryFormProps {
   property: Property;
@@ -25,6 +30,20 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
   const [error, setError] = useState("");
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
 
+  // Auto-populate from localStorage and listen to real-time updates
+  useEffect(() => {
+    const saved = getUserContact();
+    if (saved.name) setName((prev) => prev || saved.name);
+    if (saved.phone) setPhone((prev) => prev || saved.phone);
+
+    const unsubscribe = subscribeUserContact((contact) => {
+      if (contact.name) setName(contact.name);
+      if (contact.phone) setPhone(contact.phone);
+    });
+
+    return unsubscribe;
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) {
@@ -34,6 +53,7 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
     setSubmitting(true);
     setError("");
     try {
+      saveUserContact({ name: name.trim(), phone: phone.trim() });
       await submitEnquiry(property.id, null, name, phone, message);
       setSubmitted(true);
       trackPropertyLeadSubmit(property);
@@ -43,6 +63,7 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
       setSubmitting(false);
     }
   };
+
 
   const cleanPhone = property.broker_phone?.replace(/\D/g, "") || "9876543210";
   const cleanWhatsApp = property.broker_whatsapp?.replace(/\D/g, "") || cleanPhone;

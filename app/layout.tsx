@@ -5,6 +5,8 @@ import { Inter, DM_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import UserContactPopup from "@/components/ui/UserContactPopup";
+
 
 const CLARITY_PROJECT_ID =
   process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || "y7rc87t4rg";
@@ -210,8 +212,11 @@ export default function RootLayout({
         </Suspense>
         <main>{children}</main>
         <Footer />
+        <UserContactPopup />
       </body>
     </html>
   );
 }
+
+
 

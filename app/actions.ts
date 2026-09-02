@@ -78,3 +78,27 @@ export async function submitEnquiry(
     return { success: true }; // Return success for UX
   }
 }
+
+export async function submitQuickLead(
+  name: string,
+  phone: string,
+  sourcePath?: string
+): Promise<{ success: boolean }> {
+  if (!name || !phone) return { success: false };
+
+  try {
+    const supabase = createServerSupabaseClient();
+    await supabase.from("enquiries").insert({
+      property_id: null,
+      broker_id: null,
+      name: name.trim(),
+      phone: phone.trim(),
+      message: sourcePath ? `Quick Lead captured on ${sourcePath}` : "Quick Lead captured from website popup",
+      lead_source: "timed_popup",
+    });
+    return { success: true };
+  } catch {
+    return { success: true };
+  }
+}
+

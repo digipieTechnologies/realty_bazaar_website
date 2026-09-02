@@ -1,11 +1,12 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { submitContactForm, type ContactFormState } from "@/app/actions";
 import { Send, Phone, Mail, MapPin } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import CustomSelect from "@/components/ui/CustomSelect";
 import { trackContactFormSubmit } from "@/lib/analytics/clarity";
+import { getUserContact, saveUserContact } from "@/lib/storage/userContact";
 
 const subjectOptions = [
   { value: "general", label: "General Enquiry" },
@@ -23,12 +24,24 @@ export default function ContactForm() {
     submitContactForm,
     initialState
   );
+  const [contactName, setContactName] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+
+  useEffect(() => {
+    const saved = getUserContact();
+    if (saved.name) setContactName(saved.name);
+    if (saved.phone) setContactPhone(saved.phone);
+  }, []);
 
   useEffect(() => {
     if (state.success) {
+      if (contactName || contactPhone) {
+        saveUserContact({ name: contactName, phone: contactPhone });
+      }
       trackContactFormSubmit();
     }
-  }, [state.success]);
+  }, [state.success, contactName, contactPhone]);
+
 
   return (
     <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
@@ -135,6 +148,8 @@ export default function ContactForm() {
                   id="contact-name"
                   name="name"
                   type="text"
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
                   required
                   placeholder="Rajesh Patel"
                   className="w-full px-4 py-3 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm text-[#172033] placeholder:text-[#98A2B3] transition-colors bg-white"
@@ -162,9 +177,12 @@ export default function ContactForm() {
                 id="contact-phone"
                 name="phone"
                 type="tel"
+                value={contactPhone}
+                onChange={(e) => setContactPhone(e.target.value)}
                 placeholder="+91 98765 43210"
                 className="w-full px-4 py-3 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] outline-none text-sm text-[#172033] placeholder:text-[#98A2B3] transition-colors bg-white"
               />
+
             </div>
             <div>
               <label htmlFor="contact-subject" className="block text-sm font-semibold text-[#172033] mb-1.5">

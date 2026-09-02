@@ -7,6 +7,7 @@ import { X, Calendar, CheckCircle2 } from "lucide-react";
 import { submitEnquiry } from "@/app/actions";
 import CustomSelect from "@/components/ui/CustomSelect";
 import type { Property } from "@/types";
+import { getUserContact, saveUserContact } from "@/lib/storage/userContact";
 
 const timeSlotOptions = [
   { value: "10:00 AM", label: "Morning (10:00 AM – 12:00 PM)" },
@@ -41,6 +42,10 @@ export default function ScheduleVisitModal({
 
   useEffect(() => {
     if (isOpen) {
+      const saved = getUserContact();
+      if (saved.name) setName((prev) => prev || saved.name);
+      if (saved.phone) setPhone((prev) => prev || saved.phone);
+
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
 
@@ -67,6 +72,7 @@ export default function ScheduleVisitModal({
     setError("");
 
     try {
+      saveUserContact({ name: name.trim(), phone: phone.trim() });
       const message = `Site Visit Request for ${property.title} on ${date} at ${time}.`;
       await submitEnquiry(property.id, null, name, phone, message);
       setSubmitted(true);
@@ -76,6 +82,7 @@ export default function ScheduleVisitModal({
       setSubmitting(false);
     }
   };
+
 
   if (!mounted) return null;
 
