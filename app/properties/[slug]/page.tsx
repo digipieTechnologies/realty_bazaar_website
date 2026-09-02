@@ -15,6 +15,7 @@ import {
   Car,
   Building2,
   IndianRupee,
+  ExternalLink,
 } from "lucide-react";
 import {
   getPropertyBySlug,
@@ -22,7 +23,13 @@ import {
   getSimilarProperties,
   getPropertyFaqs,
 } from "@/lib/supabase/queries";
-import { generatePropertyMetaTitle, formatPrice, formatLocation } from "@/lib/utils";
+import {
+  generatePropertyMetaTitle,
+  formatPrice,
+  formatLocation,
+  getMapUrl,
+} from "@/lib/utils";
+
 import PropertyGallery from "@/components/property/PropertyGallery";
 import EnquiryForm from "@/components/property/EnquiryForm";
 import PropertyCard from "@/components/property/PropertyCard";
@@ -136,68 +143,79 @@ function PropertySummaryCard({
 }) {
   return (
     <section
-      className={`bg-white rounded-3xl p-5 sm:p-7 border border-[#E4EAF2] shadow-2xs ${className}`}
+      className={`bg-white rounded-3xl p-4 sm:p-6 border border-[#E4EAF2] shadow-2xs ${className}`}
       aria-label="Property Summary"
     >
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
         {/* Left: Badges, Title, Location */}
-        <div className="space-y-2.5 min-w-0 flex-1">
+        <div className="space-y-2 min-w-0 flex-1">
           {/* Badges Row */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="bg-[#245FA8] text-white text-xs font-bold px-3 py-1 rounded-lg shadow-2xs">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="bg-[#245FA8] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-md shadow-2xs">
               {property.transaction_type === "sale" ? "For Sale" : "For Rent"}
             </span>
-            <span className="bg-[#F3F8FE] text-[#245FA8] border border-[#6FA5E5]/30 text-xs font-bold px-3 py-1 rounded-lg uppercase">
+            <span className="bg-[#F3F8FE] text-[#245FA8] border border-[#6FA5E5]/30 text-[11px] font-bold px-2.5 py-0.5 rounded-md uppercase">
               {property.property_type}
             </span>
             {property.property_code && (
-              <span className="bg-[#F8FAFC] text-[#245FA8] border border-[#E4EAF2] text-xs font-bold px-2.5 py-1 rounded-lg font-mono">
+              <span className="bg-[#F8FAFC] text-[#245FA8] border border-[#E4EAF2] text-[11px] font-bold px-2 py-0.5 rounded-md font-mono">
                 #{property.property_code}
               </span>
             )}
             {property.promoted && (
-              <span className="bg-[#172033] text-[#6FA5E5] text-xs font-bold px-3 py-1 rounded-lg">
+              <span className="bg-[#172033] text-[#6FA5E5] text-[11px] font-bold px-2.5 py-0.5 rounded-md">
                 Promoted
               </span>
             )}
             {property.featured && !property.promoted && (
-              <span className="bg-[#EAF3FF] text-[#245FA8] border border-[#6FA5E5]/40 text-xs font-bold px-3 py-1 rounded-lg">
+              <span className="bg-[#EAF3FF] text-[#245FA8] border border-[#6FA5E5]/40 text-[11px] font-bold px-2.5 py-0.5 rounded-md">
                 Featured
               </span>
             )}
             {property.broker_verified && (
-              <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-1 rounded-lg">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
                 <span>Verified Listing</span>
               </span>
             )}
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl sm:text-3xl lg:text-[32px] font-display font-bold text-[#172033] tracking-tight leading-tight">
+          <h1 className="text-lg sm:text-xl lg:text-2xl font-display font-bold text-[#172033] tracking-tight leading-snug">
             {property.title}
           </h1>
 
-          {/* Location */}
-          <div className="flex items-center gap-1.5 text-xs sm:text-sm text-[#667085]">
-            <MapPin className="w-4 h-4 text-[#397BCF] shrink-0" />
-            <span>{property.address || `${property.locality}, ${property.city}`}</span>
+          {/* Location / Interactive Map Navigation */}
+          <div>
+            <a
+              href={getMapUrl(property)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-[#475467] hover:text-[#397BCF] group transition-colors cursor-pointer"
+              title="Open location in Google / Apple Maps"
+            >
+              <MapPin className="w-3.5 h-3.5 text-[#397BCF] group-hover:scale-110 transition-transform shrink-0" />
+              <span className="group-hover:underline underline-offset-2 font-medium text-xs sm:text-sm">
+                {property.address || `${property.locality}, ${property.city}`}
+              </span>
+              <ExternalLink className="w-3 h-3 text-[#98A2B3] group-hover:text-[#397BCF] opacity-70 group-hover:opacity-100 transition-opacity shrink-0" />
+            </a>
           </div>
         </div>
 
         {/* Right: Key Commercial Metrics & Actions */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 sm:gap-6 lg:gap-8 pt-4 lg:pt-0 border-t lg:border-t-0 border-[#E4EAF2] shrink-0">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 sm:gap-6 lg:gap-7 pt-4 lg:pt-0 border-t lg:border-t-0 border-[#E4EAF2] shrink-0">
           {/* Metric 1: Price */}
-          <div className="min-w-[120px]">
-            <div className="text-[11px] font-bold text-[#667085] uppercase tracking-wider mb-0.5 flex items-center gap-1">
-              <IndianRupee className="w-3.5 h-3.5 text-[#397BCF]" />
+          <div className="min-w-[110px]">
+            <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider mb-0.5 flex items-center gap-1">
+              <IndianRupee className="w-3 h-3 text-[#397BCF]" />
               <span>Price</span>
             </div>
-            <div className="text-2xl sm:text-3xl font-display font-bold text-[#172033] tracking-tight">
+            <div className="text-xl sm:text-2xl font-display font-bold text-[#172033] tracking-tight">
               {price}
             </div>
             {property.price_per_sqft && property.transaction_type === "sale" && (
-              <div className="text-xs text-[#667085] font-medium mt-0.5">
+              <div className="text-[11px] text-[#667085] font-medium mt-0.5">
                 ₹{property.price_per_sqft.toLocaleString("en-IN")} / sq ft
               </div>
             )}
@@ -205,22 +223,22 @@ function PropertySummaryCard({
 
           {/* Divider */}
           {property.area_sqft && (
-            <div className="hidden sm:block w-px h-12 bg-[#E4EAF2]" aria-hidden="true" />
+            <div className="hidden sm:block w-px h-10 bg-[#E4EAF2]" aria-hidden="true" />
           )}
 
           {/* Metric 2: Area */}
           {property.area_sqft && (
-            <div className="min-w-[110px]">
-              <div className="text-[11px] font-bold text-[#667085] uppercase tracking-wider mb-0.5 flex items-center gap-1">
-                <Square className="w-3.5 h-3.5 text-[#397BCF]" />
+            <div className="min-w-[105px]">
+              <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider mb-0.5 flex items-center gap-1">
+                <Square className="w-3 h-3 text-[#397BCF]" />
                 <span>{isPlot ? "Plot Area" : "Super Built-up"}</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-display font-bold text-[#172033] tracking-tight">
+              <div className="text-xl sm:text-2xl font-display font-bold text-[#172033] tracking-tight">
                 {property.area_sqft.toLocaleString("en-IN")}{" "}
-                <span className="text-base sm:text-lg font-medium text-[#667085]">sq ft</span>
+                <span className="text-sm sm:text-base font-normal text-[#667085]">sq ft</span>
               </div>
               {areaSqm && (
-                <div className="text-xs text-[#667085] font-medium mt-0.5">
+                <div className="text-[11px] text-[#667085] font-medium mt-0.5">
                   {areaSqm} sq m
                 </div>
               )}
@@ -229,21 +247,21 @@ function PropertySummaryCard({
 
           {/* Divider */}
           {(property.bedrooms || property.bathrooms || isPlot) && (
-            <div className="hidden sm:block w-px h-12 bg-[#E4EAF2]" aria-hidden="true" />
+            <div className="hidden sm:block w-px h-10 bg-[#E4EAF2]" aria-hidden="true" />
           )}
 
           {/* Metric 3: Configuration */}
-          <div className="min-w-[110px]">
-            <div className="text-[11px] font-bold text-[#667085] uppercase tracking-wider mb-0.5 flex items-center gap-1">
-              <Bed className="w-3.5 h-3.5 text-[#397BCF]" />
+          <div className="min-w-[100px]">
+            <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider mb-0.5 flex items-center gap-1">
+              <Bed className="w-3 h-3 text-[#397BCF]" />
               <span>Configuration</span>
             </div>
-            <div className="text-2xl sm:text-3xl font-display font-bold text-[#172033] tracking-tight">
+            <div className="text-xl sm:text-2xl font-display font-bold text-[#172033] tracking-tight">
               {property.bedrooms
                 ? `${property.bedrooms} BHK`
                 : property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1)}
             </div>
-            <div className="text-xs text-[#667085] font-medium mt-0.5">
+            <div className="text-[11px] text-[#667085] font-medium mt-0.5">
               {property.bedrooms
                 ? `${property.bedrooms} Bed${property.bedrooms > 1 ? "s" : ""}`
                 : ""}
@@ -254,6 +272,7 @@ function PropertySummaryCard({
               {!property.bedrooms && !property.bathrooms ? "Direct Property" : ""}
             </div>
           </div>
+
 
           {/* Action Buttons: Share & Save */}
           <div className="flex sm:flex-col items-center gap-2 ml-auto sm:ml-0 w-full sm:w-auto pt-2 sm:pt-0">

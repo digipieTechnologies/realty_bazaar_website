@@ -116,7 +116,10 @@ function mapDbRowToProperty(row: DbPropertyRow): Property {
     city,
     locality,
     address: fullAddress,
+    latitude: addr?.latitude ?? null,
+    longitude: addr?.longitude ?? null,
     area_sqft: areaInSqft,
+
     carpet_sqft: null,
     bedrooms: row.bedrooms ?? null,
     bathrooms: row.bathrooms ?? null,

@@ -156,3 +156,23 @@ export function parsePhoneNumber(raw: string): ParsedPhone {
   };
 }
 
+/**
+ * Generates an accessible Google / Apple Maps navigation URL from property coordinates or address
+ */
+export function getMapUrl(property: {
+  latitude?: number | null;
+  longitude?: number | null;
+  address?: string | null;
+  locality?: string | null;
+  city?: string | null;
+}): string {
+  if (property.latitude && property.longitude) {
+    return `https://www.google.com/maps/search/?api=1&query=${property.latitude},${property.longitude}`;
+  }
+
+  const parts = [property.address, property.locality, property.city, "India"].filter(Boolean);
+  const query = parts.join(", ");
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+}
+
+

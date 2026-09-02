@@ -88,7 +88,10 @@ export interface Property {
   city: string;
   locality: string;
   address?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   area_sqft: number | null;
+
   carpet_sqft?: number | null;
   bedrooms: number | null;
   bathrooms: number | null;

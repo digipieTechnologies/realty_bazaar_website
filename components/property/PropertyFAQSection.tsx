@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, HelpCircle, MessageCircleQuestion } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Property, PropertyFAQ } from "@/types";
 
 interface PropertyFAQSectionProps {
@@ -10,54 +11,58 @@ interface PropertyFAQSectionProps {
 }
 
 function PropertyFAQItem({
-  faq,
+  question,
+  answer,
   isOpen,
   onToggle,
-  index,
 }: {
-  faq: PropertyFAQ;
+  question: string;
+  answer: string;
   isOpen: boolean;
   onToggle: () => void;
-  index: number;
 }) {
   return (
-    <div
-      className={`border rounded-xl transition-all duration-200 overflow-hidden ${isOpen
-        ? "border-[#397BCF]/40 bg-[#F8FAFC] shadow-2xs"
-        : "border-[#E4EAF2] bg-white hover:border-[#CBD5E1]"
-        }`}
-    >
+    <div className="border-b border-[#E4EAF2] last:border-0">
       <button
         type="button"
         onClick={onToggle}
+        className="w-full text-left flex items-center justify-between gap-4 py-4 hover:text-[#397BCF] transition-colors cursor-pointer select-none group"
         aria-expanded={isOpen}
-        aria-controls={`faq-answer-${index}`}
-        id={`faq-question-${index}`}
-        className="w-full px-4 py-3 sm:px-5 sm:py-3.5 text-left flex items-center justify-between gap-3.5 cursor-pointer select-none"
       >
-        <span className="font-display font-semibold text-xs sm:text-sm text-[#172033] leading-snug">
-          {faq.question}
+        <span
+          className={`text-xs sm:text-sm font-semibold transition-colors leading-snug ${
+            isOpen ? "text-[#397BCF]" : "text-[#172033] group-hover:text-[#397BCF]"
+          }`}
+        >
+          {question}
         </span>
-        <div
-          className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center shrink-0 transition-transform duration-200 ${isOpen
-            ? "bg-[#397BCF] text-white rotate-180"
-            : "bg-[#F3F8FE] text-[#245FA8]"
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="shrink-0"
+        >
+          <ChevronDown
+            className={`w-4 h-4 transition-colors ${
+              isOpen ? "text-[#397BCF]" : "text-[#667085] group-hover:text-[#397BCF]"
             }`}
-        >
-          <ChevronDown className="w-3.5 h-3.5" />
-        </div>
+          />
+        </motion.div>
       </button>
-
-      {isOpen && (
-        <div
-          id={`faq-answer-${index}`}
-          role="region"
-          aria-labelledby={`faq-question-${index}`}
-          className="px-4 pb-3.5 sm:px-5 pt-1 text-xs text-[#475467] leading-relaxed border-t border-[#E4EAF2]/60"
-        >
-          <p>{faq.answer}</p>
-        </div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <p className="pb-4 text-xs sm:text-sm text-[#667085] leading-relaxed">
+              {answer}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -66,29 +71,36 @@ export default function PropertyFAQSection({
   faqs,
   property,
 }: PropertyFAQSectionProps) {
-  // If no FAQs for this property, do not render empty section
   if (!faqs || faqs.length === 0) return null;
 
-  // First 2 FAQs open by default for immediate reading & indexability
-  const [openIndices, setOpenIndices] = useState<number[]>([0, 1]);
+  // Only the first item open by default
+  const [openIds, setOpenIds] = useState<string[]>(() =>
+    faqs.slice(0, 1).map((f) => f.id)
+  );
 
-  const toggleFAQ = (index: number) => {
-    setOpenIndices((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+
+  const toggleFAQ = (id: string) => {
+    setOpenIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
 
   const handleExpandAll = () => {
-    if (openIndices.length === faqs.length) {
-      setOpenIndices([]);
+    if (openIds.length === faqs.length) {
+      setOpenIds([]);
     } else {
-      setOpenIndices(faqs.map((_, i) => i));
+      setOpenIds(faqs.map((f) => f.id));
     }
   };
 
+  // Split into 2 balanced columns for large screens
+  const mid = Math.ceil(faqs.length / 2);
+  const leftCol = faqs.slice(0, mid);
+  const rightCol = faqs.slice(mid);
+
   return (
     <section
-      className="mt-10 bg-white rounded-3xl p-5 sm:p-7 lg:p-8 border border-[#E4EAF2] shadow-2xs space-y-6"
+      className="mt-10 bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-[#E4EAF2] shadow-2xs space-y-6"
       aria-labelledby="property-faq-heading"
     >
       {/* Section Header */}
@@ -115,22 +127,35 @@ export default function PropertyFAQSection({
             onClick={handleExpandAll}
             className="self-start sm:self-center px-3.5 py-1.5 bg-[#F8FAFC] hover:bg-[#F3F8FE] border border-[#E4EAF2] hover:border-[#397BCF]/30 rounded-lg text-xs font-bold text-[#397BCF] transition-all cursor-pointer shrink-0 shadow-2xs"
           >
-            {openIndices.length === faqs.length ? "Collapse All" : "Expand All"}
+            {openIds.length === faqs.length ? "Collapse All" : "Expand All"}
           </button>
         )}
       </div>
 
-      {/* 2-Column Balanced FAQ Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-3.5 items-start">
-        {faqs.map((faq, index) => (
-          <PropertyFAQItem
-            key={faq.id || index}
-            faq={faq}
-            index={index}
-            isOpen={openIndices.includes(index)}
-            onToggle={() => toggleFAQ(index)}
-          />
-        ))}
+      {/* 2-Column Clean Divider Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-0 items-start">
+        <div>
+          {leftCol.map((faq) => (
+            <PropertyFAQItem
+              key={faq.id}
+              question={faq.question}
+              answer={faq.answer}
+              isOpen={openIds.includes(faq.id)}
+              onToggle={() => toggleFAQ(faq.id)}
+            />
+          ))}
+        </div>
+        <div>
+          {rightCol.map((faq) => (
+            <PropertyFAQItem
+              key={faq.id}
+              question={faq.question}
+              answer={faq.answer}
+              isOpen={openIds.includes(faq.id)}
+              onToggle={() => toggleFAQ(faq.id)}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Helpful Broker Support Footer */}
