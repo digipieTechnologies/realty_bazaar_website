@@ -1,5 +1,5 @@
 import { createPublicServerSupabaseClient } from "./server";
-import type { Property, DbPropertyRow } from "@/types";
+import type { Property, DbPropertyRow, PropertyFAQ } from "@/types";
 import { formatPrice, slugify } from "@/lib/utils";
 
 // ── Slug helpers ──────────────────────────────────────────────────────────────
@@ -83,9 +83,9 @@ function mapDbRowToProperty(row: DbPropertyRow): Property {
   // Normalize facing direction (DB: 'east', 'north_east', etc.)
   const facing = row.facing
     ? row.facing
-        .split("_")
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ") + " Facing"
+      .split("_")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ") + " Facing"
     : null;
 
   const price = typeof row.price === "number" ? row.price : null;
@@ -574,5 +574,29 @@ export async function getCityCounts(): Promise<Record<string, number>> {
   } catch (err) {
     console.error("[getCityCounts] Unexpected error:", err);
     return {};
+  }
+}
+
+// ── Property FAQs Query ───────────────────────────────────────────────────────
+export async function getPropertyFaqs(propertyId: string): Promise<PropertyFAQ[]> {
+  if (!propertyId) return [];
+
+  try {
+    const supabase = createPublicServerSupabaseClient();
+    const { data, error } = await supabase
+      .from("property_faqs")
+      .select("id, property_id, question, answer, created_at, updated_at")
+      .eq("property_id", propertyId)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error(`[getPropertyFaqs] Error fetching FAQs for property ${propertyId}:`, error);
+      return [];
+    }
+
+    return (data as PropertyFAQ[]) || [];
+  } catch (err) {
+    console.error("[getPropertyFaqs] Unexpected error:", err);
+    return [];
   }
 }

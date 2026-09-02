@@ -145,3 +145,12 @@ export interface PricingPlan {
   ctaLabel: string;
   ctaVariant: "primary" | "secondary" | "outline";
 }
+
+export interface PropertyFAQ {
+  id: string;
+  property_id: string;
+  question: string;
+  answer: string;
+  created_at?: string;
+  updated_at?: string;
+}

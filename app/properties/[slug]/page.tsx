@@ -11,8 +11,6 @@ import {
   CheckCircle2,
   Compass,
   Layers,
-  Sparkles,
-  Phone,
   Key,
   Car,
   Building2,
@@ -22,6 +20,7 @@ import {
   getPropertyBySlug,
   getAllPropertySlugs,
   getSimilarProperties,
+  getPropertyFaqs,
 } from "@/lib/supabase/queries";
 import { generatePropertyMetaTitle, formatPrice, formatLocation } from "@/lib/utils";
 import PropertyGallery from "@/components/property/PropertyGallery";
@@ -32,7 +31,7 @@ import SavePropertyButton from "@/components/property/SavePropertyButton";
 import PropertyViewTracker from "@/components/property/PropertyViewTracker";
 import PropertyMobileStickyBar from "@/components/property/PropertyMobileStickyBar";
 import PropertyInterestedPopup from "@/components/property/PropertyInterestedPopup";
-
+import PropertyFAQSection from "@/components/property/PropertyFAQSection";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://therealtybazaar.com";
 
@@ -82,19 +81,19 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
 
   const ogImages = validImages.length > 0
     ? validImages.slice(0, 4).map((url, idx) => ({
-        url,
+      url,
+      width: 1200,
+      height: 630,
+      alt: `${property.title}${idx > 0 ? ` – Photo ${idx + 1}` : ""}`,
+    }))
+    : [
+      {
+        url: defaultOgImage,
         width: 1200,
         height: 630,
-        alt: `${property.title}${idx > 0 ? ` – Photo ${idx + 1}` : ""}`,
-      }))
-    : [
-        {
-          url: defaultOgImage,
-          width: 1200,
-          height: 630,
-          alt: `${property.title} | The Realty Bazaar`,
-        },
-      ];
+        alt: `${property.title} | The Realty Bazaar`,
+      },
+    ];
 
   return {
     title,
@@ -287,7 +286,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     notFound();
   }
 
-  const similarProperties = await getSimilarProperties(property, 3);
+  const [similarProperties, faqs] = await Promise.all([
+    getSimilarProperties(property, 3),
+    getPropertyFaqs(property.id),
+  ]);
   const price = formatPrice(property.price, property.price_display);
   const cleanPhone = property.broker_phone?.replace(/\D/g, "") || "9876543210";
   const cleanWhatsApp = property.broker_whatsapp?.replace(/\D/g, "") || cleanPhone;
@@ -323,8 +325,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     name: property.title,
     description:
       property.description ||
-      `${property.bedrooms ? `${property.bedrooms} BHK ` : ""}${property.property_type} ${
-        property.transaction_type === "sale" ? "for sale" : "for rent"
+      `${property.bedrooms ? `${property.bedrooms} BHK ` : ""}${property.property_type} ${property.transaction_type === "sale" ? "for sale" : "for rent"
       } in ${locDisplay}.`,
     url: `https://therealtybazaar.com/properties/${slug}`,
     datePosted: property.created_at,
@@ -388,6 +389,23 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     ],
   };
 
+  // Google Rich Snippet FAQPage Schema for Search Engines
+  const faqPageLd =
+    faqs && faqs.length > 0
+      ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map((f) => ({
+          "@type": "Question",
+          name: f.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: f.answer,
+          },
+        })),
+      }
+      : null;
+
   const areaSqm = property.area_sqft ? (property.area_sqft * 0.092903).toFixed(1) : null;
   const isPlot = property.property_type === "plot";
 
@@ -396,6 +414,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
       <PropertyViewTracker property={property} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      {faqPageLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageLd) }} />
+      )}
+
 
       {/* Breadcrumbs Navigation */}
       <nav className="bg-white border-b border-[#E4EAF2] py-3.5" aria-label="Breadcrumb">
@@ -657,10 +679,14 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           </div>
 
           {/* Right 4 Cols (Sticky Enquiry Form & Broker Card) */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 sticky top-24">
             <EnquiryForm property={property} />
           </div>
         </div>
+
+        {/* Property FAQs Section (Full-Width 2-Column Responsive Layout) */}
+        <PropertyFAQSection faqs={faqs} property={property} />
+
 
         {/* Similar Properties Section */}
         {similarProperties.length > 0 && (
@@ -699,4 +725,3 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     </div>
   );
 }
-
