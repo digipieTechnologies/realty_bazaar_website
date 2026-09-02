@@ -24,14 +24,9 @@ export default function ContactForm() {
     submitContactForm,
     initialState
   );
-  const [contactName, setContactName] = useState("");
-  const [contactPhone, setContactPhone] = useState("");
+  const [contactName, setContactName] = useState(() => getUserContact().name || "");
+  const [contactPhone, setContactPhone] = useState(() => getUserContact().phone || "");
 
-  useEffect(() => {
-    const saved = getUserContact();
-    if (saved.name) setContactName(saved.name);
-    if (saved.phone) setContactPhone(saved.phone);
-  }, []);
 
   useEffect(() => {
     if (state.success) {

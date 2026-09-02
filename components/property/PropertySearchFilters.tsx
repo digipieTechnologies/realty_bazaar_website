@@ -1,23 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Search, SlidersHorizontal, X, RotateCcw, Check, Sparkles, MapPin, Building, IndianRupee, ShieldCheck } from "lucide-react";
+import { Search, SlidersHorizontal, X, RotateCcw } from "lucide-react";
 import CustomSelect from "@/components/ui/CustomSelect";
+import type { PropertyFilterState as FilterState } from "@/types";
 
-export interface FilterState {
-  q: string;
-  transactionType: "all" | "sale" | "rent";
-  propertyType: string;
-  city: string;
-  locality: string;
-  bhk: string;
-  minPrice: string;
-  maxPrice: string;
-  furnishing: string;
-  verifiedOnly: boolean;
-  featuredOnly: boolean;
-  sortBy: "relevance" | "price_asc" | "price_desc" | "newest" | "area_desc";
-}
+export type { FilterState };
 
 interface PropertySearchFiltersProps {
   filters: FilterState;
@@ -48,7 +36,8 @@ const furnishingOptions = [
 
 const budgetPresets = [
   { label: "Any Budget", min: "", max: "" },
-  { label: "Under ₹50L", min: "0", max: "5000000" },
+  { label: "Under ₹25L", min: "", max: "2500000" },
+  { label: "₹25L – ₹50L", min: "2500000", max: "5000000" },
   { label: "₹50L – ₹1Cr", min: "5000000", max: "10000000" },
   { label: "₹1Cr – ₹2Cr", min: "10000000", max: "20000000" },
   { label: "₹2Cr – ₹5Cr", min: "20000000", max: "50000000" },
@@ -63,7 +52,7 @@ export default function PropertySearchFilters({
 }: PropertySearchFiltersProps) {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  const update = (key: keyof FilterState, value: any) => {
+  const update = <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
     onFilterChange({
       ...filters,
       [key]: value,
@@ -115,11 +104,11 @@ export default function PropertySearchFilters({
 
         {/* Quick horizontal transaction tabs on mobile */}
         <div className="flex items-center gap-1.5 mt-2 overflow-x-auto no-scrollbar pt-1">
-          {[
+          {([
             { value: "all", label: "All Listings" },
             { value: "sale", label: "Buy" },
             { value: "rent", label: "Rent" },
-          ].map((tab) => (
+          ] as const).map((tab) => (
             <button
               key={tab.value}
               type="button"
@@ -167,11 +156,11 @@ export default function PropertySearchFilters({
                     Transaction Type
                   </label>
                   <div className="grid grid-cols-3 gap-2">
-                    {[
+                    {([
                       { value: "all", label: "All" },
                       { value: "sale", label: "For Sale" },
                       { value: "rent", label: "For Rent" },
-                    ].map((tab) => (
+                    ] as const).map((tab) => (
                       <button
                         key={tab.value}
                         type="button"
@@ -351,12 +340,13 @@ export default function PropertySearchFilters({
             Purpose
           </label>
           <div className="grid grid-cols-3 gap-1.5 p-1 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2]">
-            {[
+            {([
               { value: "all", label: "All" },
               { value: "sale", label: "Buy" },
               { value: "rent", label: "Rent" },
-            ].map((tab) => (
+            ] as const).map((tab) => (
               <button
+
                 key={tab.value}
                 type="button"
                 onClick={() => update("transactionType", tab.value)}

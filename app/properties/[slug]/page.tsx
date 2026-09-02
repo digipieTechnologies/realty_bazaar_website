@@ -29,6 +29,7 @@ import {
   formatLocation,
   getMapUrl,
 } from "@/lib/utils";
+import type { Property } from "@/types";
 
 import PropertyGallery from "@/components/property/PropertyGallery";
 import EnquiryForm from "@/components/property/EnquiryForm";
@@ -135,12 +136,13 @@ function PropertySummaryCard({
   isPlot,
   className = "",
 }: {
-  property: any;
+  property: Property;
   price: string;
   areaSqm: string | null;
   isPlot: boolean;
   className?: string;
 }) {
+
   return (
     <section
       className={`bg-white rounded-3xl p-4 sm:p-6 border border-[#E4EAF2] shadow-2xs ${className}`}

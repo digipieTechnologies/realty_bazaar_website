@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Flame, Sparkles } from "lucide-react";
+import { ArrowRight, Flame } from "lucide-react";
 import PropertyCard from "@/components/property/PropertyCard";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import type { Property } from "@/types";

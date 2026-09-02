@@ -174,5 +174,3 @@ export function getMapUrl(property: {
   const query = parts.join(", ");
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
-
-

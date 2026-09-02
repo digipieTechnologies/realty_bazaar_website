@@ -12,6 +12,8 @@ import {
   trackScheduleVisitModalOpen,
   trackScheduleVisitSubmit,
 } from "@/lib/analytics/clarity";
+import { useIsClient } from "@/lib/hooks/useIsClient";
+
 
 const timeSlotOptions = [
   { value: "10:00 AM", label: "Morning (10:00 AM – 12:00 PM)" },
@@ -31,9 +33,9 @@ export default function ScheduleVisitModal({
   isOpen,
   onClose,
 }: ScheduleVisitModalProps) {
-  const [mounted, setMounted] = useState(false);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const isClient = useIsClient();
+  const [name, setName] = useState(() => getUserContact().name || "");
+  const [phone, setPhone] = useState(() => getUserContact().phone || "");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("10:00 AM");
   const [submitting, setSubmitting] = useState(false);
@@ -41,15 +43,8 @@ export default function ScheduleVisitModal({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
     if (isOpen) {
       trackScheduleVisitModalOpen(property);
-      const saved = getUserContact();
-      if (saved.name) setName((prev) => prev || saved.name);
-      if (saved.phone) setPhone((prev) => prev || saved.phone);
 
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
@@ -73,34 +68,37 @@ export default function ScheduleVisitModal({
       return;
     }
 
+    const cleanDigits = phone.replace(/\D/g, "");
+    if (cleanDigits.length < 7) {
+      setError("Please enter a valid phone number.");
+      return;
+    }
+
     setSubmitting(true);
     setError("");
 
     try {
       saveUserContact({ name: name.trim(), phone: phone.trim() });
-      const message = `Site Visit Request for ${property.title} on ${date} at ${time}.`;
-      const propertyDetails = `${property.title} (${property.locality ? property.locality + ", " : ""}${property.city})`;
+
       await submitEnquiry(
         property.id,
         property.broker_id || null,
-        name,
-        phone,
-        message,
-        propertyDetails
+        name.trim(),
+        phone.trim(),
+        `Requested Site Visit on ${date} (${time}) for ${property.title} in ${property.locality}, ${property.city}`
       );
+
       trackScheduleVisitSubmit(property);
       setSubmitted(true);
-    } catch {
 
+    } catch {
       setError("Could not submit your request. Please try again or WhatsApp the broker directly.");
     } finally {
       setSubmitting(false);
     }
   };
 
-
-
-  if (!mounted) return null;
+  if (!isClient) return null;
 
   return createPortal(
     <AnimatePresence>

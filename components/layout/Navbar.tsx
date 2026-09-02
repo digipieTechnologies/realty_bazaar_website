@@ -34,7 +34,6 @@ export default function Navbar() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-    setMobileOpen(false);
   }, [pathname, searchParams]);
 
   // Prevent body scroll when mobile menu open

@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { Smartphone, Sparkles, Share2, Target, Users, CheckCircle2, ArrowRight, Download } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import AppStoreButtons from "@/components/ui/AppStoreButtons";
 import ListPropertyModal from "@/components/ui/ListPropertyModal";
 
 const brokerHighlights = [

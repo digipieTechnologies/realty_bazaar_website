@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles, Home, Building, Layers, Trees, Briefcase, IndianRupee } from "lucide-react";
+import { Sparkles, Home, Building, Trees, Briefcase, IndianRupee } from "lucide-react";
 
 const chips = [
   { label: "1 BHK", href: "/properties?bhk=1", icon: null },

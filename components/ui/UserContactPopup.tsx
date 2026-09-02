@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Phone, User, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
@@ -18,11 +18,12 @@ import {
   trackUserContactPopupSubmit,
   trackUserContactPopupDismiss,
 } from "@/lib/analytics/clarity";
+import { useIsClient } from "@/lib/hooks/useIsClient";
 
 const POPUP_DELAY_MS = 30000; // 30 seconds
 
 export default function UserContactPopup() {
-  const [mounted, setMounted] = useState(false);
+  const isClient = useIsClient();
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -30,9 +31,13 @@ export default function UserContactPopup() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    setMounted(true);
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+    setPopupDismissed();
+    trackUserContactPopupDismiss();
+  }, []);
 
+  useEffect(() => {
     // If already saved or dismissed, don't set up the timer
     if (hasUserContact() || isPopupDismissed()) {
       return;
@@ -58,7 +63,6 @@ export default function UserContactPopup() {
       }
     }, remainingTime);
 
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -77,15 +81,7 @@ export default function UserContactPopup() {
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isOpen]);
-
-  const handleClose = () => {
-    setIsOpen(false);
-    setPopupDismissed();
-    trackUserContactPopupDismiss();
-  };
-
-
+  }, [isOpen, handleClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,18 +101,14 @@ export default function UserContactPopup() {
     setError("");
 
     try {
-      // 1. Save to localStorage immediately & broadcast to active forms
+      // 1. Save to local storage for auto-fill across all forms
       saveUserContact({ name: name.trim(), phone: phone.trim() });
 
-      // 2. Submit details to server
-      const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
-      await submitQuickLead(name.trim(), phone.trim(), currentPath);
+      // 2. Submit quick lead to database (social_leads table)
+      await submitQuickLead(name.trim(), phone.trim(), "Quick Contact Popup Modal");
 
       trackUserContactPopupSubmit();
       setSubmitted(true);
-
-
-      // Auto close after brief celebration
       setTimeout(() => {
         setIsOpen(false);
       }, 2000);
@@ -132,7 +124,7 @@ export default function UserContactPopup() {
     }
   };
 
-  if (!mounted) return null;
+  if (!isClient) return null;
 
   return createPortal(
     <AnimatePresence>

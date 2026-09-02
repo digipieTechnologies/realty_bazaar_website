@@ -26,7 +26,7 @@ export function generatePropertyDraftText(
   // Title / Headline
   lines.push(`🏡 *${property.title}*`);
   lines.push(`📍 *Location:* ${property.locality}, ${property.city}`);
-  
+
   // Price line
   if (property.price_per_sqft && property.transaction_type === "sale") {
     lines.push(
@@ -49,6 +49,7 @@ export function generatePropertyDraftText(
 
   // Additional details if available
   const details: string[] = [];
+  if (propType) details.push(`Type: ${propType}`);
   if (property.floor) details.push(`Floor: ${property.floor}`);
   if (property.facing) details.push(`Facing: ${property.facing}`);
   if (property.possession) details.push(`Possession: ${property.possession}`);

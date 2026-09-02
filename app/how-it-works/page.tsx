@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import { StaggerReveal, StaggerItem } from "@/components/ui/ScrollReveal";
 import FinalCTA from "@/components/home/FinalCTA";
 import BrokerWorkflow from "@/components/home/BrokerWorkflow";
 import HowItWorksSeeker from "@/components/home/HowItWorksSeeker";
-import { Download, ArrowRight } from "lucide-react";
-import Link from "next/link";
 
-const APP_URL =
-  process.env.NEXT_PUBLIC_PLAY_STORE_URL ||
-  "https://play.google.com/store/apps/details?id=com.therealtybazaar";
+
 
 export const metadata: Metadata = {
   title: "How It Works — Real Estate Marketing & CRM Platform",

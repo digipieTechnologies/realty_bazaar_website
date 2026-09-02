@@ -2,16 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ShieldCheck,
-  FileText,
   Building2,
-  Phone,
   Mail,
   Scale,
   AlertCircle,
   CheckCircle2,
   Calendar,
-  Lock,
 } from "lucide-react";
+
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export const metadata: Metadata = {

@@ -55,13 +55,12 @@ export function StaggerReveal({
   children,
   className,
   staggerDelay = 0.1,
-  direction = "up",
 }: {
   children: React.ReactNode;
   className?: string;
   staggerDelay?: number;
-  direction?: "up" | "left" | "none";
 }) {
+
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
 

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Download, Check, Smartphone, BarChart3, TrendingUp, Users, Bell, Camera, Share2, Target } from "lucide-react";
+import { Download, Check, Smartphone, BarChart3, Users, Bell, Camera, Share2, Target } from "lucide-react";
 import Link from "next/link";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { StaggerReveal, StaggerItem } from "@/components/ui/ScrollReveal";
 import PricingSection from "@/components/home/PricingSection";
-import FAQSection from "@/components/home/FAQSection";
 import FinalCTA from "@/components/home/FinalCTA";
+
 
 const APP_URL =
   process.env.NEXT_PUBLIC_PLAY_STORE_URL ||

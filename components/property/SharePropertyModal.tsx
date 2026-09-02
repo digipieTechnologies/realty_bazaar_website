@@ -20,6 +20,7 @@ import {
 import type { Property } from "@/types";
 import { generatePropertyDraftText } from "@/lib/share";
 import { formatPrice } from "@/lib/utils";
+import { useIsClient } from "@/lib/hooks/useIsClient";
 import { trackPropertyShare } from "@/lib/analytics/clarity";
 import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
@@ -34,34 +35,28 @@ export default function SharePropertyModal({
   isOpen,
   onClose,
 }: SharePropertyModalProps) {
-  const [mounted, setMounted] = useState(false);
+  const isClient = useIsClient();
   const [copiedType, setCopiedType] = useState<"draft" | "link" | null>(null);
-  const [draftText, setDraftText] = useState("");
-  const [canNativeShare, setCanNativeShare] = useState(false);
+  const [draftText, setDraftText] = useState(() => generatePropertyDraftText(property));
+  const [prevPropId, setPrevPropId] = useState(property.id);
+  const canNativeShare =
+    typeof navigator !== "undefined" && typeof navigator.share === "function";
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  if (prevPropId !== property.id) {
+    setPrevPropId(property.id);
+    setDraftText(generatePropertyDraftText(property));
+    setCopiedType(null);
+  }
 
-  // Initialize draft text, check native share capability, and lock body scroll
+  // Lock body scroll while modal is open
   useEffect(() => {
     if (isOpen) {
-      const generated = generatePropertyDraftText(property);
-      setDraftText(generated);
-      setCopiedType(null);
-      if (typeof navigator !== "undefined" && !!navigator.share) {
-        setCanNativeShare(true);
-      }
-
-      // Lock body scroll while modal is open
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
 
       // Handle Escape key
       const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          onClose();
-        }
+        if (e.key === "Escape") onClose();
       };
       window.addEventListener("keydown", handleKeyDown);
 
@@ -70,7 +65,7 @@ export default function SharePropertyModal({
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isOpen, property, onClose]);
+  }, [isOpen, onClose]);
 
   const propertyUrl =
     typeof window !== "undefined"
@@ -135,7 +130,7 @@ export default function SharePropertyModal({
   )}&body=${encodeURIComponent(draftText)}`;
   const smsShareUrl = `sms:?body=${encodeURIComponent(draftText)}`;
 
-  if (!mounted) return null;
+  if (!isClient) return null;
 
   return createPortal(
     <AnimatePresence>
@@ -241,11 +236,10 @@ export default function SharePropertyModal({
                   <button
                     type="button"
                     onClick={handleCopyDraft}
-                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs ${
-                      copiedType === "draft"
-                        ? "bg-green-600 text-white"
-                        : "bg-[#172033] hover:bg-[#253553] text-white"
-                    }`}
+                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs ${copiedType === "draft"
+                      ? "bg-green-600 text-white"
+                      : "bg-[#172033] hover:bg-[#253553] text-white"
+                      }`}
                   >
                     {copiedType === "draft" ? (
                       <>

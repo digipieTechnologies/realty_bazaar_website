@@ -30,9 +30,8 @@ function PropertyFAQItem({
         aria-expanded={isOpen}
       >
         <span
-          className={`text-xs sm:text-sm font-semibold transition-colors leading-snug ${
-            isOpen ? "text-[#397BCF]" : "text-[#172033] group-hover:text-[#397BCF]"
-          }`}
+          className={`text-xs sm:text-sm font-semibold transition-colors leading-snug ${isOpen ? "text-[#397BCF]" : "text-[#172033] group-hover:text-[#397BCF]"
+            }`}
         >
           {question}
         </span>
@@ -42,9 +41,8 @@ function PropertyFAQItem({
           className="shrink-0"
         >
           <ChevronDown
-            className={`w-4 h-4 transition-colors ${
-              isOpen ? "text-[#397BCF]" : "text-[#667085] group-hover:text-[#397BCF]"
-            }`}
+            className={`w-4 h-4 transition-colors ${isOpen ? "text-[#397BCF]" : "text-[#667085] group-hover:text-[#397BCF]"
+              }`}
           />
         </motion.div>
       </button>
@@ -71,13 +69,12 @@ export default function PropertyFAQSection({
   faqs,
   property,
 }: PropertyFAQSectionProps) {
-  if (!faqs || faqs.length === 0) return null;
-
   // Only the first item open by default
   const [openIds, setOpenIds] = useState<string[]>(() =>
-    faqs.slice(0, 1).map((f) => f.id)
+    faqs && faqs.length > 0 ? [faqs[0].id] : []
   );
 
+  if (!faqs || faqs.length === 0) return null;
 
   const toggleFAQ = (id: string) => {
     setOpenIds((prev) =>

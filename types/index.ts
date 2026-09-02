@@ -157,3 +157,21 @@ export interface PropertyFAQ {
   created_at?: string;
   updated_at?: string;
 }
+
+export type SortOption = "relevance" | "price_asc" | "price_desc" | "newest" | "area_desc";
+
+export interface PropertyFilterState {
+  q: string;
+  transactionType: "all" | "sale" | "rent";
+  propertyType: string;
+  city: string;
+  locality: string;
+  bhk: string;
+  minPrice: string;
+  maxPrice: string;
+  furnishing: string;
+  verifiedOnly: boolean;
+  featuredOnly: boolean;
+  sortBy: SortOption;
+}
+

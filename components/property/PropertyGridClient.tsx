@@ -2,11 +2,11 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Sparkles, SlidersHorizontal, ArrowUpDown, X, Home, RotateCcw, Loader2 } from "lucide-react";
+import { X, Home, RotateCcw } from "lucide-react";
 import PropertyCard from "@/components/property/PropertyCard";
 import PropertySearchFilters, { type FilterState } from "@/components/property/PropertySearchFilters";
 import CustomSelect from "@/components/ui/CustomSelect";
-import type { Property } from "@/types";
+import type { Property, SortOption } from "@/types";
 import { fetchPropertiesPage } from "@/app/properties/actions";
 import { trackPropertySearch, trackPropertyFilter } from "@/lib/analytics/clarity";
 
@@ -41,7 +41,7 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
     furnishing: searchParams.get("furnishing") || "all",
     verifiedOnly: searchParams.get("verified") === "true",
     featuredOnly: searchParams.get("featured") === "true",
-    sortBy: (searchParams.get("sort") as any) || "relevance",
+    sortBy: (searchParams.get("sort") as SortOption) || "relevance",
   }));
 
   // ── Infinite scroll state ──────────────────────────────────────────────────
@@ -60,16 +60,12 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
     filtersRef.current = filters;
   }, [filters]);
 
-  // ── Reset list when filters change ─────────────────────────────────────────
-  useEffect(() => {
-    setProperties(initialProperties);
-    setOffset(initialProperties.length);
-    setHasMore(initialProperties.length >= PAGE_SIZE);
-  }, [initialProperties]);
-
-  // ── Sync state when URL params change ──────────────────────────────────────
-  useEffect(() => {
-    const nextFilters: FilterState = {
+  // ── Sync state when URL params change (during render) ──────────────────────
+  const searchParamsString = searchParams.toString();
+  const [prevParamsString, setPrevParamsString] = useState(searchParamsString);
+  if (prevParamsString !== searchParamsString) {
+    setPrevParamsString(searchParamsString);
+    setFilters({
       q: searchParams.get("q") || "",
       transactionType: (searchParams.get("transaction") as "all" | "sale" | "rent") || "all",
       propertyType: searchParams.get("type") || "All Types",
@@ -81,12 +77,21 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
       furnishing: searchParams.get("furnishing") || "all",
       verifiedOnly: searchParams.get("verified") === "true",
       featuredOnly: searchParams.get("featured") === "true",
-      sortBy: (searchParams.get("sort") as any) || "relevance",
-    };
-    setFilters(nextFilters);
-  }, [searchParams]);
+      sortBy: (searchParams.get("sort") as SortOption) || "relevance",
+    });
+  }
+
+  // ── Reset list when initialProperties change (during render) ───────────────
+  const [prevInitialProps, setPrevInitialProps] = useState(initialProperties);
+  if (prevInitialProps !== initialProperties) {
+    setPrevInitialProps(initialProperties);
+    setProperties(initialProperties);
+    setOffset(initialProperties.length);
+    setHasMore(initialProperties.length >= PAGE_SIZE);
+  }
 
   // ── Fetch next page ─────────────────────────────────────────────────────────
+
   const loadMore = useCallback(async () => {
     if (loadingMore || !hasMore) return;
     setLoadingMore(true);
@@ -103,11 +108,12 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
         bedrooms: f.bhk !== "Any" ? f.bhk : undefined,
         minPrice: f.minPrice ? parseFloat(f.minPrice) : undefined,
         maxPrice: f.maxPrice ? parseFloat(f.maxPrice) : undefined,
-        sortBy: f.sortBy !== "relevance" ? (f.sortBy as any) : "newest",
+        sortBy: f.sortBy !== "relevance" ? (f.sortBy as SortOption) : "newest",
         searchQuery: f.q.trim() || undefined,
       });
 
       if (next.length < PAGE_SIZE) setHasMore(false);
+
       setProperties((prev) => {
         // Deduplicate by ID
         const seen = new Set(prev.map((p) => p.id));
@@ -196,13 +202,14 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
         bedrooms: newFilters.bhk !== "Any" ? newFilters.bhk : undefined,
         minPrice: newFilters.minPrice ? parseFloat(newFilters.minPrice) : undefined,
         maxPrice: newFilters.maxPrice ? parseFloat(newFilters.maxPrice) : undefined,
-        sortBy: newFilters.sortBy !== "relevance" ? (newFilters.sortBy as any) : "newest",
+        sortBy: newFilters.sortBy !== "relevance" ? (newFilters.sortBy as SortOption) : "newest",
         searchQuery: newFilters.q.trim() || undefined,
       });
 
       setProperties(fresh);
       setOffset(fresh.length);
       setHasMore(fresh.length >= PAGE_SIZE);
+
     } catch (err) {
       console.error("[handleFilterChange] Error fetching filtered properties:", err);
     } finally {
@@ -314,40 +321,63 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
 
   // ── Active filter chips ────────────────────────────────────────────────────
   const activeTags = useMemo(() => {
-    const tags: { label: string; onRemove: () => void }[] = [];
+    const tags: {
+      key: keyof FilterState;
+      label: string;
+      resetValues: Partial<FilterState>;
+    }[] = [];
 
     if (filters.q) {
-      tags.push({ label: `"${filters.q}"`, onRemove: () => handleFilterChange({ ...filters, q: "" }) });
+      tags.push({ key: "q", label: `"${filters.q}"`, resetValues: { q: "" } });
     }
     if (filters.transactionType !== "all") {
       tags.push({
+        key: "transactionType",
         label: filters.transactionType === "sale" ? "For Sale" : "For Rent",
-        onRemove: () => handleFilterChange({ ...filters, transactionType: "all" }),
+        resetValues: { transactionType: "all" },
       });
     }
     if (filters.city !== "All Cities") {
-      tags.push({ label: `City: ${filters.city}`, onRemove: () => handleFilterChange({ ...filters, city: "All Cities" }) });
+      tags.push({
+        key: "city",
+        label: `City: ${filters.city}`,
+        resetValues: { city: "All Cities" },
+      });
     }
     if (filters.propertyType !== "All Types") {
       tags.push({
+        key: "propertyType",
         label: `Type: ${filters.propertyType}`,
-        onRemove: () => handleFilterChange({ ...filters, propertyType: "All Types" }),
+        resetValues: { propertyType: "All Types" },
       });
     }
     if (filters.bhk !== "Any") {
-      tags.push({ label: `${filters.bhk} BHK`, onRemove: () => handleFilterChange({ ...filters, bhk: "Any" }) });
+      tags.push({
+        key: "bhk",
+        label: `${filters.bhk} BHK`,
+        resetValues: { bhk: "Any" },
+      });
     }
     if (filters.minPrice || filters.maxPrice) {
       tags.push({
+        key: "minPrice",
         label: "Custom Budget",
-        onRemove: () => handleFilterChange({ ...filters, minPrice: "", maxPrice: "" }),
+        resetValues: { minPrice: "", maxPrice: "" },
       });
     }
     if (filters.verifiedOnly) {
-      tags.push({ label: "Verified Brokers", onRemove: () => handleFilterChange({ ...filters, verifiedOnly: false }) });
+      tags.push({
+        key: "verifiedOnly",
+        label: "Verified Brokers",
+        resetValues: { verifiedOnly: false },
+      });
     }
     if (filters.featuredOnly) {
-      tags.push({ label: "Featured", onRemove: () => handleFilterChange({ ...filters, featuredOnly: false }) });
+      tags.push({
+        key: "featuredOnly",
+        label: "Featured",
+        resetValues: { featuredOnly: false },
+      });
     }
 
     return tags;
@@ -391,7 +421,9 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
           <div className="w-full sm:w-56 shrink-0">
             <CustomSelect
               value={filters.sortBy}
-              onChange={(val) => handleFilterChange({ ...filters, sortBy: val as any })}
+              onChange={(val) =>
+                handleFilterChange({ ...filters, sortBy: val as SortOption })
+              }
               options={sortOptions}
               size="sm"
             />
@@ -402,15 +434,17 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
         {activeTags.length > 0 && (
           <div className="flex items-center gap-2 flex-wrap text-xs">
             <span className="text-[#667085] font-semibold">Active Filters:</span>
-            {activeTags.map((tag, idx) => (
+            {activeTags.map((tag) => (
               <span
-                key={idx}
+                key={tag.key}
                 className="inline-flex items-center gap-1 px-3 py-1 bg-[#EAF3FF] text-[#245FA8] border border-[#6FA5E5]/30 rounded-full font-semibold"
               >
                 {tag.label}
                 <button
                   type="button"
-                  onClick={tag.onRemove}
+                  onClick={() =>
+                    handleFilterChange({ ...filters, ...tag.resetValues })
+                  }
                   className="hover:text-red-600 transition-colors cursor-pointer"
                   aria-label={`Remove ${tag.label}`}
                 >
@@ -423,12 +457,13 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
               onClick={handleReset}
               className="text-xs text-[#667085] hover:text-[#397BCF] font-bold underline underline-offset-2 ml-1"
             >
-              Clear All
+              Reset all
             </button>
           </div>
         )}
 
         {/* Property Grid Results */}
+
         {displayProperties.length === 0 && !loadingMore ? (
           <div className="bg-white border border-[#E4EAF2] rounded-3xl p-10 sm:p-16 text-center shadow-xs">
             <div className="w-16 h-16 rounded-3xl bg-[#F3F8FE] text-[#397BCF] flex items-center justify-center mx-auto mb-4">

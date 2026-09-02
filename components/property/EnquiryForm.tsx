@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { submitEnquiry } from "@/app/actions";
-import { Send, Phone, Calendar, ShieldCheck, CheckCircle2, Building } from "lucide-react";
+import { Send, Phone, Calendar, ShieldCheck, CheckCircle2 } from "lucide-react";
 import ScheduleVisitModal from "@/components/property/ScheduleVisitModal";
 import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import type { Property } from "@/types";
@@ -22,20 +22,16 @@ interface EnquiryFormProps {
 }
 
 export default function EnquiryForm({ property }: EnquiryFormProps) {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [name, setName] = useState(() => getUserContact().name || "");
+  const [phone, setPhone] = useState(() => getUserContact().phone || "");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
 
-  // Auto-populate from localStorage and listen to real-time updates
+  // Listen to real-time updates from other popups/forms
   useEffect(() => {
-    const saved = getUserContact();
-    if (saved.name) setName((prev) => prev || saved.name);
-    if (saved.phone) setPhone((prev) => prev || saved.phone);
-
     const unsubscribe = subscribeUserContact((contact) => {
       if (contact.name) setName(contact.name);
       if (contact.phone) setPhone(contact.phone);

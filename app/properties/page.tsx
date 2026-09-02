@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getPublishedProperties } from "@/lib/supabase/queries";
+import type { SortOption } from "@/types";
 import PropertyGridClient from "@/components/property/PropertyGridClient";
 import QuickDiscoveryChips from "@/components/home/QuickDiscoveryChips";
 
@@ -25,9 +26,10 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
   const minPrice = typeof params.minPrice === "string" ? parseFloat(params.minPrice) : undefined;
   const maxPrice = typeof params.maxPrice === "string" ? parseFloat(params.maxPrice) : undefined;
   const q = typeof params.q === "string" ? params.q : undefined;
-  const sort = typeof params.sort === "string" ? (params.sort as any) : undefined;
+  const sort = typeof params.sort === "string" ? (params.sort as SortOption) : undefined;
 
   // Load the first page matching any server search parameters
+
   const properties = await getPublishedProperties({
     limit: 12,
     offset: 0,

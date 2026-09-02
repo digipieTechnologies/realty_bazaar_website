@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Maximize2, X, Image as ImageIcon } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 interface PropertyGalleryProps {
   images: string[];
@@ -93,11 +93,10 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
               key={idx}
               type="button"
               onClick={() => setCurrent(idx)}
-              className={`relative shrink-0 w-24 h-16 rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${
-                idx === current
+              className={`relative shrink-0 w-24 h-16 rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${idx === current
                   ? "border-[#397BCF] ring-2 ring-[#397BCF]/20 scale-102"
                   : "border-[#E4EAF2] hover:border-[#397BCF]/60 opacity-70 hover:opacity-100"
-              }`}
+                }`}
               aria-label={`View photo ${idx + 1}`}
             >
               <Image
@@ -173,9 +172,8 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
                   key={idx}
                   type="button"
                   onClick={() => setCurrent(idx)}
-                  className={`relative w-16 h-12 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 ${
-                    idx === current ? "border-[#397BCF] scale-110" : "border-white/20 opacity-50"
-                  }`}
+                  className={`relative w-16 h-12 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 ${idx === current ? "border-[#397BCF] scale-110" : "border-white/20 opacity-50"
+                    }`}
                   aria-label={`Select photo ${idx + 1}`}
                 >
                   <Image

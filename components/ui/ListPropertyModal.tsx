@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Smartphone, Sparkles, Share2, Target, CheckCircle2, QrCode, ExternalLink, Globe } from "lucide-react";
+import { X, Smartphone, Sparkles, Share2, Target, CheckCircle2, ExternalLink, Globe } from "lucide-react";
 import AppStoreButtons from "@/components/ui/AppStoreButtons";
 import { BROKER_PORTAL_URL } from "@/lib/constants";
+import { useIsClient } from "@/lib/hooks/useIsClient";
 
 interface ListPropertyModalProps {
   isOpen: boolean;
@@ -13,11 +14,7 @@ interface ListPropertyModalProps {
 }
 
 export default function ListPropertyModal({ isOpen, onClose }: ListPropertyModalProps) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const isClient = useIsClient();
 
   useEffect(() => {
     if (isOpen) {
@@ -36,7 +33,7 @@ export default function ListPropertyModal({ isOpen, onClose }: ListPropertyModal
     }
   }, [isOpen, onClose]);
 
-  if (!mounted) return null;
+  if (!isClient) return null;
 
   return createPortal(
     <AnimatePresence>

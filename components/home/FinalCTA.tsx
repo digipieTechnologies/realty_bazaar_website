@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Smartphone, ArrowRight } from "lucide-react";
+import { Search, Smartphone } from "lucide-react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import ListPropertyModal from "@/components/ui/ListPropertyModal";
 

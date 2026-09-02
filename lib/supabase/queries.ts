@@ -1,4 +1,5 @@
 import { createPublicServerSupabaseClient } from "./server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Property, DbPropertyRow, PropertyFAQ } from "@/types";
 import { formatPrice, slugify } from "@/lib/utils";
 
@@ -342,19 +343,22 @@ export async function getPublishedProperties(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type QueryFilterCallback = (q: any) => any;
+
 // ── Helper to query single property row ───────────────────────────────────────
 async function fetchPropertyRow(
-  supabase: any,
-  filterFn: (q: any) => any
+  supabase: SupabaseClient,
+  filterFn: QueryFilterCallback
 ): Promise<DbPropertyRow | null> {
   try {
-    let query = supabase
+    const baseQuery = supabase
       .from("properties")
       .select(PROPERTY_SELECT)
       .eq("is_active", true)
       .eq("is_deleted", false);
 
-    query = filterFn(query);
+    const query = filterFn(baseQuery);
     const { data, error } = await query.maybeSingle();
 
     if (!error && data) {

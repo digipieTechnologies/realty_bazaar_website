@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Phone, User, CheckCircle2, ShieldCheck, Send, Building, MapPin, Tag } from "lucide-react";
+import { X, Sparkles, Phone, User, CheckCircle2, Send, MapPin } from "lucide-react";
 import {
   getUserContact,
   hasUserContact,
@@ -12,6 +12,8 @@ import {
 import { submitEnquiry } from "@/app/actions";
 import { trackClarityEvent, setPropertyTags } from "@/lib/analytics/clarity";
 import type { Property } from "@/types";
+import { useIsClient } from "@/lib/hooks/useIsClient";
+
 
 const PROPERTY_POPUP_DELAY_MS = 25000; // 25 seconds
 
@@ -22,7 +24,7 @@ interface PropertyInterestedPopupProps {
 export default function PropertyInterestedPopup({
   property,
 }: PropertyInterestedPopupProps) {
-  const [mounted, setMounted] = useState(false);
+  const isClient = useIsClient();
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -35,9 +37,13 @@ export default function PropertyInterestedPopup({
   const sessionDismissKey = `trb_prop_interested_dismissed_${property.id}`;
   const sessionSubmittedKey = `trb_prop_interested_submitted_${property.id}`;
 
-  useEffect(() => {
-    setMounted(true);
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+    sessionStorage.setItem(sessionDismissKey, "true");
+    trackClarityEvent("property_interested_popup_dismissed");
+  }, [sessionDismissKey]);
 
+  useEffect(() => {
     // If user already submitted enquiry for this property in this session or dismissed it, do not show
     if (
       sessionStorage.getItem(sessionDismissKey) === "true" ||
@@ -80,13 +86,7 @@ export default function PropertyInterestedPopup({
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isOpen]);
-
-  const handleClose = () => {
-    setIsOpen(false);
-    sessionStorage.setItem(sessionDismissKey, "true");
-    trackClarityEvent("property_interested_popup_dismissed");
-  };
+  }, [isOpen, handleClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,15 +105,10 @@ export default function PropertyInterestedPopup({
     setError("");
 
     try {
-      // 1. Save user contact to localStorage for auto-filling and future usage
       saveUserContact({ name: name.trim(), phone: phone.trim() });
 
-      // 2. Format property details string
-      const propertyDetails = property.title
-        ? `${property.title} (${property.locality ? property.locality + ", " : ""}${property.city})`
-        : null;
+      const propertyDetails = `${property.title} at ${property.locality}, ${property.city} (${property.address || property.city})`;
 
-      // 3. Submit enquiry lead directly to database
       await submitEnquiry(
         property.id,
         property.broker_id || null,
@@ -142,7 +137,7 @@ export default function PropertyInterestedPopup({
     }
   };
 
-  if (!mounted) return null;
+  if (!isClient) return null;
 
   const hasSavedDetails = hasUserContact() && !editingContact && name.trim() && phone.trim();
 
