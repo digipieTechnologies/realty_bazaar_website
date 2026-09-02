@@ -13,7 +13,11 @@ import {
   getSessionStartTime,
 } from "@/lib/storage/userContact";
 import { submitQuickLead } from "@/app/actions";
-import { trackClarityEvent } from "@/lib/analytics/clarity";
+import {
+  trackUserContactPopupOpen,
+  trackUserContactPopupSubmit,
+  trackUserContactPopupDismiss,
+} from "@/lib/analytics/clarity";
 
 const POPUP_DELAY_MS = 30000; // 30 seconds
 
@@ -45,17 +49,37 @@ export default function UserContactPopup() {
         if (saved.name) setName(saved.name);
         if (saved.phone) setPhone(saved.phone);
         setIsOpen(true);
-        trackClarityEvent("user_contact_popup_opened");
+        trackUserContactPopupOpen();
       }
     }, remainingTime);
 
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") handleClose();
+      };
+      window.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isOpen]);
+
   const handleClose = () => {
     setIsOpen(false);
     setPopupDismissed();
+    trackUserContactPopupDismiss();
   };
+
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,8 +106,9 @@ export default function UserContactPopup() {
       const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
       await submitQuickLead(name.trim(), phone.trim(), currentPath);
 
-      trackClarityEvent("user_contact_popup_submitted");
+      trackUserContactPopupSubmit();
       setSubmitted(true);
+
 
       // Auto close after brief celebration
       setTimeout(() => {

@@ -4,6 +4,8 @@
  * and dispatches cross-component / cross-tab synchronization events.
  */
 
+import { setUserContactTags } from "@/lib/analytics/clarity";
+
 const STORAGE_KEY_NAME = "trb_user_name";
 const STORAGE_KEY_PHONE = "trb_user_phone";
 const STORAGE_KEY_SUBMITTED = "trb_user_contact_submitted";
@@ -48,6 +50,7 @@ export function hasUserContact(): boolean {
  * Save user contact details to localStorage and broadcast update event
  */
 export function saveUserContact(contact: Partial<UserContact>): void {
+
   if (typeof window === "undefined") return;
 
   try {
@@ -63,6 +66,7 @@ export function saveUserContact(contact: Partial<UserContact>): void {
     }
     if (updatedName && updatedPhone) {
       localStorage.setItem(STORAGE_KEY_SUBMITTED, "true");
+      setUserContactTags(true);
     }
 
     // Broadcast custom event for in-page reactive state updates
@@ -75,6 +79,7 @@ export function saveUserContact(contact: Partial<UserContact>): void {
     console.error("Failed to save user contact to localStorage:", error);
   }
 }
+
 
 /**
  * Check if the popup was dismissed/snoozed or already completed

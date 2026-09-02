@@ -8,6 +8,10 @@ import { submitEnquiry } from "@/app/actions";
 import CustomSelect from "@/components/ui/CustomSelect";
 import type { Property } from "@/types";
 import { getUserContact, saveUserContact } from "@/lib/storage/userContact";
+import {
+  trackScheduleVisitModalOpen,
+  trackScheduleVisitSubmit,
+} from "@/lib/analytics/clarity";
 
 const timeSlotOptions = [
   { value: "10:00 AM", label: "Morning (10:00 AM – 12:00 PM)" },
@@ -42,6 +46,7 @@ export default function ScheduleVisitModal({
 
   useEffect(() => {
     if (isOpen) {
+      trackScheduleVisitModalOpen(property);
       const saved = getUserContact();
       if (saved.name) setName((prev) => prev || saved.name);
       if (saved.phone) setPhone((prev) => prev || saved.phone);
@@ -59,7 +64,7 @@ export default function ScheduleVisitModal({
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, property]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,6 +80,7 @@ export default function ScheduleVisitModal({
       saveUserContact({ name: name.trim(), phone: phone.trim() });
       const message = `Site Visit Request for ${property.title} on ${date} at ${time}.`;
       await submitEnquiry(property.id, null, name, phone, message);
+      trackScheduleVisitSubmit(property);
       setSubmitted(true);
     } catch {
       setError("Could not submit your request. Please try again or WhatsApp the broker directly.");
@@ -82,6 +88,7 @@ export default function ScheduleVisitModal({
       setSubmitting(false);
     }
   };
+
 
 
   if (!mounted) return null;

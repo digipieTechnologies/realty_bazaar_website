@@ -183,3 +183,53 @@ export function trackPropertyLeadSubmit(property: PropertyTrackingContext): void
 export function trackContactFormSubmit(): void {
   trackClarityEvent("contact_form_submit");
 }
+
+/**
+ * 11. Track User Contact Popup Opened
+ */
+export function trackUserContactPopupOpen(): void {
+  setClarityTag("user_contact_popup_status", "viewed");
+  trackClarityEvent("user_contact_popup_opened");
+}
+
+/**
+ * 12. Track User Contact Popup Submitted
+ */
+export function trackUserContactPopupSubmit(): void {
+  setClarityTag("user_has_saved_contact", "true");
+  setClarityTag("user_contact_popup_status", "submitted");
+  trackClarityEvent("user_contact_popup_submitted");
+}
+
+/**
+ * 13. Track User Contact Popup Dismissed / Maybe Later
+ */
+export function trackUserContactPopupDismiss(): void {
+  setClarityTag("user_contact_popup_status", "dismissed");
+  trackClarityEvent("user_contact_popup_dismissed");
+}
+
+/**
+ * 14. Track Schedule Visit Modal Opened
+ */
+export function trackScheduleVisitModalOpen(property?: PropertyTrackingContext): void {
+  if (property) setPropertyTags(property);
+  trackClarityEvent("schedule_visit_modal_opened");
+}
+
+/**
+ * 15. Track Schedule Visit Submitted
+ */
+export function trackScheduleVisitSubmit(property?: PropertyTrackingContext): void {
+  if (property) setPropertyTags(property);
+  setClarityTag("user_has_saved_contact", "true");
+  trackClarityEvent("schedule_visit_submitted");
+}
+
+/**
+ * Set Contact Saved Status Tag
+ */
+export function setUserContactTags(hasContact: boolean): void {
+  setClarityTag("user_has_saved_contact", hasContact ? "true" : "false");
+}
+
