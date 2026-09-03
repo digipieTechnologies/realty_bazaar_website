@@ -134,7 +134,7 @@ export type VisitStatus =
   | "rescheduled"
   | "completed"
   | "cancelled"
-  | "noShow"
+  | "no_show"
   | "unknown";
 
 export interface PropertyVisit {

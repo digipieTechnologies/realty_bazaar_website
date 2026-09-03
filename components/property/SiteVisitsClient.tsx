@@ -14,7 +14,6 @@ import {
   CheckCircle2,
   XCircle,
   RotateCcw,
-  Trash2,
   ArrowRight,
   RefreshCw,
   Sparkles,
@@ -75,7 +74,7 @@ const STATUS_CONFIG: Record<
     icon: CheckCircle2,
     description: "Site visit completed",
   },
-  noShow: {
+  no_show: {
     label: "No Show",
     bg: "bg-orange-50",
     text: "text-orange-800",
@@ -109,10 +108,9 @@ function formatDateDisplay(dateStr: string) {
 }
 
 export default function SiteVisitsClient() {
-  const { visits, visitCount, pendingCount, confirmedCount, isLoaded, isRefreshing, removeVisit, refresh } =
+  const { visits, visitCount, pendingCount, confirmedCount, isLoaded, isRefreshing, refresh } =
     useMyVisits();
   const [filter, setFilter] = useState<"all" | "pending" | "confirmed" | "other">("all");
-  const [removeId, setRemoveId] = useState<string | null>(null);
 
   const filteredVisits = visits.filter((v) => {
     if (filter === "pending") return v.status === "pending";
@@ -139,47 +137,38 @@ export default function SiteVisitsClient() {
             <span>{visitCount} {visitCount === 1 ? "Scheduled Site Visit" : "Scheduled Site Visits"}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-[#172033] tracking-tight">
-            Scheduled Site Visits
+            My Site Visits
           </h1>
-          <p className="text-sm text-[#667085] mt-1">
-            Track your property inspection bookings, live broker confirmations, and reschedule updates.
+          <p className="text-xs sm:text-sm text-[#667085] mt-1">
+            Track confirmation status, reschedule notes, and visit appointments for your inspected properties.
           </p>
         </div>
 
-        {visitCount > 0 && (
-          <div className="flex items-center gap-2.5">
-            <button
-              type="button"
-              onClick={() => refresh()}
-              disabled={isRefreshing}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-[#F3F8FE] text-[#172033] border border-[#E4EAF2] rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer disabled:opacity-50"
-              title="Refresh live status from broker CRM"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 text-[#397BCF] ${isRefreshing ? "animate-spin" : ""}`} />
-              <span>{isRefreshing ? "Syncing..." : "Sync Status"}</span>
-            </button>
-
-            <Link
-              href="/properties"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#245FA8] hover:bg-[#1E4E8C] text-white rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm"
-            >
-              <Building2 className="w-4 h-4" />
-              <span>Browse More</span>
-            </Link>
-          </div>
-        )}
+        {/* Live Status Refresh */}
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={refresh}
+            disabled={isRefreshing}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#E4EAF2] hover:border-[#397BCF] bg-white text-xs font-bold text-[#172033] hover:text-[#397BCF] transition-all shadow-2xs cursor-pointer disabled:opacity-50"
+            title="Refresh latest broker status"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin text-[#397BCF]" : ""}`} />
+            <span>{isRefreshing ? "Updating..." : "Refresh Status"}</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter Tabs */}
       {visitCount > 0 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[#E4EAF2]/60">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-bold">
           <button
             type="button"
             onClick={() => setFilter("all")}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer select-none ${
+            className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer select-none shrink-0 ${
               filter === "all"
-                ? "bg-[#172033] text-white shadow-xs"
-                : "bg-white text-[#475467] hover:bg-[#F3F8FE] border border-[#E4EAF2]"
+                ? "bg-[#172033] text-white shadow-2xs"
+                : "bg-white text-[#667085] border border-[#E4EAF2] hover:bg-[#F8FAFC]"
             }`}
           >
             All Visits ({visitCount})
@@ -187,10 +176,10 @@ export default function SiteVisitsClient() {
           <button
             type="button"
             onClick={() => setFilter("pending")}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer select-none ${
+            className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer select-none shrink-0 ${
               filter === "pending"
-                ? "bg-amber-600 text-white shadow-xs"
-                : "bg-white text-[#475467] hover:bg-amber-50/50 border border-[#E4EAF2]"
+                ? "bg-[#172033] text-white shadow-2xs"
+                : "bg-white text-[#667085] border border-[#E4EAF2] hover:bg-[#F8FAFC]"
             }`}
           >
             Pending ({pendingCount})
@@ -198,10 +187,10 @@ export default function SiteVisitsClient() {
           <button
             type="button"
             onClick={() => setFilter("confirmed")}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer select-none ${
+            className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer select-none shrink-0 ${
               filter === "confirmed"
-                ? "bg-green-700 text-white shadow-xs"
-                : "bg-white text-[#475467] hover:bg-green-50/50 border border-[#E4EAF2]"
+                ? "bg-[#172033] text-white shadow-2xs"
+                : "bg-white text-[#667085] border border-[#E4EAF2] hover:bg-[#F8FAFC]"
             }`}
           >
             Confirmed ({confirmedCount})
@@ -209,13 +198,13 @@ export default function SiteVisitsClient() {
           <button
             type="button"
             onClick={() => setFilter("other")}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer select-none ${
+            className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer select-none shrink-0 ${
               filter === "other"
-                ? "bg-slate-700 text-white shadow-xs"
-                : "bg-white text-[#475467] hover:bg-[#F3F8FE] border border-[#E4EAF2]"
+                ? "bg-[#172033] text-white shadow-2xs"
+                : "bg-white text-[#667085] border border-[#E4EAF2] hover:bg-[#F8FAFC]"
             }`}
           >
-            Rescheduled / Cancelled ({visits.length - pendingCount - confirmedCount})
+            Rescheduled / Cancelled ({visitCount - pendingCount - confirmedCount})
           </button>
         </div>
       )}
@@ -225,7 +214,7 @@ export default function SiteVisitsClient() {
         filteredVisits.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredVisits.map((visit) => (
-              <VisitCard key={visit.id} visit={visit} onRemove={() => setRemoveId(visit.id)} />
+              <VisitCard key={visit.id} visit={visit} />
             ))}
           </div>
         ) : (
@@ -272,47 +261,11 @@ export default function SiteVisitsClient() {
           </div>
         </div>
       )}
-
-      {/* Remove Confirmation Modal */}
-      {removeId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-[#E4EAF2] text-center space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center mx-auto">
-              <Trash2 className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-[#172033]">Remove from your list?</h3>
-              <p className="text-xs text-[#667085] mt-1.5">
-                This will remove this visit record from your device.
-              </p>
-            </div>
-            <div className="flex gap-2.5 pt-2">
-              <button
-                type="button"
-                onClick={() => setRemoveId(null)}
-                className="flex-1 py-2.5 px-4 bg-[#F8FAFC] hover:bg-[#F3F8FE] text-[#172033] border border-[#E4EAF2] rounded-xl text-xs font-bold transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  removeVisit(removeId);
-                  setRemoveId(null);
-                }}
-                className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm cursor-pointer"
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
-function VisitCard({ visit, onRemove }: { visit: PropertyVisit; onRemove: () => void }) {
+function VisitCard({ visit }: { visit: PropertyVisit }) {
   const statusCfg = STATUS_CONFIG[visit.status] || STATUS_CONFIG.pending;
   const StatusIcon = statusCfg.icon;
   const prop = visit.property;
@@ -325,147 +278,103 @@ function VisitCard({ visit, onRemove }: { visit: PropertyVisit; onRemove: () => 
   const cleanWhatsApp = prop?.broker_whatsapp?.replace(/\D/g, "") || cleanPhone;
 
   return (
-    <div className="bg-white rounded-3xl border border-[#E4EAF2] shadow-2xs hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col justify-between">
-      {/* Top Status Bar */}
-      <div className="p-4 sm:p-5 border-b border-[#E4EAF2]/80 flex items-start justify-between gap-3 bg-[#F8FAFC]">
-        <div className="flex items-center gap-2 flex-wrap">
+    <div className="bg-white rounded-2xl border border-[#E4EAF2] shadow-2xs hover:shadow-md transition-all duration-200 p-4 sm:p-5 flex flex-col justify-between gap-3.5">
+      {/* 1. Header: Status Badge & Dynamic Context Note */}
+      <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#E4EAF2]/80">
+        <div className="flex items-center gap-2 flex-wrap min-w-0">
           <div
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${statusCfg.bg} ${statusCfg.text} ${statusCfg.border}`}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border ${statusCfg.bg} ${statusCfg.text} ${statusCfg.border} shrink-0`}
           >
             <StatusIcon className="w-3.5 h-3.5 shrink-0" />
             <span>{statusCfg.label}</span>
           </div>
 
-          <span className="text-[11px] text-[#98A2B3] hidden sm:inline">
-            • {statusCfg.description}
-          </span>
+          {/* Dynamic Note Beside Status */}
+          {visit.status === "cancelled" && visit.cancelled_reason ? (
+            <span className="text-xs font-semibold text-red-600 truncate max-w-[260px] sm:max-w-none">
+              • Reason: <span className="font-normal text-red-700">{visit.cancelled_reason}</span>
+            </span>
+          ) : visit.status === "rescheduled" && visit.reschedule_reason ? (
+            <span className="text-xs font-semibold text-blue-600 truncate max-w-[260px] sm:max-w-none">
+              • Note: <span className="font-normal text-blue-700">{visit.reschedule_reason}</span>
+            </span>
+          ) : (
+            <span className="text-xs text-[#98A2B3] truncate hidden sm:inline">
+              • {statusCfg.description}
+            </span>
+          )}
         </div>
-
-        <button
-          type="button"
-          onClick={onRemove}
-          className="p-1.5 rounded-lg text-[#98A2B3] hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
-          title="Remove from your list"
-          aria-label="Remove visit"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
       </div>
 
-      <div className="p-4 sm:p-5 space-y-4 flex-1">
-        {/* Rejection / Cancellation Reason (Prominent Alert) */}
-        {visit.status === "cancelled" && (
-          <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 flex items-start gap-2.5 text-xs text-red-800">
-            <XCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-            <div>
-              <span className="font-bold">Cancellation / Rejection Reason:</span>
-              <p className="mt-0.5 text-red-700 leading-relaxed font-medium">
-                {visit.cancelled_reason || "The broker was unavailable or declined this requested time slot."}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Reschedule Reason */}
-        {visit.status === "rescheduled" && visit.reschedule_reason && (
-          <div className="p-3.5 rounded-2xl bg-blue-50 border border-blue-200 flex items-start gap-2.5 text-xs text-blue-800">
-            <RotateCcw className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-            <div>
-              <span className="font-bold">Rescheduled Reason:</span>
-              <p className="mt-0.5 text-blue-700 leading-relaxed font-medium">
-                {visit.reschedule_reason}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Property Brief Summary Card */}
-        <div className="flex gap-3.5 items-start p-3 rounded-2xl bg-[#F8FAFC] border border-[#E4EAF2]/80 hover:bg-[#F3F8FE] transition-colors">
-          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-[#0B132B] shrink-0">
-            <Image
-              src={propertyImg}
-              alt={prop?.title || "Property image"}
-              fill
-              className="object-cover"
-              sizes="96px"
-            />
-          </div>
-
-          <div className="min-w-0 flex-1 space-y-1">
-            <Link
-              href={propertySlug}
-              className="font-display font-bold text-sm sm:text-base text-[#172033] hover:text-[#397BCF] line-clamp-1 transition-colors flex items-center gap-1"
-            >
-              <span>{prop?.title || "Property Details"}</span>
-              <ExternalLink className="w-3 h-3 text-[#98A2B3] shrink-0 opacity-70" />
-            </Link>
-
-            <div className="flex items-center gap-1 text-xs text-[#667085] truncate">
-              <MapPin className="w-3.5 h-3.5 text-[#98A2B3] shrink-0" />
-              <span className="truncate">
-                {prop?.locality ? `${prop.locality}, ` : ""}{prop?.city || "Gujarat, India"}
-              </span>
-            </div>
-
-            {priceDisplay && (
-              <div className="text-sm font-display font-bold text-[#397BCF]">
-                {priceDisplay}
-              </div>
-            )}
-          </div>
+      {/* 2. Property Brief */}
+      <div className="flex gap-3 items-center">
+        <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-xl overflow-hidden bg-[#0B132B] shrink-0 border border-[#E4EAF2]">
+          <Image
+            src={propertyImg}
+            alt={prop?.title || "Property thumbnail"}
+            fill
+            className="object-cover"
+            sizes="72px"
+          />
         </div>
 
-        {/* Scheduled Slot Details Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-          <div className="p-3 rounded-2xl border border-[#E4EAF2] bg-white flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#397BCF] flex items-center justify-center shrink-0">
-              <Calendar className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="text-[10px] uppercase font-bold text-[#98A2B3] tracking-wider">
-                Visit Date
-              </div>
-              <div className="text-xs font-bold text-[#172033]">
-                {formatDateDisplay(visit.visit_date)}
-              </div>
-            </div>
+        <div className="min-w-0 flex-1 space-y-0.5">
+          <Link
+            href={propertySlug}
+            className="font-display font-bold text-xs sm:text-sm text-[#172033] hover:text-[#397BCF] line-clamp-1 transition-colors flex items-center gap-1"
+          >
+            <span>{prop?.title || "Property Details"}</span>
+            <ExternalLink className="w-3 h-3 text-[#98A2B3] shrink-0 opacity-70" />
+          </Link>
+
+          <div className="flex items-center gap-1 text-[11px] text-[#667085] truncate">
+            <MapPin className="w-3 h-3 text-[#98A2B3] shrink-0" />
+            <span className="truncate">
+              {prop?.locality ? `${prop.locality}, ` : ""}{prop?.city || "Gujarat, India"}
+            </span>
           </div>
 
-          <div className="p-3 rounded-2xl border border-[#E4EAF2] bg-white flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#397BCF] flex items-center justify-center shrink-0">
-              <Clock className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="text-[10px] uppercase font-bold text-[#98A2B3] tracking-wider">
-                Time Slot
-              </div>
-              <div className="text-xs font-bold text-[#172033]">
-                {visit.time_slot}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Client & Booking Notes */}
-        <div className="text-xs text-[#667085] space-y-1 bg-white p-3 rounded-2xl border border-[#E4EAF2]">
-          <div className="flex items-center justify-between">
-            <span className="text-[#98A2B3]">Booked for:</span>
-            <span className="font-semibold text-[#172033]">{visit.client_name} ({visit.client_phone})</span>
-          </div>
-          {visit.notes && (
-            <div className="pt-1 text-[11px] border-t border-[#E4EAF2] mt-1">
-              <span className="font-bold text-[#172033]">Your Note: </span>
-              <span>{visit.notes}</span>
+          {priceDisplay && (
+            <div className="text-xs sm:text-sm font-display font-bold text-[#245FA8]">
+              {priceDisplay}
             </div>
           )}
         </div>
       </div>
 
-      {/* Footer Broker Actions */}
-      <div className="p-4 sm:p-5 pt-0 flex flex-wrap items-center gap-2">
+      {/* 3. Integrated Booking Info */}
+      <div className="bg-[#F8FAFC] border border-[#E4EAF2] rounded-xl p-3 space-y-2 text-xs">
+        {/* Date & Time Row */}
+        <div className="flex items-center justify-between text-xs text-[#172033] font-semibold flex-wrap gap-2">
+          <div className="flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-[#397BCF] shrink-0" />
+            <span>{formatDateDisplay(visit.visit_date)}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-[#397BCF] shrink-0" />
+            <span>{visit.time_slot}</span>
+          </div>
+        </div>
+
+        {/* Client Tag */}
+        <div className="flex items-center justify-between text-[11px] text-[#667085] pt-1.5 border-t border-[#E4EAF2]/80">
+          <span className="text-[#98A2B3]">Booked for:</span>
+          <span className="font-semibold text-[#172033]">{visit.client_name} ({visit.client_phone})</span>
+        </div>
+
+        {visit.notes && (
+          <div className="text-[11px] text-[#667085] bg-white border border-[#E4EAF2] rounded-lg px-2.5 py-1">
+            <strong className="text-[#172033]">Your Note: </strong>
+            <span>{visit.notes}</span>
+          </div>
+        )}
+      </div>
+
+      {/* 4. Footer Actions */}
+      <div className="flex flex-wrap items-center gap-2 pt-0.5">
         <Link
           href={propertySlug}
-          className="flex-1 min-w-[120px] inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-[#172033] hover:bg-[#253553] text-white text-xs font-bold rounded-xl transition-all shadow-2xs"
+          className="flex-1 min-w-[110px] inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#172033] hover:bg-[#253553] text-white text-xs font-bold rounded-xl transition-all shadow-2xs cursor-pointer"
         >
           <span>View Property</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -474,11 +383,11 @@ function VisitCard({ visit, onRemove }: { visit: PropertyVisit; onRemove: () => 
         {cleanPhone && (
           <a
             href={`tel:${cleanPhone}`}
-            className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-[#F3F8FE] hover:bg-[#EAF3FF] text-[#245FA8] border border-[#6FA5E5]/30 text-xs font-bold rounded-xl transition-all"
+            className="inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#F3F8FE] hover:bg-[#EAF3FF] text-[#245FA8] border border-[#6FA5E5]/30 text-xs font-bold rounded-xl transition-all cursor-pointer"
             title="Call listing broker"
           >
             <Phone className="w-3.5 h-3.5" />
-            <span>Call Broker</span>
+            <span className="hidden sm:inline">Call Broker</span>
           </a>
         )}
 
@@ -489,11 +398,11 @@ function VisitCard({ visit, onRemove }: { visit: PropertyVisit; onRemove: () => 
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] border border-[#25D366]/30 text-xs font-bold rounded-xl transition-all"
+            className="inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] border border-[#25D366]/30 text-xs font-bold rounded-xl transition-all cursor-pointer"
             title="WhatsApp listing broker"
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>WhatsApp</span>
+            <span className="hidden sm:inline">WhatsApp</span>
           </a>
         )}
       </div>
