@@ -51,6 +51,24 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      { source: "/logo.png", destination: "/images/branding/logo.png" },
+      { source: "/logo-white.png", destination: "/images/branding/logo-white.png" },
+      { source: "/logo-icon.png", destination: "/images/branding/logo-icon.png" },
+      { source: "/og-image.jpg", destination: "/images/og/og-image.jpg" },
+      { source: "/images/hero-architectural-sketch.jpg", destination: "/images/hero/hero-architectural-sketch.jpg" },
+      { source: "/facebook-icon.png", destination: "/images/social/facebook-icon.png" },
+      { source: "/instagram-icon.png", destination: "/images/social/instagram-icon.png" },
+      { source: "/apple-touch-icon.png", destination: "/images/favicons/apple-touch-icon.png" },
+      { source: "/icon-192.png", destination: "/images/favicons/icon-192.png" },
+      { source: "/icon-512.png", destination: "/images/favicons/icon-512.png" },
+      { source: "/favicon-48x48.png", destination: "/images/favicons/favicon-48x48.png" },
+      { source: "/favicon-96x96.png", destination: "/images/favicons/favicon-96x96.png" },
+      { source: "/favicon-32x32.png", destination: "/images/favicons/favicon-32x32.png" },
+      { source: "/favicon-16x16.png", destination: "/images/favicons/favicon-16x16.png" },
+    ];
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days image cache

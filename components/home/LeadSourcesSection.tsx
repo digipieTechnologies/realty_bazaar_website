@@ -7,10 +7,10 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import Image from "next/image";
 
 const leadSources = [
-  { label: "Instagram", color: "from-pink-500 to-purple-600", icon: "/instagram-icon.png", type: "image" },
-  { label: "Facebook", color: "from-blue-600 to-blue-700", icon: "/facebook-icon.png", type: "image" },
+  { label: "Instagram", color: "from-pink-500 to-purple-600", icon: "/images/social/instagram-icon.png", type: "image" },
+  { label: "Facebook", color: "from-blue-600 to-blue-700", icon: "/images/social/facebook-icon.png", type: "image" },
   { label: "Meta Ads", color: "from-blue-500 to-cyan-500", icon: "🎯", type: "emoji" },
-  { label: "The Realty Bazaar", color: "from-[#397BCF] to-[#245FA8]", icon: "/logo-icon.png", type: "brand" },
+  { label: "The Realty Bazaar", color: "from-[#397BCF] to-[#245FA8]", icon: "/images/branding/logo-icon.png", type: "brand" },
   { label: "Manual Entry", color: "from-[#1e2d47] to-[#172033]", icon: "✍️", type: "emoji" },
 ];
 
@@ -114,7 +114,7 @@ export default function LeadSourcesSection() {
           >
             <div className="w-12 h-12 rounded-xl bg-white/10 p-2.5 flex items-center justify-center mx-auto mb-3">
               <Image
-                src="/logo-icon.png"
+                src="/images/branding/logo-icon.png"
                 alt="Broker CRM"
                 width={36}
                 height={36}

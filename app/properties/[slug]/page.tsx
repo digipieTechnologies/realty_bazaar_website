@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
     : `Explore photos, verified pricing, floor plans, amenities, and direct broker contact for ${property.title} in ${locText}.`;
 
   const canonicalUrl = `${SITE_URL}/properties/${slug}`;
-  const defaultOgImage = `${SITE_URL}/og-image.jpg`;
+  const defaultOgImage = `${SITE_URL}/images/og/og-image.jpg`;
 
   // Filter valid absolute image URLs
   const validImages: string[] = (property.images ?? []).filter(

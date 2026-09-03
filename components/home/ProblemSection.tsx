@@ -146,7 +146,7 @@ export default function ProblemSection() {
               >
                 <div className="w-12 h-12 rounded-xl bg-white/10 p-2.5 flex items-center justify-center mx-auto mb-3">
                   <Image
-                    src="/logo-icon.png"
+                    src="/images/branding/logo-icon.png"
                     alt="The Realty Bazaar"
                     width={36}
                     height={36}

@@ -86,7 +86,7 @@ export default function HeroSection() {
       {/* Full Hero Architectural Blueprint Line-Art Sketch Background (Edge-to-Edge Full Bleed) */}
       <div className="absolute inset-0 w-full h-full pointer-events-none select-none z-0 overflow-hidden">
         <Image
-          src="/images/hero-architectural-sketch.jpg"
+          src="/images/hero/hero-architectural-sketch.jpg"
           alt="Architectural Blueprint Sketch"
           fill
           priority

@@ -53,7 +53,7 @@ export default function Footer() {
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-flex items-center transition-opacity hover:opacity-90">
               <Image
-                src="/logo-white.png"
+                src="/images/branding/logo-white.png"
                 alt="The Realty Bazaar"
                 width={190}
                 height={44}

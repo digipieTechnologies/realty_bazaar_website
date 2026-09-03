@@ -77,7 +77,7 @@ export default function Navbar() {
               aria-label="The Realty Bazaar — Home"
             >
               <Image
-                src="/logo.png"
+                src="/images/branding/logo.png"
                 alt="The Realty Bazaar"
                 width={190}
                 height={44}
@@ -156,7 +156,7 @@ export default function Navbar() {
               <div className="flex items-center justify-between p-4 border-b border-[#E4EAF2]">
                 <Link href="/" className="flex items-center shrink-0" onClick={() => setMobileOpen(false)}>
                   <Image
-                    src="/logo.png"
+                    src="/images/branding/logo.png"
                     alt="The Realty Bazaar"
                     width={160}
                     height={38}

@@ -88,7 +88,7 @@ export const metadata: Metadata = {
       "Discover verified residential and commercial properties for sale and rent across India, and connect directly with trusted local real estate brokers.",
     images: [
       {
-        url: `${SITE_URL}/og-image.jpg`,
+        url: `${SITE_URL}/images/og/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: "The Realty Bazaar — Real Estate Growth Platform",
@@ -100,7 +100,7 @@ export const metadata: Metadata = {
     title: "The Realty Bazaar — Real Estate Growth Platform",
     description:
       "Discover verified residential and commercial properties for sale and rent across India, and connect directly with trusted local real estate brokers.",
-    images: [`${SITE_URL}/og-image.jpg`],
+    images: [`${SITE_URL}/images/og/og-image.jpg`],
     site: "@therealtybazaar",
     creator: "@therealtybazaar",
   },
@@ -109,11 +109,18 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/logo-icon.png", sizes: "any", type: "image/png" },
+      { url: "/favicon.ico", sizes: "48x48 32x32 16x16" },
+      { url: "/images/favicons/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/images/favicons/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/images/favicons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/images/favicons/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/images/favicons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/favicons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
     ],
-    apple: "/apple-touch-icon.png",
+    shortcut: ["/favicon.ico"],
+    apple: [
+      { url: "/images/favicons/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   manifest: "/manifest.webmanifest",
 };
@@ -127,9 +134,9 @@ const organizationSchema = {
   url: SITE_URL,
   logo: {
     "@type": "ImageObject",
-    url: `${SITE_URL}/logo.png`,
+    url: `${SITE_URL}/images/branding/logo.png`,
   },
-  image: `${SITE_URL}/og-image.jpg`,
+  image: `${SITE_URL}/images/og/og-image.jpg`,
   description:
     "PropTech platform and property discovery marketplace for Indian real-estate brokers — marketing, lead generation and CRM in one app.",
   address: {
