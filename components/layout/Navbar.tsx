@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Menu, X, ChevronRight, PlusCircle, Smartphone } from "lucide-react";
+import { Menu, X, ChevronRight, PlusCircle, Smartphone, Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import ListPropertyModal from "@/components/ui/ListPropertyModal";
+import { useSavedProperties } from "@/lib/saved";
 
 const navLinks = [
   { label: "Buy", href: "/properties?transaction=sale", paramKey: "transaction", paramValue: "sale" },
@@ -23,6 +24,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [listModalOpen, setListModalOpen] = useState(false);
+  const { savedCount } = useSavedProperties();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -109,6 +111,31 @@ export default function Navbar() {
 
             {/* Desktop CTAs */}
             <div className="hidden lg:flex items-center gap-3">
+              <Link
+                href="/saved"
+                id="nav-saved-properties"
+                aria-label="View saved properties"
+                className={cn(
+                  "relative inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all border select-none",
+                  pathname === "/saved"
+                    ? "bg-red-50 text-red-600 border-red-200"
+                    : "bg-white hover:bg-red-50/60 text-[#475467] hover:text-red-600 border-[#E4EAF2] hover:border-red-200"
+                )}
+              >
+                <Heart
+                  className={cn(
+                    "w-4 h-4 transition-colors",
+                    savedCount > 0 ? "fill-red-500 text-red-500" : "text-[#667085]"
+                  )}
+                />
+                <span>Saved</span>
+                {savedCount > 0 && (
+                  <span className="min-w-5 h-5 px-1.5 rounded-full bg-red-600 text-white text-[11px] font-bold flex items-center justify-center shadow-2xs">
+                    {savedCount}
+                  </span>
+                )}
+              </Link>
+
               <button
                 onClick={() => setListModalOpen(true)}
                 id="nav-list-property"
@@ -119,8 +146,26 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* Mobile Actions: Hamburger */}
-            <div className="flex items-center gap-1 lg:hidden">
+            {/* Mobile Actions: Saved + Hamburger */}
+            <div className="flex items-center gap-1.5 lg:hidden">
+              <Link
+                href="/saved"
+                aria-label="View saved properties"
+                className="relative p-2 rounded-lg text-[#172033] hover:bg-[#F3F8FE] transition-colors"
+              >
+                <Heart
+                  className={cn(
+                    "w-5 h-5 transition-colors",
+                    savedCount > 0 ? "fill-red-500 text-red-500" : "text-[#667085]"
+                  )}
+                />
+                {savedCount > 0 && (
+                  <span className="absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-red-600 text-white text-[9px] font-bold flex items-center justify-center">
+                    {savedCount}
+                  </span>
+                )}
+              </Link>
+
               <button
                 className="p-2 rounded-lg text-[#172033] hover:bg-[#F3F8FE] transition-colors cursor-pointer"
                 onClick={() => setMobileOpen(!mobileOpen)}
@@ -195,6 +240,36 @@ export default function Navbar() {
                     </Link>
                   );
                 })}
+
+                <div className="pt-2">
+                  <Link
+                    href="/saved"
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all border",
+                      pathname === "/saved"
+                        ? "bg-red-50 text-red-600 border-red-200"
+                        : "text-[#172033] hover:bg-red-50/50 border-[#E4EAF2]"
+                    )}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Heart
+                        className={cn(
+                          "w-4 h-4",
+                          savedCount > 0 ? "fill-red-500 text-red-500" : "text-[#667085]"
+                        )}
+                      />
+                      <span>Saved Properties</span>
+                    </div>
+                    {savedCount > 0 ? (
+                      <span className="min-w-5 h-5 px-1.5 rounded-full bg-red-600 text-white text-[10px] font-bold flex items-center justify-center">
+                        {savedCount}
+                      </span>
+                    ) : (
+                      <ChevronRight className="w-4 h-4 opacity-40" />
+                    )}
+                  </Link>
+                </div>
               </nav>
 
               <div className="p-4 border-t border-[#E4EAF2] space-y-2.5">

@@ -9,13 +9,15 @@ import { formatPrice } from "@/lib/utils";
 import SharePropertyButton from "./SharePropertyButton";
 import { trackPropertyCardClick, trackPropertyFavourite } from "@/lib/analytics/clarity";
 
+import { useSavedProperty } from "@/lib/saved";
+
 interface PropertyCardProps {
   property: Property;
   priorityImage?: boolean;
 }
 
 export default function PropertyCard({ property, priorityImage = false }: PropertyCardProps) {
-  const [isSaved, setIsSaved] = useState(false);
+  const { isSaved, toggleSave } = useSavedProperty(property);
   const fallbackImage = "/images/properties/property-placeholder.png";
 
   const primaryImage = property.images?.[0] || null;
@@ -29,18 +31,6 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
 
   const imgSrc = !hasError && primaryImage ? primaryImage : fallbackImage;
   const price = formatPrice(property.price, property.price_display);
-
-  const toggleFavorite = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsSaved((prev) => {
-      const next = !prev;
-      if (next) {
-        trackPropertyFavourite(property);
-      }
-      return next;
-    });
-  };
 
   const handleCardClick = () => {
     trackPropertyCardClick(property);
@@ -113,13 +103,20 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
             {/* Favorite Heart Button */}
             <button
               type="button"
-              onClick={toggleFavorite}
-              className="w-8 h-8 rounded-full bg-white/90 backdrop-blur-md hover:bg-white text-[#172033] flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-110 active:scale-95 cursor-pointer"
+              onClick={toggleSave}
+              className={`group/heart w-8 h-8 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-110 active:scale-95 cursor-pointer select-none ${
+                isSaved
+                  ? "bg-white text-red-500 ring-2 ring-red-100"
+                  : "bg-white/90 hover:bg-white text-[#667085] hover:text-red-500"
+              }`}
               aria-label={isSaved ? "Remove from saved" : "Save property"}
             >
               <Heart
-                className={`w-4 h-4 transition-colors ${isSaved ? "fill-red-500 text-red-500" : "text-[#667085] hover:text-red-500"
-                  }`}
+                className={`w-4 h-4 transition-all duration-200 ${
+                  isSaved
+                    ? "fill-red-500 text-red-500 scale-110"
+                    : "text-[#667085] group-hover/heart:text-red-500 group-hover/heart:scale-110"
+                }`}
               />
             </button>
           </div>
