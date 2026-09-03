@@ -4,11 +4,12 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Menu, X, ChevronRight, PlusCircle, Smartphone, Heart } from "lucide-react";
+import { Menu, X, ChevronRight, PlusCircle, Smartphone, Heart, Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import ListPropertyModal from "@/components/ui/ListPropertyModal";
 import { useSavedProperties } from "@/lib/saved";
+import { useMyVisits } from "@/lib/visits";
 
 const navLinks = [
   { label: "Buy", href: "/properties?transaction=sale", paramKey: "transaction", paramValue: "sale" },
@@ -25,6 +26,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [listModalOpen, setListModalOpen] = useState(false);
   const { savedCount } = useSavedProperties();
+  const { visitCount } = useMyVisits();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -110,13 +112,13 @@ export default function Navbar() {
             </nav>
 
             {/* Desktop CTAs */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-2.5">
               <Link
                 href="/saved"
                 id="nav-saved-properties"
                 aria-label="View saved properties"
                 className={cn(
-                  "relative inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all border select-none",
+                  "relative inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all border select-none",
                   pathname === "/saved"
                     ? "bg-red-50 text-red-600 border-red-200"
                     : "bg-white hover:bg-red-50/60 text-[#475467] hover:text-red-600 border-[#E4EAF2] hover:border-red-200"
@@ -136,13 +138,33 @@ export default function Navbar() {
                 )}
               </Link>
 
+              <Link
+                href="/site-visits"
+                id="nav-site-visits"
+                aria-label="View scheduled site visits"
+                className={cn(
+                  "relative inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all border select-none",
+                  pathname === "/site-visits"
+                    ? "bg-[#EAF3FF] text-[#245FA8] border-[#397BCF]/40"
+                    : "bg-white hover:bg-[#F3F8FE] text-[#475467] hover:text-[#245FA8] border-[#E4EAF2] hover:border-[#397BCF]/30"
+                )}
+              >
+                <Calendar className="w-4 h-4 text-[#397BCF]" />
+                <span>Visits</span>
+                {visitCount > 0 && (
+                  <span className="min-w-5 h-5 px-1.5 rounded-full bg-[#245FA8] text-white text-[11px] font-bold flex items-center justify-center shadow-2xs">
+                    {visitCount}
+                  </span>
+                )}
+              </Link>
+
               <button
                 onClick={() => setListModalOpen(true)}
                 id="nav-list-property"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#245FA8] hover:bg-[#1E4E8C] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#245FA8] hover:bg-[#1E4E8C] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer ml-1"
               >
                 <PlusCircle className="w-4 h-4" />
-                List Your Property
+                List Property
               </button>
             </div>
 
@@ -241,7 +263,7 @@ export default function Navbar() {
                   );
                 })}
 
-                <div className="pt-2">
+                <div className="pt-2 space-y-1">
                   <Link
                     href="/saved"
                     onClick={() => setMobileOpen(false)}
@@ -264,6 +286,29 @@ export default function Navbar() {
                     {savedCount > 0 ? (
                       <span className="min-w-5 h-5 px-1.5 rounded-full bg-red-600 text-white text-[10px] font-bold flex items-center justify-center">
                         {savedCount}
+                      </span>
+                    ) : (
+                      <ChevronRight className="w-4 h-4 opacity-40" />
+                    )}
+                  </Link>
+
+                  <Link
+                    href="/site-visits"
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all border",
+                      pathname === "/site-visits"
+                        ? "bg-[#EAF3FF] text-[#245FA8] border-[#397BCF]/40"
+                        : "text-[#172033] hover:bg-[#F3F8FE] border-[#E4EAF2]"
+                    )}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Calendar className="w-4 h-4 text-[#397BCF]" />
+                      <span>Scheduled Site Visits</span>
+                    </div>
+                    {visitCount > 0 ? (
+                      <span className="min-w-5 h-5 px-1.5 rounded-full bg-[#245FA8] text-white text-[10px] font-bold flex items-center justify-center">
+                        {visitCount}
                       </span>
                     ) : (
                       <ChevronRight className="w-4 h-4 opacity-40" />

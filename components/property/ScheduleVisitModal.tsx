@@ -2,24 +2,27 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, CheckCircle2 } from "lucide-react";
-import { submitEnquiry } from "@/app/actions";
+import { X, Calendar, CheckCircle2, ArrowRight, Clock } from "lucide-react";
+import { submitSiteVisitRequest } from "@/app/actions";
 import CustomSelect from "@/components/ui/CustomSelect";
+import CustomDatePicker from "@/components/ui/CustomDatePicker";
 import type { Property } from "@/types";
 import { getUserContact, saveUserContact } from "@/lib/storage/userContact";
+import { saveVisitToStorage } from "@/lib/visits";
 import {
   trackScheduleVisitModalOpen,
   trackScheduleVisitSubmit,
 } from "@/lib/analytics/clarity";
 import { useIsClient } from "@/lib/hooks/useIsClient";
 
-
 const timeSlotOptions = [
-  { value: "10:00 AM", label: "Morning (10:00 AM – 12:00 PM)" },
-  { value: "02:00 PM", label: "Afternoon (02:00 PM – 04:00 PM)" },
-  { value: "05:00 PM", label: "Evening (05:00 PM – 07:00 PM)" },
-  { value: "Weekend Slot", label: "Weekend Slot" },
+  { value: "10:00 AM – 12:00 PM", label: "Morning (10:00 AM – 12:00 PM)" },
+  { value: "12:00 PM – 02:00 PM", label: "Midday (12:00 PM – 02:00 PM)" },
+  { value: "02:00 PM – 04:00 PM", label: "Afternoon (02:00 PM – 04:00 PM)" },
+  { value: "04:00 PM – 06:00 PM", label: "Evening (04:00 PM – 06:00 PM)" },
+  { value: "06:00 PM – 08:00 PM", label: "Late Evening (06:00 PM – 08:00 PM)" },
 ];
 
 interface ScheduleVisitModalProps {
@@ -37,7 +40,8 @@ export default function ScheduleVisitModal({
   const [name, setName] = useState(() => getUserContact().name || "");
   const [phone, setPhone] = useState(() => getUserContact().phone || "");
   const [date, setDate] = useState("");
-  const [time, setTime] = useState("10:00 AM");
+  const [time, setTime] = useState("10:00 AM – 12:00 PM");
+  const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -80,17 +84,22 @@ export default function ScheduleVisitModal({
     try {
       saveUserContact({ name: name.trim(), phone: phone.trim() });
 
-      await submitEnquiry(
-        property.id,
-        property.broker_id || null,
-        name.trim(),
-        phone.trim(),
-        `Requested Site Visit on ${date} (${time}) for ${property.title} in ${property.locality}, ${property.city}`
-      );
+      const res = await submitSiteVisitRequest({
+        propertyId: property.id,
+        brokerId: property.broker_id || null,
+        clientName: name.trim(),
+        clientPhone: phone.trim(),
+        visitDate: date,
+        timeSlot: time,
+        notes: notes.trim() || undefined,
+      });
+
+      if (res.success && res.visit) {
+        saveVisitToStorage(res.visit, property);
+      }
 
       trackScheduleVisitSubmit(property);
       setSubmitted(true);
-
     } catch {
       setError("Could not submit your request. Please try again or WhatsApp the broker directly.");
     } finally {
@@ -145,23 +154,39 @@ export default function ScheduleVisitModal({
             {/* Modal Body */}
             <div className="p-6">
               {submitted ? (
-                <div className="py-8 text-center space-y-3">
-                  <div className="w-14 h-14 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="w-8 h-8" />
+                <div className="py-6 text-center space-y-4">
+                  <div className="w-14 h-14 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto border border-amber-200">
+                    <Clock className="w-7 h-7" />
                   </div>
-                  <h4 className="text-lg font-display font-bold text-[#172033]">
-                    Site Visit Requested!
-                  </h4>
-                  <p className="text-sm text-[#667085] max-w-sm mx-auto leading-relaxed">
-                    The broker <strong className="text-[#172033]">{property.broker_name}</strong> will call/WhatsApp you at <strong className="text-[#172033]">{phone}</strong> to confirm the timing.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="mt-4 px-6 py-2.5 bg-[#397BCF] text-white font-bold rounded-xl text-xs hover:bg-[#245FA8] transition-colors cursor-pointer"
-                  >
-                    Done
-                  </button>
+                  <div>
+                    <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100/80 text-amber-800 text-[11px] font-bold mb-1.5">
+                      Status: Pending Broker Confirmation
+                    </div>
+                    <h4 className="text-xl font-display font-bold text-[#172033]">
+                      Site Visit Requested!
+                    </h4>
+                    <p className="text-xs sm:text-sm text-[#667085] max-w-sm mx-auto leading-relaxed mt-1">
+                      Your request for <strong className="text-[#172033]">{date} ({time})</strong> has been sent to the broker. They will review and confirm via their mobile app.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2">
+                    <Link
+                      href="/site-visits"
+                      onClick={onClose}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[#245FA8] hover:bg-[#1E4E8C] text-white font-bold rounded-xl text-xs transition-all shadow-sm"
+                    >
+                      <span>View Scheduled Visits</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="w-full sm:w-auto px-5 py-2.5 bg-[#F8FAFC] hover:bg-[#F3F8FE] text-[#172033] border border-[#E4EAF2] font-bold rounded-xl text-xs transition-colors cursor-pointer"
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -171,16 +196,14 @@ export default function ScheduleVisitModal({
                       <label className="block text-xs font-bold text-[#172033] mb-1">
                         Preferred Date <span className="text-[#397BCF]">*</span>
                       </label>
-                      <div className="relative">
-                        <input
-                          type="date"
-                          value={date}
-                          onChange={(e) => setDate(e.target.value)}
-                          required
-                          min={new Date().toISOString().split("T")[0]}
-                          className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] text-xs font-medium text-[#172033] outline-none"
-                        />
-                      </div>
+                      <CustomDatePicker
+                        value={date}
+                        onChange={setDate}
+                        placeholder="Select date"
+                        size="sm"
+                        triggerClassName="!py-2.5 !text-xs !font-medium text-[#172033]"
+                        required
+                      />
                     </div>
 
                     {/* Preferred Time */}
@@ -225,6 +248,20 @@ export default function ScheduleVisitModal({
                       placeholder="+91 98765 43210"
                       required
                       className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] text-xs font-medium text-[#172033] placeholder:text-[#98A2B3] outline-none"
+                    />
+                  </div>
+
+                  {/* Notes / Special Requests */}
+                  <div>
+                    <label className="block text-xs font-bold text-[#172033] mb-1">
+                      Notes / Message <span className="text-xs text-[#98A2B3] font-normal">(Optional)</span>
+                    </label>
+                    <textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="e.g. Visiting with family, prefer afternoon slot..."
+                      rows={2}
+                      className="w-full px-3 py-2 rounded-xl border-2 border-[#E4EAF2] focus:border-[#397BCF] text-xs font-medium text-[#172033] placeholder:text-[#98A2B3] outline-none resize-none"
                     />
                   </div>
 

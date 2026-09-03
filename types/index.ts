@@ -128,6 +128,35 @@ export interface Enquiry {
   type?: "enquiry" | "site_visit";
 }
 
+export type VisitStatus =
+  | "pending"
+  | "confirmed"
+  | "rescheduled"
+  | "completed"
+  | "cancelled"
+  | "noShow"
+  | "unknown";
+
+export interface PropertyVisit {
+  id: string;
+  broker_id: string;
+  property_id: string;
+  client_name: string;
+  client_phone: string;
+  phone_country_code?: string | null;
+  phone_country_iso?: string | null;
+  visit_date: string; // YYYY-MM-DD
+  time_slot: string;  // e.g. "03:00 PM – 04:00 PM"
+  status: VisitStatus;
+  notes?: string | null;
+  reschedule_count: number;
+  reschedule_reason?: string | null;
+  cancelled_reason?: string | null;
+  created_at: string;
+  updated_at: string;
+  property?: Property | null;
+}
+
 export interface ContactSubmission {
   name: string;
   email: string;

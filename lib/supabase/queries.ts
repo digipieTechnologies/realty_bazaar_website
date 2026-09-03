@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { createPublicServerSupabaseClient } from "./server";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Property, DbPropertyRow, PropertyFAQ } from "@/types";
+import type { Property, DbPropertyRow, PropertyFAQ, PropertyVisit } from "@/types";
 import { formatPrice, slugify } from "@/lib/utils";
 
 // ── Slug helpers ──────────────────────────────────────────────────────────────
@@ -721,6 +721,65 @@ export async function getPropertyFaqs(propertyId: string): Promise<PropertyFAQ[]
 
     return (data as PropertyFAQ[]) || [];
   } catch {
+    return [];
+  }
+}
+
+// ── Property Visits Query ─────────────────────────────────────────────────────
+export async function getPropertyVisitsByIds(visitIds: string[]): Promise<PropertyVisit[]> {
+  if (!visitIds || visitIds.length === 0) return [];
+
+  try {
+    const supabase = createPublicServerSupabaseClient();
+    const { data: visitsData, error } = await supabase
+      .from("property_visits")
+      .select("id, broker_id, property_id, client_name, client_phone, phone_country_code, phone_country_iso, visit_date, time_slot, status, notes, reschedule_count, reschedule_reason, cancelled_reason, created_at, updated_at, is_deleted")
+      .in("id", visitIds)
+      .eq("is_deleted", false)
+      .order("created_at", { ascending: false });
+
+    if (error || !visitsData || visitsData.length === 0) {
+      return [];
+    }
+
+    // Fetch corresponding properties
+    const propertyIds = Array.from(new Set(visitsData.map((v: any) => v.property_id).filter(Boolean)));
+    const propertiesMap: Record<string, Property> = {};
+
+    if (propertyIds.length > 0) {
+      const { data: propsData } = await supabase
+        .from("properties")
+        .select(PROPERTY_SELECT)
+        .in("id", propertyIds);
+
+      if (propsData) {
+        for (const row of propsData as unknown as DbPropertyRow[]) {
+          propertiesMap[row.id] = mapDbRowToProperty(row);
+        }
+      }
+    }
+
+    return (visitsData as any[]).map((v) => ({
+      id: v.id,
+      broker_id: v.broker_id,
+      property_id: v.property_id,
+      client_name: v.client_name,
+      client_phone: v.client_phone,
+      phone_country_code: v.phone_country_code,
+      phone_country_iso: v.phone_country_iso,
+      visit_date: v.visit_date,
+      time_slot: v.time_slot,
+      status: v.status,
+      notes: v.notes,
+      reschedule_count: v.reschedule_count || 0,
+      reschedule_reason: v.reschedule_reason,
+      cancelled_reason: v.cancelled_reason,
+      created_at: v.created_at,
+      updated_at: v.updated_at,
+      property: propertiesMap[v.property_id] || null,
+    }));
+  } catch (err) {
+    console.error("[getPropertyVisitsByIds] Unexpected error:", err);
     return [];
   }
 }
