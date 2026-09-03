@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createPublicServerSupabaseClient } from "./server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Property, DbPropertyRow, PropertyFAQ } from "@/types";
@@ -485,7 +486,7 @@ async function fetchPropertyRow(
 //   1. <slugified-title>-<property_code> (e.g. "modern-4-bhk-penthouse-dp1-011")
 //   2. Direct <property_code>            (e.g. "DP1-011" or "dp1-011")
 //   3. Legacy UUID format                (e.g. "...-92299dcc65c842a09c36e89453255582")
-export async function getPropertyBySlug(
+export const getPropertyBySlug = cache(async function getPropertyBySlug(
   slug: string
 ): Promise<Property | null> {
   const cleanSlug = decodeURIComponent(slug).toLowerCase().trim();
@@ -528,7 +529,7 @@ export async function getPropertyBySlug(
     console.error("[getPropertyBySlug] Unexpected error:", err);
     return null;
   }
-}
+});
 
 /**
  * Helper to identify test/sample/seed listings that must not be indexed or exposed in public sitemaps
@@ -557,16 +558,23 @@ export function isTestProperty(title: string | null | undefined, id?: string | n
   );
 }
 
-// ── Get all slugs for generateStaticParams ────────────────────────────────────
-export async function getAllPropertySlugs(): Promise<string[]> {
+// ── Get slugs for generateStaticParams (top properties for fast build time) ───
+export async function getAllPropertySlugs(limit: number = 25): Promise<string[]> {
   try {
     const supabase = createPublicServerSupabaseClient();
-    const { data, error } = await supabase
+    let query = supabase
       .from("properties")
       .select("id, property_title, property_code")
       .eq("is_active", true)
       .eq("is_deleted", false)
-      .eq("property_status", "available");
+      .eq("property_status", "available")
+      .order("created_at", { ascending: false });
+
+    if (limit > 0) {
+      query = query.limit(limit);
+    }
+
+    const { data, error } = await query;
 
     if (error || !data) return [];
     return data
