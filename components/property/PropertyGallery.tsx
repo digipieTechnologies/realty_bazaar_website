@@ -15,7 +15,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const fallbackImages = [
-    "/images/properties/property-placeholder.jpg",
+    "/images/properties/property-placeholder.png",
   ];
   const list = images && images.length > 0 ? images : fallbackImages;
   const [failedIndices, setFailedIndices] = useState<Record<number, boolean>>({});
@@ -101,8 +101,8 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
               type="button"
               onClick={() => setCurrent(idx)}
               className={`relative shrink-0 w-24 h-16 rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${idx === current
-                  ? "border-[#397BCF] ring-2 ring-[#397BCF]/20 scale-102"
-                  : "border-[#E4EAF2] hover:border-[#397BCF]/60 opacity-70 hover:opacity-100"
+                ? "border-[#397BCF] ring-2 ring-[#397BCF]/20 scale-102"
+                : "border-[#E4EAF2] hover:border-[#397BCF]/60 opacity-70 hover:opacity-100"
                 }`}
               aria-label={`View photo ${idx + 1}`}
             >

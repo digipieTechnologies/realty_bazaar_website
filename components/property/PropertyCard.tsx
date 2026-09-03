@@ -17,7 +17,7 @@ interface PropertyCardProps {
 export default function PropertyCard({ property, priorityImage = false }: PropertyCardProps) {
   const [isSaved, setIsSaved] = useState(false);
   const fallbackImage =
-    "/images/properties/property-placeholder.jpg";
+    "/images/properties/property-placeholder.png";
   const [imgSrc, setImgSrc] = useState(
     property.images?.[0] || fallbackImage
   );
@@ -39,9 +39,8 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
     trackPropertyCardClick(property);
   };
 
-  const imageAlt = `${property.bedrooms ? `${property.bedrooms} BHK ` : ""}${
-    property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1)
-  } in ${property.locality ? `${property.locality}, ` : ""}${property.city} — ${property.title}`;
+  const imageAlt = `${property.bedrooms ? `${property.bedrooms} BHK ` : ""}${property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1)
+    } in ${property.locality ? `${property.locality}, ` : ""}${property.city} — ${property.title}`;
 
   return (
     <div className="group relative bg-white border border-[#E4EAF2] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_2px_8px_-2px_rgb(0_0_0/0.04)] hover:shadow-[0_16px_32px_-8px_rgb(57_123_207/0.12)] hover:border-[#397BCF]/60 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
@@ -102,9 +101,8 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
               aria-label={isSaved ? "Remove from saved" : "Save property"}
             >
               <Heart
-                className={`w-4 h-4 transition-colors ${
-                  isSaved ? "fill-red-500 text-red-500" : "text-[#667085] hover:text-red-500"
-                }`}
+                className={`w-4 h-4 transition-colors ${isSaved ? "fill-red-500 text-red-500" : "text-[#667085] hover:text-red-500"
+                  }`}
               />
             </button>
           </div>

@@ -93,7 +93,7 @@ export default function SharePropertyModal({
   const price = formatPrice(property.price, property.price_display);
   const imageUrl =
     property.images?.[0] ||
-    "/images/properties/property-placeholder.jpg";
+    "/images/properties/property-placeholder.png";
 
   const handleCopyDraft = async () => {
     try {
@@ -283,11 +283,10 @@ export default function SharePropertyModal({
                   <button
                     type="button"
                     onClick={handleCopyDraft}
-                    className={`flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs ${
-                      copiedType === "draft"
-                        ? "bg-green-600 text-white"
-                        : "bg-[#172033] hover:bg-[#253553] text-white"
-                    }`}
+                    className={`flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs ${copiedType === "draft"
+                      ? "bg-green-600 text-white"
+                      : "bg-[#172033] hover:bg-[#253553] text-white"
+                      }`}
                   >
                     {copiedType === "draft" ? (
                       <>
@@ -306,11 +305,10 @@ export default function SharePropertyModal({
                   <button
                     type="button"
                     onClick={handleCopyLink}
-                    className={`flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs border ${
-                      copiedType === "link"
-                        ? "bg-green-600 text-white border-green-600"
-                        : "bg-[#F8FAFC] hover:bg-[#F3F8FE] border-[#E4EAF2] text-[#172033] hover:border-[#397BCF]/40"
-                    }`}
+                    className={`flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs border ${copiedType === "link"
+                      ? "bg-green-600 text-white border-green-600"
+                      : "bg-[#F8FAFC] hover:bg-[#F3F8FE] border-[#E4EAF2] text-[#172033] hover:border-[#397BCF]/40"
+                      }`}
                   >
                     {copiedType === "link" ? (
                       <>
