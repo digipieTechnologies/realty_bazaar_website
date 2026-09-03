@@ -72,9 +72,10 @@ function mapDbRowToProperty(row: DbPropertyRow): Property {
     .map((m: any) => {
       if (typeof m === "string") return m;
       if (m && typeof m === "object") {
-        if (m.type === "image" || m.type === "photo" || !m.type) return m.url;
+        const directUrl = m.url || m.image_url || m.src || m.link || m.file_url;
+        if (m.type === "image" || m.type === "photo" || !m.type) return directUrl || m.thumbnail || null;
         if (m.thumbnail) return m.thumbnail;
-        return m.url || null;
+        return directUrl || null;
       }
       return null;
     })

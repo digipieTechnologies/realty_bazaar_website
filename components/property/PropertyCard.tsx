@@ -16,11 +16,18 @@ interface PropertyCardProps {
 
 export default function PropertyCard({ property, priorityImage = false }: PropertyCardProps) {
   const [isSaved, setIsSaved] = useState(false);
-  const fallbackImage =
-    "/images/properties/property-placeholder.png";
-  const [imgSrc, setImgSrc] = useState(
-    property.images?.[0] || fallbackImage
-  );
+  const fallbackImage = "/images/properties/property-placeholder.png";
+
+  const primaryImage = property.images?.[0] || null;
+  const [hasError, setHasError] = useState(false);
+  const [prevImage, setPrevImage] = useState(primaryImage);
+
+  if (prevImage !== primaryImage) {
+    setPrevImage(primaryImage);
+    setHasError(false);
+  }
+
+  const imgSrc = !hasError && primaryImage ? primaryImage : fallbackImage;
   const price = formatPrice(property.price, property.price_display);
 
   const toggleFavorite = (e: React.MouseEvent) => {
@@ -59,7 +66,7 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
             sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) calc(50vw - 32px), 380px"
             priority={priorityImage}
             loading={priorityImage ? "eager" : "lazy"}
-            onError={() => setImgSrc(fallbackImage)}
+            onError={() => setHasError(true)}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
 
