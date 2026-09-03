@@ -80,12 +80,13 @@ function mapDbRowToProperty(row: DbPropertyRow): Property {
     })
     .filter((url): url is string => typeof url === "string" && url.trim().length > 0);
 
-  // Build human-readable floor string
+  // Build concise human-readable floor string (e.g. "2nd of 4" or "Ground of 4")
   let floor: string | null = null;
   if (row.floor_number != null && row.total_floors != null) {
-    floor = `${toOrdinal(row.floor_number)} of ${row.total_floors} Floors`;
+    const floorLabel = row.floor_number === 0 ? "Ground" : toOrdinal(row.floor_number);
+    floor = `${floorLabel} of ${row.total_floors}`;
   } else if (row.floor_number != null) {
-    floor = `${toOrdinal(row.floor_number)} Floor`;
+    floor = row.floor_number === 0 ? "Ground" : `${toOrdinal(row.floor_number)} Floor`;
   }
 
   // Normalize furnishing status (DB uses underscores, UI uses hyphens)
