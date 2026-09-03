@@ -52,13 +52,23 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
   return (
     <div className="group relative bg-white border border-[#E4EAF2] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_2px_8px_-2px_rgb(0_0_0/0.04)] hover:shadow-[0_16px_32px_-8px_rgb(57_123_207/0.12)] hover:border-[#397BCF]/60 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
       {/* Image Container */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F3F8FE]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#0B132B]">
         <Link
           href={`/properties/${property.slug}`}
           onClick={handleCardClick}
           className="block w-full h-full relative"
           aria-label={`View details for ${property.title}`}
         >
+          {/* Ambient blurred backdrop for seamless framing */}
+          <Image
+            src={imgSrc}
+            alt=""
+            fill
+            aria-hidden="true"
+            className="w-full h-full object-cover blur-xl opacity-40 scale-125 select-none pointer-events-none"
+          />
+
+          {/* Full Uncropped Foreground Image */}
           <Image
             src={imgSrc}
             alt={imageAlt}
@@ -67,7 +77,7 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
             priority={priorityImage}
             loading={priorityImage ? "eager" : "lazy"}
             onError={() => setHasError(true)}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            className="w-full h-full object-contain relative z-1 group-hover:scale-103 transition-transform duration-500 ease-out"
           />
 
           {/* Property Type Badge (bottom left of image) */}

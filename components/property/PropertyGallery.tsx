@@ -38,7 +38,17 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
   return (
     <div className="space-y-3">
       {/* Main Image Banner */}
-      <div className="relative aspect-[16/10] sm:aspect-[16/9] rounded-3xl overflow-hidden bg-[#172033] group shadow-sm border border-[#E4EAF2]">
+      <div className="relative aspect-[16/10] sm:aspect-[16/9] rounded-3xl overflow-hidden bg-[#0B132B] group shadow-sm border border-[#E4EAF2]">
+        {/* Ambient Blurred Backdrop for Vertical / Non-standard Aspect Ratios */}
+        <Image
+          src={getImageSrc(current)}
+          alt=""
+          fill
+          aria-hidden="true"
+          className="w-full h-full object-cover blur-2xl opacity-40 scale-125 select-none pointer-events-none"
+        />
+
+        {/* Foreground Full Uncropped Image */}
         <Image
           src={getImageSrc(current)}
           alt={`${title} - Photo ${current + 1}`}
@@ -46,7 +56,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
           priority
           sizes="(max-width: 1024px) 100vw, 800px"
           onError={() => setFailedIndices((prev) => ({ ...prev, [current]: true }))}
-          className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 cursor-pointer"
+          className="w-full h-full object-contain relative z-1 group-hover:scale-101 transition-transform duration-500 cursor-pointer"
           onClick={() => setLightboxOpen(true)}
         />
 
@@ -100,7 +110,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
               key={idx}
               type="button"
               onClick={() => setCurrent(idx)}
-              className={`relative shrink-0 w-24 h-16 rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${idx === current
+              className={`relative shrink-0 w-24 h-16 rounded-2xl overflow-hidden border-2 transition-all cursor-pointer bg-[#0B132B] ${idx === current
                 ? "border-[#397BCF] ring-2 ring-[#397BCF]/20 scale-102"
                 : "border-[#E4EAF2] hover:border-[#397BCF]/60 opacity-70 hover:opacity-100"
                 }`}
@@ -108,10 +118,17 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
             >
               <Image
                 src={getImageSrc(idx)}
+                alt=""
+                fill
+                aria-hidden="true"
+                className="w-full h-full object-cover blur-md opacity-40 scale-110 pointer-events-none"
+              />
+              <Image
+                src={getImageSrc(idx)}
                 alt={`${title} – photo ${idx + 1}`}
                 fill
                 sizes="96px"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain relative z-1"
                 loading="lazy"
                 onError={() => setFailedIndices((prev) => ({ ...prev, [idx]: true }))}
               />
