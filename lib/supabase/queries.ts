@@ -199,7 +199,7 @@ const PROPERTY_SELECT = `
   is_deleted,
   created_at,
   updated_at,
-  addresses (
+  addresses!inner (
     full_address,
     city,
     state,
@@ -208,7 +208,7 @@ const PROPERTY_SELECT = `
     longitude,
     pincode
   ),
-  brokers (
+  brokers!inner (
     id,
     business_name,
     is_active
@@ -226,38 +226,108 @@ export interface GetPropertiesOptions {
   bedrooms?: string | number;
   minPrice?: number;
   maxPrice?: number;
+  furnishing?: string;
+  verifiedOnly?: boolean;
+  featuredOnly?: boolean;
   featured?: boolean;
   promoted?: boolean;
   searchQuery?: string;
   sortBy?: "relevance" | "price_asc" | "price_desc" | "newest" | "area_desc";
 }
 
-// ── Main query ────────────────────────────────────────────────────────────────
-export async function getPublishedProperties(
+export interface GetPropertiesResult {
+  properties: Property[];
+  totalCount: number;
+}
+
+// Valid Postgres enum values for property_type_enum in Supabase
+const VALID_DB_PROPERTY_TYPES = new Set([
+  "apartment",
+  "villa",
+  "penthouse",
+  "commercial",
+  "plot",
+  "row_house",
+]);
+
+export function resolveDbPropertyTypes(type?: string): string[] {
+  if (!type) return [];
+  const norm = type.toLowerCase().replace(/[\s-]+/g, "_").trim();
+  if (norm === "all" || norm === "all_types" || norm === "any") return [];
+
+  // Direct enum match
+  if (VALID_DB_PROPERTY_TYPES.has(norm)) {
+    return [norm];
+  }
+
+  // Common UI aliases mapped to database schema
+  switch (norm) {
+    case "house":
+    case "independent_house":
+    case "townhouse":
+      return ["row_house", "villa"];
+    case "shop":
+    case "retail":
+    case "office":
+    case "warehouse":
+      return ["commercial"];
+    case "studio":
+    case "flat":
+      return ["apartment"];
+    default:
+      return [];
+  }
+}
+
+// ── Main query with total count ───────────────────────────────────────────────
+export async function getPublishedPropertiesWithCount(
   options?: GetPropertiesOptions
-): Promise<Property[]> {
+): Promise<GetPropertiesResult> {
   try {
     const supabase = createPublicServerSupabaseClient();
 
     let query = supabase
       .from("properties")
-      .select(PROPERTY_SELECT)
+      .select(PROPERTY_SELECT, { count: "exact" })
       .eq("is_active", true)
       .eq("is_deleted", false)
       .eq("property_status", "available");
 
     // Transaction type filter (listing_type in DB)
-    if (options?.transactionType && options.transactionType !== "any") {
-      query = query.eq("listing_type", options.transactionType);
+    if (
+      options?.transactionType &&
+      options.transactionType !== "any" &&
+      options.transactionType !== "all"
+    ) {
+      const listingType =
+        options.transactionType.toLowerCase() === "buy"
+          ? "sale"
+          : options.transactionType.toLowerCase();
+      query = query.eq("listing_type", listingType);
     }
 
-    // Property type filter
+    // Property type filter safely mapped to database enum
+    if (options?.propertyType) {
+      const dbTypes = resolveDbPropertyTypes(options.propertyType);
+      if (dbTypes.length === 1) {
+        query = query.eq("property_type", dbTypes[0]);
+      } else if (dbTypes.length > 1) {
+        query = query.in("property_type", dbTypes);
+      }
+    }
+
+    // City filter on joined addresses
     if (
-      options?.propertyType &&
-      options.propertyType !== "Any" &&
-      options.propertyType !== "All Types"
+      options?.city &&
+      options.city !== "Any" &&
+      options.city !== "All Cities"
     ) {
-      query = query.eq("property_type", options.propertyType);
+      query = query.ilike("addresses.city", `%${options.city}%`);
+    }
+
+    // Locality filter on joined addresses
+    if (options?.locality && options.locality.trim()) {
+      query = query.ilike("addresses.landmark", `%${options.locality.trim()}%`);
     }
 
     // Bedrooms filter
@@ -272,6 +342,25 @@ export async function getPublishedProperties(
     // Price range filters
     if (options?.minPrice) query = query.gte("price", options.minPrice);
     if (options?.maxPrice) query = query.lte("price", options.maxPrice);
+
+    // Furnishing filter
+    if (options?.furnishing && options.furnishing !== "all") {
+      const dbFurnishing = options.furnishing.replace(/-/g, "_");
+      query = query.eq("furnishing_status", dbFurnishing);
+    }
+
+    // Verified brokers filter
+    if (options?.verifiedOnly) {
+      query = query.eq("brokers.is_active", true);
+    }
+
+    // Search query on pre-computed search_text
+    if (options?.searchQuery && options.searchQuery.trim()) {
+      const cleanQ = options.searchQuery.replace(/[,()]/g, " ").trim();
+      if (cleanQ) {
+        query = query.ilike("search_text", `%${cleanQ.toLowerCase()}%`);
+      }
+    }
 
     // Sorting
     switch (options?.sortBy) {
@@ -295,52 +384,32 @@ export async function getPublishedProperties(
     const offset = options?.offset ?? 0;
     query = query.range(offset, offset + pageSize - 1);
 
-    const { data, error } = await query;
+    const { data, count, error } = await query;
     if (error) {
-      console.error("[getPublishedProperties] Supabase error:", error.message);
-      return [];
+      console.error("[getPublishedPropertiesWithCount] Supabase error:", error.message);
+      return { properties: [], totalCount: 0 };
     }
 
-    let properties = ((data ?? []) as unknown as DbPropertyRow[]).map(
+    const properties = ((data ?? []) as unknown as DbPropertyRow[]).map(
       mapDbRowToProperty
     );
 
-    // Post-process filters on joined address columns
-    if (
-      options?.city &&
-      options.city !== "Any" &&
-      options.city !== "All Cities"
-    ) {
-      const cityLower = options.city.toLowerCase();
-      properties = properties.filter(
-        (p) => p.city.toLowerCase() === cityLower
-      );
-    }
-
-    if (options?.locality) {
-      const localityLower = options.locality.toLowerCase();
-      properties = properties.filter((p) =>
-        p.locality.toLowerCase().includes(localityLower)
-      );
-    }
-
-    if (options?.searchQuery) {
-      const q = options.searchQuery.toLowerCase().trim();
-      properties = properties.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.city.toLowerCase().includes(q) ||
-          p.locality.toLowerCase().includes(q) ||
-          p.description?.toLowerCase().includes(q) ||
-          p.property_type.toLowerCase().includes(q)
-      );
-    }
-
-    return properties;
+    return {
+      properties,
+      totalCount: count ?? properties.length,
+    };
   } catch (err) {
-    console.error("[getPublishedProperties] Unexpected error:", err);
-    return [];
+    console.error("[getPublishedPropertiesWithCount] Unexpected error:", err);
+    return { properties: [], totalCount: 0 };
   }
+}
+
+// Backward-compatible getPublishedProperties
+export async function getPublishedProperties(
+  options?: GetPropertiesOptions
+): Promise<Property[]> {
+  const result = await getPublishedPropertiesWithCount(options);
+  return result.properties;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

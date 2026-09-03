@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { getPublishedProperties } from "@/lib/supabase/queries";
+import { getPublishedPropertiesWithCount } from "@/lib/supabase/queries";
 import type { SortOption } from "@/types";
 import PropertyGridClient from "@/components/property/PropertyGridClient";
 import QuickDiscoveryChips from "@/components/home/QuickDiscoveryChips";
@@ -28,9 +28,8 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
   const q = typeof params.q === "string" ? params.q : undefined;
   const sort = typeof params.sort === "string" ? (params.sort as SortOption) : undefined;
 
-  // Load the first page matching any server search parameters
-
-  const properties = await getPublishedProperties({
+  // Load the first page matching any server search parameters with exact total count
+  const { properties, totalCount } = await getPublishedPropertiesWithCount({
     limit: 12,
     offset: 0,
     propertyType: propertyType && propertyType !== "All Types" ? propertyType : undefined,
@@ -113,7 +112,10 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
               </div>
             }
           >
-            <PropertyGridClient initialProperties={properties} />
+            <PropertyGridClient
+              initialProperties={properties}
+              initialTotalCount={totalCount}
+            />
           </Suspense>
         </div>
       </section>

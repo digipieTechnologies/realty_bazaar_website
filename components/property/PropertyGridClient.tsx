@@ -14,6 +14,7 @@ const PAGE_SIZE = 12;
 
 interface PropertyGridClientProps {
   initialProperties: Property[];
+  initialTotalCount?: number;
 }
 
 const sortOptions = [
@@ -24,7 +25,10 @@ const sortOptions = [
   { value: "area_desc", label: "Area: Large to Small" },
 ];
 
-export default function PropertyGridClient({ initialProperties }: PropertyGridClientProps) {
+export default function PropertyGridClient({
+  initialProperties,
+  initialTotalCount,
+}: PropertyGridClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -44,10 +48,14 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
     sortBy: (searchParams.get("sort") as SortOption) || "relevance",
   }));
 
-  // ── Infinite scroll state ──────────────────────────────────────────────────
+  // ── Infinite scroll & count state ──────────────────────────────────────────
   const [properties, setProperties] = useState<Property[]>(initialProperties);
+  const [totalCount, setTotalCount] = useState(initialTotalCount ?? initialProperties.length);
   const [offset, setOffset] = useState(initialProperties.length);
-  const [hasMore, setHasMore] = useState(initialProperties.length >= PAGE_SIZE);
+  const [hasMore, setHasMore] = useState(
+    (initialTotalCount ?? initialProperties.length) > initialProperties.length &&
+      initialProperties.length >= PAGE_SIZE
+  );
   const [loadingMore, setLoadingMore] = useState(false);
 
   // Sentinel ref — the invisible div at the bottom of the list
@@ -86,8 +94,10 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
   if (prevInitialProps !== initialProperties) {
     setPrevInitialProps(initialProperties);
     setProperties(initialProperties);
+    const resolvedTotal = initialTotalCount ?? initialProperties.length;
+    setTotalCount(resolvedTotal);
     setOffset(initialProperties.length);
-    setHasMore(initialProperties.length >= PAGE_SIZE);
+    setHasMore(resolvedTotal > initialProperties.length && initialProperties.length >= PAGE_SIZE);
   }
 
   // ── Fetch next page ─────────────────────────────────────────────────────────
@@ -98,7 +108,7 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
 
     const f = filtersRef.current;
     try {
-      const next = await fetchPropertiesPage({
+      const { properties: next, totalCount: nextTotal } = await fetchPropertiesPage({
         offset,
         limit: PAGE_SIZE,
         transactionType: f.transactionType !== "all" ? f.transactionType : undefined,
@@ -108,16 +118,24 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
         bedrooms: f.bhk !== "Any" ? f.bhk : undefined,
         minPrice: f.minPrice ? parseFloat(f.minPrice) : undefined,
         maxPrice: f.maxPrice ? parseFloat(f.maxPrice) : undefined,
+        furnishing: f.furnishing !== "all" ? f.furnishing : undefined,
+        verifiedOnly: f.verifiedOnly,
         sortBy: f.sortBy !== "relevance" ? (f.sortBy as SortOption) : "newest",
         searchQuery: f.q.trim() || undefined,
       });
 
-      if (next.length < PAGE_SIZE) setHasMore(false);
+      setTotalCount(nextTotal);
 
       setProperties((prev) => {
         // Deduplicate by ID
         const seen = new Set(prev.map((p) => p.id));
-        return [...prev, ...next.filter((p) => !seen.has(p.id))];
+        const combined = [...prev, ...next.filter((p) => !seen.has(p.id))];
+        if (combined.length >= nextTotal || next.length === 0) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+        return combined;
       });
       setOffset((prev) => prev + next.length);
     } catch (err) {
@@ -192,7 +210,7 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
     // Fetch fresh page 0 for new filters
     setLoadingMore(true);
     try {
-      const fresh = await fetchPropertiesPage({
+      const { properties: fresh, totalCount: freshTotal } = await fetchPropertiesPage({
         offset: 0,
         limit: PAGE_SIZE,
         transactionType: newFilters.transactionType !== "all" ? newFilters.transactionType : undefined,
@@ -202,13 +220,16 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
         bedrooms: newFilters.bhk !== "Any" ? newFilters.bhk : undefined,
         minPrice: newFilters.minPrice ? parseFloat(newFilters.minPrice) : undefined,
         maxPrice: newFilters.maxPrice ? parseFloat(newFilters.maxPrice) : undefined,
+        furnishing: newFilters.furnishing !== "all" ? newFilters.furnishing : undefined,
+        verifiedOnly: newFilters.verifiedOnly,
         sortBy: newFilters.sortBy !== "relevance" ? (newFilters.sortBy as SortOption) : "newest",
         searchQuery: newFilters.q.trim() || undefined,
       });
 
       setProperties(fresh);
+      setTotalCount(freshTotal);
       setOffset(fresh.length);
-      setHasMore(fresh.length >= PAGE_SIZE);
+      setHasMore(fresh.length < freshTotal && fresh.length >= PAGE_SIZE);
 
     } catch (err) {
       console.error("[handleFilterChange] Error fetching filtered properties:", err);
@@ -391,7 +412,7 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
           filters={filters}
           onFilterChange={handleFilterChange}
           onReset={handleReset}
-          totalCount={displayProperties.length}
+          totalCount={totalCount}
         />
       </div>
 
@@ -401,15 +422,9 @@ export default function PropertyGridClient({ initialProperties }: PropertyGridCl
         <div className="bg-white border border-[#E4EAF2] rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="text-base sm:text-lg font-display font-bold text-[#172033]">
-              {displayProperties.length}{" "}
-              {displayProperties.length === 1 ? "Property" : "Properties"} Loaded
+              {totalCount} {totalCount === 1 ? "Property" : "Properties"}
               {filters.city !== "All Cities" && (
                 <span className="text-[#397BCF]"> in {filters.city}</span>
-              )}
-              {hasMore && (
-                <span className="text-xs font-normal text-[#667085] ml-2">
-                  (scroll to load more)
-                </span>
               )}
             </div>
             <p className="text-xs text-[#667085]">

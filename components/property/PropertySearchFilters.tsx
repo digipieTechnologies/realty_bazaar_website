@@ -19,6 +19,7 @@ const propertyTypes = [
   { value: "All Types", label: "All Types" },
   { value: "apartment", label: "Apartment / Flat" },
   { value: "villa", label: "Luxury Villa" },
+  { value: "penthouse", label: "Penthouse" },
   { value: "house", label: "Independent House" },
   { value: "plot", label: "Plot / Land" },
   { value: "commercial", label: "Commercial Office" },
@@ -59,17 +60,20 @@ export default function PropertySearchFilters({
     });
   };
 
-  const hasActiveFilters =
-    filters.q !== "" ||
-    filters.transactionType !== "all" ||
-    filters.propertyType !== "All Types" ||
-    filters.city !== "All Cities" ||
-    filters.bhk !== "Any" ||
-    filters.minPrice !== "" ||
-    filters.maxPrice !== "" ||
-    filters.furnishing !== "all" ||
-    filters.verifiedOnly ||
-    filters.featuredOnly;
+  const activeFilterCount = [
+    Boolean(filters.q.trim()),
+    filters.transactionType !== "all",
+    filters.propertyType !== "All Types",
+    filters.city !== "All Cities",
+    Boolean(filters.locality.trim()),
+    filters.bhk !== "Any",
+    Boolean(filters.minPrice || filters.maxPrice),
+    filters.furnishing !== "all",
+    Boolean(filters.verifiedOnly),
+    Boolean(filters.featuredOnly),
+  ].filter(Boolean).length;
+
+  const hasActiveFilters = activeFilterCount > 0;
 
   return (
     <>
@@ -96,8 +100,10 @@ export default function PropertySearchFilters({
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             <span>Filters</span>
-            {hasActiveFilters && (
-              <span className="w-2 h-2 rounded-full bg-[#6FA5E5] animate-pulse" />
+            {activeFilterCount > 0 && (
+              <span className="min-w-[18px] h-[18px] px-1 bg-[#397BCF] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                {activeFilterCount}
+              </span>
             )}
           </button>
         </div>
@@ -138,6 +144,11 @@ export default function PropertySearchFilters({
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-4 h-4 text-[#397BCF]" />
                   <h3 className="font-bold text-base text-[#172033]">Filter Properties</h3>
+                  {activeFilterCount > 0 && (
+                    <span className="text-xs font-bold px-2 py-0.5 bg-[#EAF3FF] text-[#245FA8] rounded-full">
+                      {activeFilterCount}
+                    </span>
+                  )}
                 </div>
                 <button
                   type="button"
@@ -304,6 +315,11 @@ export default function PropertySearchFilters({
           <div className="flex items-center gap-2">
             <SlidersHorizontal className="w-4 h-4 text-[#397BCF]" />
             <h3 className="font-display font-bold text-base text-[#172033]">Filters</h3>
+            {activeFilterCount > 0 && (
+              <span className="text-xs font-bold px-2 py-0.5 bg-[#EAF3FF] text-[#245FA8] border border-[#397BCF]/20 rounded-full">
+                {activeFilterCount}
+              </span>
+            )}
           </div>
           {hasActiveFilters && (
             <button

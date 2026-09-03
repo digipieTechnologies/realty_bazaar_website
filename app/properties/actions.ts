@@ -1,14 +1,17 @@
 "use server";
 
-import { getPublishedProperties, type GetPropertiesOptions } from "@/lib/supabase/queries";
-import type { Property } from "@/types";
+import {
+  getPublishedPropertiesWithCount,
+  type GetPropertiesOptions,
+  type GetPropertiesResult,
+} from "@/lib/supabase/queries";
 
 /**
  * Server action used by the infinite scroll client component to fetch the next
- * page of properties without a full route navigation.
+ * page of properties and total matching count without a full route navigation.
  */
 export async function fetchPropertiesPage(
   options: GetPropertiesOptions
-): Promise<Property[]> {
-  return getPublishedProperties(options);
+): Promise<GetPropertiesResult> {
+  return getPublishedPropertiesWithCount(options);
 }
