@@ -7,6 +7,7 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import Image from "next/image";
 
 const leadSources = [
+  { label: "WhatsApp", color: "from-emerald-500 to-green-600", icon: "/images/social/whatsapp-icon.avif", type: "image" },
   { label: "Instagram", color: "from-pink-500 to-purple-600", icon: "/images/social/instagram-icon.png", type: "image" },
   { label: "Facebook", color: "from-blue-600 to-blue-700", icon: "/images/social/facebook-icon.png", type: "image" },
   { label: "Meta Ads", color: "from-blue-500 to-cyan-500", icon: "🎯", type: "emoji" },
@@ -48,8 +49,8 @@ export default function LeadSourcesSection() {
 
         {/* Diagram */}
         <div ref={ref} className="flex flex-col items-center max-w-xl mx-auto">
-          {/* Top: 5 Lead sources */}
-          <div className="grid grid-cols-5 gap-3 sm:gap-6 w-full mb-4">
+          {/* Top: 6 Lead sources */}
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4 w-full mb-4">
             {leadSources.map((source, i) => (
               <motion.div
                 key={source.label}

@@ -60,6 +60,7 @@ const nextConfig: NextConfig = {
       { source: "/images/hero-architectural-sketch.jpg", destination: "/images/hero/hero-architectural-sketch.jpg" },
       { source: "/facebook-icon.png", destination: "/images/social/facebook-icon.png" },
       { source: "/instagram-icon.png", destination: "/images/social/instagram-icon.png" },
+      { source: "/whatsapp-icon.avif", destination: "/images/social/whatsapp-icon.avif" },
       { source: "/apple-touch-icon.png", destination: "/images/favicons/apple-touch-icon.png" },
       { source: "/icon-192.png", destination: "/images/favicons/icon-192.png" },
       { source: "/icon-512.png", destination: "/images/favicons/icon-512.png" },

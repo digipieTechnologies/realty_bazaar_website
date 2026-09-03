@@ -2,7 +2,7 @@
 
 import { Phone } from "lucide-react";
 import SharePropertyButton from "./SharePropertyButton";
-import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
+import Image from "next/image";
 import { trackPropertyCallClick, trackPropertyWhatsAppClick } from "@/lib/analytics/clarity";
 import type { Property } from "@/types";
 
@@ -39,7 +39,13 @@ export default function PropertyMobileStickyBar({
           className="flex-1 flex items-center justify-center gap-1.5 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded-2xl text-xs transition-all shadow-xs active:scale-95"
           id="mobile-whatsapp-broker"
         >
-          <WhatsAppIcon className="w-4 h-4" variant="white" />
+          <Image
+            src="/images/social/whatsapp-icon.avif"
+            alt="WhatsApp"
+            width={18}
+            height={18}
+            className="w-4 h-4 object-contain rounded-full shrink-0"
+          />
           WhatsApp
         </a>
 

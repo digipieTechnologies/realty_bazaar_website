@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { submitEnquiry } from "@/app/actions";
 import { Send, Phone, Calendar, ShieldCheck, CheckCircle2 } from "lucide-react";
 import ScheduleVisitModal from "@/components/property/ScheduleVisitModal";
-import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
+import Image from "next/image";
 import type { Property } from "@/types";
 import {
   trackPropertyCallClick,
@@ -118,7 +118,13 @@ export default function EnquiryForm({ property }: EnquiryFormProps) {
             onClick={() => trackPropertyWhatsAppClick(property)}
             className="flex items-center justify-center gap-2 py-3 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] font-bold rounded-2xl text-xs transition-all border border-[#25D366]/30 shadow-2xs active:scale-95"
           >
-            <WhatsAppIcon className="w-4 h-4" variant="brand" />
+            <Image
+              src="/images/social/whatsapp-icon.avif"
+              alt="WhatsApp"
+              width={18}
+              height={18}
+              className="w-4 h-4 object-contain rounded-full shrink-0"
+            />
             WhatsApp
           </a>
         </div>
