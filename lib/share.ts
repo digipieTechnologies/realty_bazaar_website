@@ -38,10 +38,10 @@ export function generatePropertyDraftText(
 
   // Key Specs
   const specs: string[] = [];
-  if (property.bedrooms) specs.push(`${property.bedrooms} BHK`);
-  if (property.bathrooms) specs.push(`${property.bathrooms} Bathrooms`);
-  if (property.area_sqft) specs.push(`${property.area_sqft.toLocaleString("en-IN")} sq ft`);
-  if (property.furnishing) specs.push(`${property.furnishing} Furnished`);
+  if (property.bedrooms && property.bedrooms > 0) specs.push(`${property.bedrooms} BHK`);
+  if (property.bathrooms && property.bathrooms > 0) specs.push(`${property.bathrooms} Bathrooms`);
+  if (property.area_sqft && property.area_sqft > 0) specs.push(`${property.area_sqft.toLocaleString("en-IN")} sq ft`);
+  if (property.furnishing) specs.push(`${property.furnishing.replace(/_/g, " ")}`);
 
   if (specs.length > 0) {
     lines.push(`📐 *Specs:* ${specs.join(" | ")}`);

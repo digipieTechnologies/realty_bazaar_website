@@ -16,6 +16,7 @@ import {
   Building2,
   IndianRupee,
   ExternalLink,
+  Armchair,
 } from "lucide-react";
 import {
   getPropertyBySlug,
@@ -216,20 +217,20 @@ function PropertySummaryCard({
             <div className="text-xl sm:text-2xl font-display font-bold text-[#172033] tracking-tight">
               {price}
             </div>
-            {property.price_per_sqft && property.transaction_type === "sale" && (
+            {property.price_per_sqft && property.transaction_type === "sale" ? (
               <div className="text-[11px] text-[#667085] font-medium mt-0.5">
                 ₹{property.price_per_sqft.toLocaleString("en-IN")} / sq ft
               </div>
-            )}
+            ) : null}
           </div>
 
           {/* Divider */}
-          {property.area_sqft && (
+          {property.area_sqft && property.area_sqft > 0 ? (
             <div className="hidden sm:block w-px h-10 bg-[#E4EAF2]" aria-hidden="true" />
-          )}
+          ) : null}
 
           {/* Metric 2: Area */}
-          {property.area_sqft && (
+          {property.area_sqft && property.area_sqft > 0 ? (
             <div className="min-w-[105px]">
               <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider mb-0.5 flex items-center gap-1">
                 <Square className="w-3 h-3 text-[#397BCF]" />
@@ -239,18 +240,18 @@ function PropertySummaryCard({
                 {property.area_sqft.toLocaleString("en-IN")}{" "}
                 <span className="text-sm sm:text-base font-normal text-[#667085]">sq ft</span>
               </div>
-              {areaSqm && (
+              {areaSqm ? (
                 <div className="text-[11px] text-[#667085] font-medium mt-0.5">
                   {areaSqm} sq m
                 </div>
-              )}
+              ) : null}
             </div>
-          )}
+          ) : null}
 
           {/* Divider */}
-          {(property.bedrooms || property.bathrooms || isPlot) && (
+          {(property.bedrooms && property.bedrooms > 0) || (property.bathrooms && property.bathrooms > 0) || isPlot ? (
             <div className="hidden sm:block w-px h-10 bg-[#E4EAF2]" aria-hidden="true" />
-          )}
+          ) : null}
 
           {/* Metric 3: Configuration */}
           <div className="min-w-[100px]">
@@ -259,19 +260,21 @@ function PropertySummaryCard({
               <span>Configuration</span>
             </div>
             <div className="text-xl sm:text-2xl font-display font-bold text-[#172033] tracking-tight">
-              {property.bedrooms
+              {property.bedrooms && property.bedrooms > 0
                 ? `${property.bedrooms} BHK`
                 : property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1)}
             </div>
             <div className="text-[11px] text-[#667085] font-medium mt-0.5">
-              {property.bedrooms
-                ? `${property.bedrooms} Bed${property.bedrooms > 1 ? "s" : ""}`
-                : ""}
-              {property.bedrooms && property.bathrooms ? " · " : ""}
-              {property.bathrooms
-                ? `${property.bathrooms} Bath${property.bathrooms > 1 ? "s" : ""}`
-                : ""}
-              {!property.bedrooms && !property.bathrooms ? "Direct Property" : ""}
+              {[
+                property.bedrooms && property.bedrooms > 0
+                  ? `${property.bedrooms} Bed${property.bedrooms > 1 ? "s" : ""}`
+                  : null,
+                property.bathrooms && property.bathrooms > 0
+                  ? `${property.bathrooms} Bath${property.bathrooms > 1 ? "s" : ""}`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(" · ") || (isPlot ? "Residential Plot" : "Standard Layout")}
             </div>
           </div>
 
@@ -499,136 +502,112 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               className="block lg:hidden"
             />
 
-            {/* Quick Specs 8-Box Features Card */}
-            <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E4EAF2] shadow-2xs">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {property.bedrooms && (
-                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
-                      <Bed className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
-                        Bedrooms
-                      </div>
-                      <div className="font-bold text-sm text-[#172033] truncate">
-                        {property.bedrooms}
-                      </div>
-                    </div>
-                  </div>
-                )}
+            {/* Quick Specs Features Grid (Only shows cards with real data) */}
+            {(() => {
+              const quickSpecs = [
+                property.bedrooms && property.bedrooms > 0
+                  ? {
+                      icon: Bed,
+                      label: "Bedrooms",
+                      value: `${property.bedrooms}`,
+                    }
+                  : null,
+                property.bathrooms && property.bathrooms > 0
+                  ? {
+                      icon: Bath,
+                      label: "Bathrooms",
+                      value: `${property.bathrooms}`,
+                    }
+                  : null,
+                property.balconies && property.balconies > 0
+                  ? {
+                      icon: Layers,
+                      label: "Balcony",
+                      value: `${property.balconies}`,
+                    }
+                  : null,
+                property.floor?.trim()
+                  ? {
+                      icon: Building2,
+                      label: "Floor",
+                      value: property.floor.trim(),
+                    }
+                  : null,
+                property.property_type
+                  ? {
+                      icon: Building2,
+                      label: "Property Type",
+                      value:
+                        property.property_type.charAt(0).toUpperCase() +
+                        property.property_type.slice(1),
+                    }
+                  : null,
+                property.possession?.trim()
+                  ? {
+                      icon: Key,
+                      label: "Possession",
+                      value: property.possession.trim().replace(/-/g, " "),
+                      capitalize: true,
+                    }
+                  : null,
+                property.facing?.trim()
+                  ? {
+                      icon: Compass,
+                      label: "Facing",
+                      value: property.facing.trim(),
+                    }
+                  : null,
+                property.parking && property.parking > 0
+                  ? {
+                      icon: Car,
+                      label: "Parking",
+                      value: `${property.parking} Reserved`,
+                    }
+                  : null,
+                property.furnishing?.trim()
+                  ? {
+                      icon: Armchair,
+                      label: "Furnishing",
+                      value: property.furnishing.trim().replace(/_/g, " "),
+                      capitalize: true,
+                    }
+                  : null,
+              ].filter((item): item is { icon: any; label: string; value: string; capitalize?: boolean } => item !== null);
 
-                {property.bathrooms && (
-                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
-                      <Bath className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
-                        Bathrooms
-                      </div>
-                      <div className="font-bold text-sm text-[#172033] truncate">
-                        {property.bathrooms}
-                      </div>
-                    </div>
-                  </div>
-                )}
+              if (quickSpecs.length === 0) return null;
 
-                {property.balconies && (
-                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
-                      <Layers className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
-                        Balcony
-                      </div>
-                      <div className="font-bold text-sm text-[#172033] truncate">
-                        {property.balconies}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {property.floor && (
-                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
-                      <Building2 className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
-                        Floor
-                      </div>
-                      <div className="font-bold text-sm text-[#172033] truncate">
-                        {property.floor}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
-                    <Building2 className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
-                      Property Type
-                    </div>
-                    <div className="font-bold text-sm text-[#172033] truncate capitalize">
-                      {property.property_type}
-                    </div>
+              return (
+                <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E4EAF2] shadow-2xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {quickSpecs.map((spec) => {
+                      const Icon = spec.icon;
+                      return (
+                        <div
+                          key={spec.label}
+                          className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3"
+                        >
+                          <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
+                              {spec.label}
+                            </div>
+                            <div
+                              className={`font-bold text-sm text-[#172033] truncate ${
+                                spec.capitalize ? "capitalize" : ""
+                              }`}
+                            >
+                              {spec.value}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-
-                {property.possession && (
-                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
-                      <Key className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
-                        Possession
-                      </div>
-                      <div className="font-bold text-sm text-[#172033] truncate capitalize">
-                        {property.possession.replace(/-/g, " ")}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {property.facing && (
-                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
-                      <Compass className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
-                        Facing
-                      </div>
-                      <div className="font-bold text-sm text-[#172033] truncate">
-                        {property.facing}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {property.parking && (
-                  <div className="p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E4EAF2] flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF3FF] text-[#245FA8] flex items-center justify-center shrink-0">
-                      <Car className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-[10px] font-bold text-[#667085] uppercase tracking-wider">
-                        Parking
-                      </div>
-                      <div className="font-bold text-sm text-[#172033] truncate">
-                        {property.parking} Reserved
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+              );
+            })()}
 
             {/* Description */}
             {property.description && (

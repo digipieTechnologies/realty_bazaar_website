@@ -705,13 +705,12 @@ export async function getPropertyFaqs(propertyId: string): Promise<PropertyFAQ[]
       .order("created_at", { ascending: true });
 
     if (error) {
-      console.error(`[getPropertyFaqs] Error fetching FAQs for property ${propertyId}:`, error);
+      // Return empty array gracefully if property_faqs table doesn't exist or has no rows
       return [];
     }
 
     return (data as PropertyFAQ[]) || [];
-  } catch (err) {
-    console.error("[getPropertyFaqs] Unexpected error:", err);
+  } catch {
     return [];
   }
 }

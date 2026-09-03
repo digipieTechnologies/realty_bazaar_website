@@ -147,24 +147,24 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
 
           {/* Key Specs Row */}
           <div className="flex items-center gap-3 text-xs text-[#475467] bg-[#F8FAFC] p-2.5 rounded-xl mb-4 border border-[#E4EAF2]/60">
-            {property.bedrooms && (
+            {property.bedrooms && property.bedrooms > 0 ? (
               <div className="flex items-center gap-1">
                 <Bed className="w-3.5 h-3.5 text-[#397BCF]" />
                 <span className="font-semibold">{property.bedrooms}</span> BHK
               </div>
-            )}
-            {property.bathrooms && (
+            ) : null}
+            {property.bathrooms && property.bathrooms > 0 ? (
               <div className="flex items-center gap-1">
                 <Bath className="w-3.5 h-3.5 text-[#397BCF]" />
                 <span className="font-semibold">{property.bathrooms}</span> Bath
               </div>
-            )}
-            {property.area_sqft && (
+            ) : null}
+            {property.area_sqft && property.area_sqft > 0 ? (
               <div className="flex items-center gap-1">
                 <Square className="w-3.5 h-3.5 text-[#397BCF]" />
                 <span className="font-semibold">{property.area_sqft.toLocaleString("en-IN")}</span> sq ft
               </div>
-            )}
+            ) : null}
           </div>
         </div>
 
