@@ -93,7 +93,7 @@ export default function SharePropertyModal({
   const price = formatPrice(property.price, property.price_display);
   const imageUrl =
     property.images?.[0] ||
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800";
+    "/images/properties/property-placeholder.jpg";
 
   const handleCopyDraft = async () => {
     try {

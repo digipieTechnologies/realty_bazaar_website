@@ -58,6 +58,7 @@ const nextConfig: NextConfig = {
       { source: "/logo-icon.png", destination: "/images/branding/logo-icon.png" },
       { source: "/og-image.jpg", destination: "/images/og/og-image.jpg" },
       { source: "/images/hero-architectural-sketch.jpg", destination: "/images/hero/hero-architectural-sketch.jpg" },
+      { source: "/property-placeholder.jpg", destination: "/images/properties/property-placeholder.jpg" },
       { source: "/facebook-icon.png", destination: "/images/social/facebook-icon.png" },
       { source: "/instagram-icon.png", destination: "/images/social/instagram-icon.png" },
       { source: "/whatsapp-icon.avif", destination: "/images/social/whatsapp-icon.avif" },
@@ -83,6 +84,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.r2.dev",
       },
     ],
   },

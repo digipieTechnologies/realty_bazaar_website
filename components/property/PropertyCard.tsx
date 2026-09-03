@@ -16,9 +16,11 @@ interface PropertyCardProps {
 
 export default function PropertyCard({ property, priorityImage = false }: PropertyCardProps) {
   const [isSaved, setIsSaved] = useState(false);
-  const imageUrl =
-    property.images?.[0] ||
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800";
+  const fallbackImage =
+    "/images/properties/property-placeholder.jpg";
+  const [imgSrc, setImgSrc] = useState(
+    property.images?.[0] || fallbackImage
+  );
   const price = formatPrice(property.price, property.price_display);
 
   const toggleFavorite = (e: React.MouseEvent) => {
@@ -52,12 +54,13 @@ export default function PropertyCard({ property, priorityImage = false }: Proper
           aria-label={`View details for ${property.title}`}
         >
           <Image
-            src={imageUrl}
+            src={imgSrc}
             alt={imageAlt}
             fill
             sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) calc(50vw - 32px), 380px"
             priority={priorityImage}
             loading={priorityImage ? "eager" : "lazy"}
+            onError={() => setImgSrc(fallbackImage)}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
 

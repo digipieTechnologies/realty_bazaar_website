@@ -58,11 +58,24 @@ function mapDbRowToProperty(row: DbPropertyRow): Property {
   const locality = addr?.landmark ?? addr?.city ?? "";
   const fullAddress = addr?.full_address ?? null;
 
-  // Extract image URLs from the medias JSONB array (images, photos, or video thumbnails)
-  const images: string[] = (row.medias ?? [])
-    .map((m) => {
-      if (m.type === "image" || m.type === "photo" || !m.type) return m.url;
-      if (m.thumbnail) return m.thumbnail;
+  // Extract image URLs from medias (handles JSONB array or stringified JSON)
+  let rawMedias = row.medias;
+  if (typeof rawMedias === "string") {
+    try {
+      rawMedias = JSON.parse(rawMedias);
+    } catch {
+      rawMedias = [];
+    }
+  }
+
+  const images: string[] = (Array.isArray(rawMedias) ? rawMedias : [])
+    .map((m: any) => {
+      if (typeof m === "string") return m;
+      if (m && typeof m === "object") {
+        if (m.type === "image" || m.type === "photo" || !m.type) return m.url;
+        if (m.thumbnail) return m.thumbnail;
+        return m.url || null;
+      }
       return null;
     })
     .filter((url): url is string => typeof url === "string" && url.trim().length > 0);
@@ -101,6 +114,32 @@ function mapDbRowToProperty(row: DbPropertyRow): Property {
     brokerUser?.phone_country_code
   );
 
+  // Parse amenities (handles JSONB array, JSON string, or comma-separated strings)
+  let rawAmenities: unknown = row.amenities;
+  if (typeof rawAmenities === "string") {
+    try {
+      rawAmenities = JSON.parse(rawAmenities);
+    } catch {
+      const str = rawAmenities as string;
+      rawAmenities = str.includes(",")
+        ? str.split(",").map((s: string) => s.trim())
+        : [str.trim()];
+    }
+  }
+
+  const parsedAmenities: string[] = Array.isArray(rawAmenities)
+    ? rawAmenities
+        .flatMap((a: unknown) => {
+          if (typeof a === "string") {
+            return a.includes(",")
+              ? a.split(",").map((s: string) => s.trim())
+              : [a.trim()];
+          }
+          return [];
+        })
+        .filter((s: string) => s.length > 0)
+    : [];
+
   return {
     id: row.id,
     broker_id: row.broker_id ?? null,
@@ -130,7 +169,7 @@ function mapDbRowToProperty(row: DbPropertyRow): Property {
     facing,
     furnishing,
     possession,
-    amenities: Array.isArray(row.amenities) ? row.amenities : [],
+    amenities: parsedAmenities,
     images: images.length > 0 ? images : null,
     video_url: null,
     broker_name: brokerUser?.name ?? null,

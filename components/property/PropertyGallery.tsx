@@ -15,9 +15,15 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const fallbackImages = [
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200",
+    "/images/properties/property-placeholder.jpg",
   ];
   const list = images && images.length > 0 ? images : fallbackImages;
+  const [failedIndices, setFailedIndices] = useState<Record<number, boolean>>({});
+
+  const getImageSrc = (index: number) => {
+    if (failedIndices[index]) return fallbackImages[0];
+    return list[index] || fallbackImages[0];
+  };
 
   const prev = (e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -34,11 +40,12 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
       {/* Main Image Banner */}
       <div className="relative aspect-[16/10] sm:aspect-[16/9] rounded-3xl overflow-hidden bg-[#172033] group shadow-sm border border-[#E4EAF2]">
         <Image
-          src={list[current]}
+          src={getImageSrc(current)}
           alt={`${title} - Photo ${current + 1}`}
           fill
           priority
           sizes="(max-width: 1024px) 100vw, 800px"
+          onError={() => setFailedIndices((prev) => ({ ...prev, [current]: true }))}
           className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 cursor-pointer"
           onClick={() => setLightboxOpen(true)}
         />
@@ -100,12 +107,13 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
               aria-label={`View photo ${idx + 1}`}
             >
               <Image
-                src={img}
+                src={getImageSrc(idx)}
                 alt={`${title} – photo ${idx + 1}`}
                 fill
                 sizes="96px"
                 className="w-full h-full object-cover"
                 loading="lazy"
+                onError={() => setFailedIndices((prev) => ({ ...prev, [idx]: true }))}
               />
             </button>
           ))}
@@ -135,10 +143,11 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
             <div className="relative flex-1 w-full max-w-6xl mx-auto flex items-center justify-center py-4">
               <div className="relative w-full h-full max-h-[78vh] flex items-center justify-center">
                 <Image
-                  src={list[current]}
+                  src={getImageSrc(current)}
                   alt={`${title} - Fullscreen photo ${current + 1}`}
                   fill
                   sizes="100vw"
+                  onError={() => setFailedIndices((prev) => ({ ...prev, [current]: true }))}
                   className="object-contain rounded-2xl shadow-2xl"
                 />
               </div>

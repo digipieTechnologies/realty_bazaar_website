@@ -38,8 +38,8 @@ export interface DbPropertyRow {
   property_status: string;       // 'available' | 'sold' | 'rented'
   construction_status: string;   // 'ready_to_move' | 'under_construction'
   facing: string | null;
-  amenities: string[] | null;    // JSONB array of strings
-  medias: Array<{ url: string; type: string; thumbnail?: string }> | null; // JSONB
+  amenities: string[] | string | null;    // JSONB array or JSON string
+  medias: Array<{ url: string; type: string; thumbnail?: string }> | string | null; // JSONB array or JSON string
   is_active: boolean;
   is_deleted: boolean;
   created_at: string;
